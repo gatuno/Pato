@@ -1,0 +1,173 @@
+/*
+ * Estilos robados desde phpmyadmin
+ * ¡Te amo phpMyAdmin!
+ */
+
+a img {
+	border: 0;
+}
+
+/* Un espacio entre las imágenes y el texto */
+.icon {
+	vertical-align: middle;
+	margin-right: 0.3em;
+	margin-left: 0.3em;
+}
+
+body {
+	margin: 0px;
+}
+
+img,
+input,
+select,
+button {
+	vertical-align: middle;
+}
+
+/* Sin espacio adicional en las tablas */
+td .icon {
+	margin: 0;
+}
+
+.advertencia, .error, .info, .pregunta
+{
+	padding-left:52px;
+	padding-top:16px;
+	min-height:52px;
+	/* background-color:#1F1F1F; */
+	clear: both;
+}
+
+.advertencia
+{
+	border:2px solid #f69724;
+	background:url('../img/warning.png') no-repeat 10px 10px;
+}
+
+.error
+{
+	border:2px solid #d93b30;
+	background:url('../img/error.png') no-repeat 10px 10px;
+}
+
+.pregunta
+{
+	border:2px solid #395e90;
+	background:url('../img/question.png') no-repeat 10px 10px;
+}
+
+.info
+{
+	border:2px solid #dce5f6;
+	background:url('../img/info.png') no-repeat 10px 10px;
+}
+
+.advertencia p, .error p, .pregunta p, .info p
+{
+	margin-top:0;
+}
+
+.topmenu {
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	padding: 0px 0px;
+	background: none repeat scroll 0px 0px rgb(68, 68, 68);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.75);
+	margin-bottom: 20px;
+}
+
+.topmenu-table {
+	border-spacing: 0px;
+	width: 100%;
+}
+
+.topmenu-table td {
+	padding: 0px;
+}
+
+.nav {
+	list-style: none outside none;
+	margin: 0px 8px;
+	padding-left: 0px;
+	position: relative;
+}
+
+.nav li {
+	display: block;
+	float: left;
+}
+
+.nav li a {
+	padding: 15px 15px;
+	display: block;
+	text-decoration: none;
+	color: #ffffff;
+}
+
+/* Colores especiales */
+.nav .general a:hover {
+	background-color: #4F38C6;
+}
+
+.nav .calificaciones a:hover {
+	background-color: #EB2927;
+}
+
+.nav .titulacion a:hover {
+	background-color: #FDDC3B;
+}
+
+/* Submenús */
+.nav ul {
+	display: none;
+	position: absolute;
+	background-color: #646578;
+	padding-left: 0px;
+}
+
+.nav li:hover > ul {
+	display: block;
+}
+
+.nav ul li {
+	float: none;
+	position: relative;
+	border-top: 1px solid #6b727c;
+	border-bottom: 1px solid #575f6a;
+}
+
+.nav ul li a {
+	padding: 6px 20px;
+	display: block;
+	text-decoration: none;
+	color: #ffffff;
+}
+
+.nav ul ul {
+	position: absolute;
+	left: 100%;
+	top: 0px;
+}
+
+.userinfo {
+	float: right;
+	padding-top: 8px;
+	margin-right: 8px;
+	margin-left: 8px;
+	padding-bottom: 8px;
+}
+
+.userinfo .login, .userinfo .logout {
+	margin: 0px;
+}
+
+.login a, .logout a {
+	text-decoration: none;
+	color: #ffffff;
+}
+
+.titulo {
+	padding-top: 10px;
+}

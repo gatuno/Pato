@@ -1,0 +1,3 @@
+[submodule "src/Gatuf"]
+	path = src/Gatuf
+	url = git://github.com/gatuno/Gatuf
