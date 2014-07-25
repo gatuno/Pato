@@ -1,0 +1,17 @@
+{extends 'general/base.html'}
+{block body}
+{if $form.errors}
+<div class="errors">
+<p>El formulario contiene algunos errores:</p>
+</div>
+{/if}
+<form method="post" action=".">
+<table>
+	<tr><th><strong>Clave:</strong></th>
+	<td>{$carrera.clave}</td>
+	</tr>
+	{$form.render_table}
+	<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar carrera" /></td></tr>
+</table>
+</form>
+{/block}
