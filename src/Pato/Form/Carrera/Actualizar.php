@@ -1,29 +1,10 @@
 <?php
 
-class Calif_Form_Carrera_Actualizar extends Gatuf_Form {
+class Pato_Form_Carrera_Actualizar extends Gatuf_Form {
 	public $carrera;
 	
 	public function initFields($extra=array()) {
 		$this->carrera = $extra['carrera'];
-		
-		$choices = array ();
-		
-		$divisiones = Gatuf::factory ('Calif_Division')->getList ();
-		foreach ($divisiones as $division) {
-			$choices[$division->nombre] = $division->id;
-		}
-		
-		$this->fields['division'] = new Gatuf_Form_Field_Varchar (
-			array (
-				'required' => true,
-				'initial' => $this->carrera->division,
-				'label' => 'División',
-				'help_text' => 'La división a la que pertenece',
-				'widget' => 'Gatuf_Form_Widget_SelectInput',
-				'widget_attrs' => array (
-					'choices' => $choices,
-				),
-		));
 		
 		$this->fields['descripcion'] = new Gatuf_Form_Field_Varchar(
 			array(
@@ -63,8 +44,7 @@ class Calif_Form_Carrera_Actualizar extends Gatuf_Form {
 			throw new Exception('Cannot save the model from an invalid form.');
 		}
 		
-		$this->carrera->descripcion = $this->cleaned_data['descripcion'];
-		$this->carrera->color = $this->cleaned_data['color'];
+		$this->carrera->setFromFormData ($this->cleaned_data);
 		
 		$this->carrera->update();
 		

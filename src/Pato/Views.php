@@ -25,7 +25,7 @@ class Pato_Views {
 			}
 			
 			if (false === $user) {
-				$error = 'The login or the password is not valid. El login y la contraseña son sensibles a las mayúsculas';
+				$error = 'El usuario ó contraseña no son válidos. El usuario y la contraseña son sensibles a las mayúsculas';
 			} else {
 				if (!$request->session->getTestCookie ()) {
 					$error = 'Necesitas habilitar las cookies para acceder a este sitio';

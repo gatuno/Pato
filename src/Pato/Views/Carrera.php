@@ -7,7 +7,6 @@ class Pato_Views_Carrera {
 	public function index ($request, $match) {
 		# Listar las carreras aquí
 		$carreras = Gatuf::factory('Pato_Carrera')->getList();
-		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/carrera/index.html',
 		                                         array('page_title' => 'Carreras',
