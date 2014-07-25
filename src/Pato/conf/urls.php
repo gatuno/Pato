@@ -15,36 +15,22 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/$#',
 	'base' => $base,
-	'model' => 'Calif_Views',
+	'model' => 'Pato_Views',
 	'method' => 'index',
-);
-
-$ctl[] = array (
-	'regex' => '#^/calif/$#',
-	'base' => $base,
-	'model' => 'Calif_Views',
-	'method' => 'calif',
 );
 
 $ctl[] = array (
 	'regex' => '#^/login/$#',
 	'base' => $base,
-	'model' => 'Calif_Views',
+	'model' => 'Pato_Views',
 	'method' => 'login',
 	'name' => 'login_view'
 );
 
 $ctl[] = array (
-	'regex' => '#^/dashboard/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_User',
-	'method' => 'dashboard',
-);
-
-$ctl[] = array (
 	'regex' => '#^/logout/$#',
 	'base' => $base,
-	'model' => 'Calif_Views',
+	'model' => 'Pato_Views',
 	'method' => 'logout',
 );
 
@@ -142,21 +128,21 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/password/$#',
 	'base' => $base,
-	'model' => 'Calif_Views',
+	'model' => 'Pato_Views',
 	'method' => 'passwordRecoveryAsk',
 );
 
 $ctl[] = array (
 	'regex' => '#^/password/ik/$#',
 	'base' => $base,
-	'model' => 'Calif_Views',
+	'model' => 'Pato_Views',
 	'method' => 'passwordRecoveryInputCode',
 );
 
 $ctl[] = array (
 	'regex' => '#^/password/k/(.*)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views',
+	'model' => 'Pato_Views',
 	'method' => 'passwordRecovery',
 );
 
@@ -171,28 +157,28 @@ $ctl[] = array(
 $ctl[] = array(
 	'regex' => '#^/carreras/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Carrera',
+	'model' => 'Pato_Views_Carrera',
 	'method' => 'index',
 );
 
 $ctl[] = array(
 	'regex' => '#^/carreras/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Carrera',
+	'model' => 'Pato_Views_Carrera',
 	'method' => 'agregarCarrera',
 );
 
 $ctl[] = array(
 	'regex' => '#^/carrera/([A-Za-z]{2,5})/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Carrera',
+	'model' => 'Pato_Views_Carrera',
 	'method' => 'verCarrera',
 );
 
 $ctl[] = array(
 	'regex' => '#^/carrera/([A-Za-z]{2,5})/update/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Carrera',
+	'model' => 'Pato_Views_Carrera',
 	'method' => 'actualizarCarrera',
 );
 
