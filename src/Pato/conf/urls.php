@@ -297,6 +297,12 @@ $ctl[] = array (
 			'base' => $base,
 			'model' => 'Pato_Views_Materia',
 			'method' => 'agregarACarrera',
+		),
+		array (
+			'regex' => '#^([\w-]+)/delcarrera/([A-Za-z]{2,5})/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Materia',
+			'method' => 'eliminarDeCarrera',
 		)
 	)
 );

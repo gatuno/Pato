@@ -1,0 +1,16 @@
+{extends 'pato/base.html'}
+{block body}
+<p>¿Está seguro que desea desasociar esta materia de esta carrera?<p>
+<p>Los alumnos de esta carrera ya no podrán matricularse en las secciones de esta materia.<p>
+<form method="post" action=".">
+<table>
+	<tr><th><strong>Materia:</strong></th>
+		<td>{$materia}</td>
+	</tr>
+    <tr><th><strong>Carrera:</strong></th>
+		<td>{$carrera}</td>
+	</tr>
+	<tr><td>&nbsp;</td><td><input type="submit" value="Sí, desasocialas" /> | <a href="{url 'Pato_Views_Materia::verMateria', array ($materia.clave)}">Cancelar el divorcio</a></td></tr>
+</table>
+</form>
+{/block}

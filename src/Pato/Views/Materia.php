@@ -267,7 +267,50 @@ class Pato_Views_Materia {
 		                                                'materia'=> $materia),
 		                                         $request);
 	}
+	
+	public $eliminarDeCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public function eliminarDeCarrera ($request, $match) {
+		$materia = new Pato_Materia ();
 		
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$carrera = new Pato_Carrera ();
+		
+		if (false === ($carrera->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$assoc_carrera = $materia->get_carreras_list ();
+		$found = false;
+		foreach ($assoc_carrera as $as_c) {
+			if ($as_c->clave == $carrera->clave) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			/* La confirmación, eliminar la asociación */
+			$materia->delAssoc ($carrera);
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		/* Presentar la confirmación de eliminación */
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/eliminar-carrera.html',
+		                                         array ('page_title' => 'Eliminar materia de una carrera',
+		                                                'materia' => $materia,
+		                                                'carrera' => $carrera),
+		                                         $request);
+	}
+	
 	public $agregarMateria_precond = array ('Gatuf_Precondition::adminRequired');
 	public function agregarMateria ($request, $match) {
 		$extra = array ();
