@@ -186,14 +186,14 @@ $ctl[] = array(
 $ctl[] = array(
 	'regex' => '#^/alumnos/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Alumno',
+	'model' => 'Pato_Views_Alumno',
 	'method' => 'index',
 );
 
 $ctl[] = array(
 	'regex' => '#^/alumnos/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Alumno',
+	'model' => 'Pato_Views_Alumno',
 	'method' => 'agregarAlumno',
 );
 
@@ -211,7 +211,7 @@ $ctl[] = array(
 		array(
 			'regex' => '#^(\d{8})/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Alumno',
+			'model' => 'Pato_Views_Alumno',
 			'method' => 'verAlumno',
 		),
 		array(
@@ -223,15 +223,21 @@ $ctl[] = array(
 		array(
 			'regex' => '#^(\d{8})/update/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Alumno',
+			'model' => 'Pato_Views_Alumno',
 			'method' => 'actualizarAlumno',
 		),
 		array (
+			'regex' => '#^(\d{8})/inscripciones/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'verInscripciones',
+		),
+		/*array ( FIXME: Mal acomodada
 			'regex' => '#^(\d{8})/evaluar/(\d+)/(\d+)/$#',
 			'base' => $base,
 			'model' => 'Calif_Views_Alumno',
 			'method' => 'evaluar',
-		)
+		)*/
 	)
 );
 

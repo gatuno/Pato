@@ -1,0 +1,5 @@
+{extends 'pato/base.html'}
+{block body}
+{if $user.administrator}<p><a href="{url 'Pato_Views_Alumno::agregarAlumno'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nuevo alumno" />Nuevo alumno</a></p>{/if}
+{$paginador.render}
+{/block}

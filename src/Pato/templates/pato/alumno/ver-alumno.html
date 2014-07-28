@@ -1,0 +1,21 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<table class="form">
+	<tr>
+	<th style="text-align: right">
+		{if $user.login == $alumno.codigo}<a href="http://gravatar.com/emails/" title="Cambie su imagen en gravatar.com">
+		{else}<a href="http://www.gravatar.com/avatar/{$alumno.user.email|md5}.jpg?s=400">{/if}
+		<img src="http://www.gravatar.com/avatar/{$alumno.user.email|md5}.jpg?s=60" alt=" " /></a>
+	</th>
+	{if $user.login == $alumno.codigo}
+		<td>Yo</td>
+	{else}
+		<td>{$alumno.apellido} {$alumno.nombre}</td>
+	{/if}
+	</tr>
+	<tr>
+		<th>Última vez visto:</th>
+		<td>{$alumno.user.last_login|dateago}</td>
+	</tr>
+</table>
+{/block}
