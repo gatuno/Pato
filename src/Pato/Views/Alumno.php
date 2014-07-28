@@ -1,6 +1,7 @@
 <?php
 
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
+Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Alumno {
 	public function index ($request, $match) {

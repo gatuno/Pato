@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block body}
+<p><a href="{url 'Pato_Views_Calendario::agregarCalendario'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nuevo calendario" />Nuevo calendario</a></p>
+{if count ($calendarios) != 0}
+<p>Los siguientes calendarios están disponibles para este sistema:</p>
+<ul>{foreach $calendarios as $cal}
+	<li>{$cal.descripcion} ({$cal.clave}){if $cal.oculto} <b>Calendario oculto</b>{/if}</li>
+{/foreach}</ul>
+{else}
+<p>No hay calendarios disponibles en este sistema. Debe crear un calendario para poder trabajar con PATO.</p>
+{/if}
+{/block} 

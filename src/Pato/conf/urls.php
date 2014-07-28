@@ -38,21 +38,21 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/calendario/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Calendario',
+	'model' => 'Pato_Views_Calendario',
 	'method' => 'cambiarCalendario',
 );
 
 $ctl[] = array (
 	'regex' => '#^/calendarios/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Calendario',
+	'model' => 'Pato_Views_Calendario',
 	'method' => 'index',
 );
 
 $ctl[] = array (
 	'regex' => '#^/calendarios/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Calendario',
+	'model' => 'Pato_Views_Calendario',
 	'method' => 'agregarCalendario',
 );
 
