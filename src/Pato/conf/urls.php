@@ -58,70 +58,10 @@ $ctl[] = array (
 
 /* Reportes y acciones varias */
 $ctl[] = array (
-	'regex' => '#^/importsiiau/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Calendario',
-	'method' => 'import_siiau',
-);
-
-$ctl[] = array (
-	'regex' => '#^/calendarios/importoferta/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Calendario',
-	'method' => 'import_oferta',
-);
-
-$ctl[] = array (
 	'regex' => '#^/sistema/$#',
 	'base' => $base,
 	'model' => 'Calif_Views_System',
 	'method' => 'index',
-);
-
-$ctl[] = array (
-	'regex' => '#^/sistema/importar_inventados/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'importarNrcInventado',
-);
-
-$ctl[] = array (
-	'regex' => '#^/sistema/auditoria/severa/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'auditoriaSevera',
-	'name' => 'auditoriaSeveraDepartamento',
-	'params' => array ('car' => false),
-);
-
-$ctl[] = array (
-	'regex' => '#^/sistema/auditoria/severa/carrera/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'auditoriaSevera',
-	'name' => 'auditoriaSeveraCarrera',
-	'params' => array ('car' => true),
-);
-
-$ctl[] = array (
-	'regex' => '#^/sistema/auditoria/horaria/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'auditoriaHoraria',
-);
-
-$ctl[] = array (
-	'regex' => '#^/sistema/importar_plantilla/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'importarPlantilla',
-);
-
-$ctl[] = array (
-	'regex' => '#^/sistema/exportar_plantilla/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'exportarPlantilla',
 );
 
 /* Recuperación de contraseñas */
@@ -291,6 +231,12 @@ $ctl[] = array (
 			'base' => $base,
 			'model' => 'Pato_Views_Materia',
 			'method' => 'actualizarMateria',
+		),
+		array (
+			'regex' => '#^([\w-]+)/horas/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Materia',
+			'method' => 'verHoras',
 		),
 		array (
 			'regex' => '#^([\w-]+)/addeval/(\d+)/$#',

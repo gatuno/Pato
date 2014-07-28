@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block body}
+<ul style="list-style-type: none;">
+<li style="display: inline;"><a href="{url 'Pato_Views_Materia::verMateria', array ($materia.clave)}">Detalles</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Materia::verHoras', array ($materia.clave)}">Horarios y Grupos</a></li>
+<!--<li style="display: inline;"><a href="url 'Pato_Views_Materia::verEval', array ($materia.clave)">Evaluación</a></li>-->
+{if $user.administrator}
+<li style="display: inline;"><a href="{url 'Pato_Views_Materia::actualizarMateria', array ($materia.clave)}">Editar</a></li>
+{/if}
+</ul>
+{block body_materia}{/block}
+{/block}

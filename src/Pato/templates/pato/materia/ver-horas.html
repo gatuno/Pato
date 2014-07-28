@@ -1,0 +1,19 @@
+{extends 'pato/materia/base.html'}
+{block extratopbody}
+<div style="float:right">
+	<form action="{url 'Pato_Views_Calendario::cambiarCalendario', array (), array ('_redirect_after' => $uri)}" method="post">
+	<strong>{$form_calendario.f.calendario.labelTag}:</strong>{$form_calendario.f.calendario|safe}&nbsp;<input type="submit" value="Cambiar" />
+	</form>
+</div>
+{/block}
+{block body_materia}
+<h2>Horas de la materia</h2>
+{if $calendario.events}
+	{$calendario.render}
+{else}
+	<p>Esta materia aún no tiene programadas horas clase.</p>
+{/if}
+<h2>Lista de secciones</h2>
+{if $user.administrator}<p>Puede <a href="{url 'Pato_Views_Seccion::agregarNrc', array (), array ('materia' => $materia.clave)}">agregar una nueva sección</a> a esta materia</p>{/if}
+{$paginador.render}
+{/block}

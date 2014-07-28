@@ -1,5 +1,6 @@
-{extends 'pato/base.html'}
-{block body}
+{extends 'pato/materia/base.html'}
+{block body_materia}
+<h2>Actualizar materia</h2>
 {if $form.errors}
 	<div class="errors"><p>El formulario contiene algunos errores:</p>{if $form.get_top_errors}{$form.render_top_errors}{/if}</div>
 {/if}

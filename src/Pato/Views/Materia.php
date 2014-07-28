@@ -108,13 +108,30 @@ class Pato_Views_Materia {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
-		$title = $materia->clave.' '.$materia->descripcion;
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/ver-materia.html',
+		                                         array('page_title' => (string) $materia,
+		                                               'materia' => $materia),
+		                                         $request);
+	}
+	
+	public function verHoras ($request, $match) {
+		$materia = new Pato_Materia ();
 		
-		/* Listar las secciones de esta materia
-		$seccion = new Calif_Seccion (); */
+		if (false === ($materia->get($match[1]))) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$nueva_clave = mb_strtoupper ($match[1]);
+		if ($match[1] != $nueva_clave) {
+			$url = Gatuf_HTTP_URL_urlForView('Pato_Views_Materia::verMateria', array ($nueva_clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		/* Listar las secciones de esta materia */
+		$seccion = new Pato_Seccion ();
 		
 		/* Enlaces extras */
-		/*$pag = new Gatuf_Paginator ($seccion);
+		$pag = new Gatuf_Paginator ($seccion);
 		$pag->model_view = 'paginador';
 		
 		$pag->action = array ('Pato_Views_Materia::verMateria', $materia->clave);
@@ -126,9 +143,9 @@ class Pato_Views_Materia {
 			array ('maestro', 'Gatuf_Paginator_FKLink', 'Maestro'),
 		);
 		
-		if ($request->user->isJefe() || $request->user->isCoord ()) {
+		/*if ($request->user->isJefe() || $request->user->isCoord ()) {
 			$list_display[] = array ('asignacion', 'Gatuf_Paginator_FKExtra', 'Asignacion');
-		}
+		}*/
 		
 		$pag->items_per_page = 30;
 		$pag->no_results_text = 'No se encontraron secciones';
@@ -140,49 +157,45 @@ class Pato_Views_Materia {
 		
 		$sql_filter = new Gatuf_SQL ('materia=%s', $materia->clave);
 		$pag->forced_where = $sql_filter;
-		$pag->setFromRequest ($request); */
+		$pag->setFromRequest ($request);
 		
 		/* Recuperar todos las secciones de esta materia */
-		/* Gatuf::loadFunction ('Calif_Utils_displayHora');
 		$calendario_materia = new Gatuf_Calendar ();
 		$calendario_materia->events = array ();
 		$calendario_materia->opts['conflicts'] = false;
 		
-		$secciones = Gatuf::factory ('Calif_Seccion')->getList (array ('filter' => $sql_filter->gen ()));
+		$secciones = $materia->get_pato_seccion_list ();
 		
 		$salon_model = new Pato_Salon ();
 		
 		foreach ($secciones as $seccion) {
-			$horas = $seccion->get_calif_horario_list (array ('view' => 'paginador'));
-			
+			//$horas = $seccion->get_pato_horario_list (array ('view' => 'paginador'));
+			$horas = array ();
 			foreach ($horas as $hora) {
-				$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::verNrc', $seccion->nrc);
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
 				$cadena_desc = sprintf ('%s <a href="%s">%s</a><br />', $seccion->materia, $url, $seccion->seccion);
-				$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Edificio::verEdificio', $hora->salon_edificio).'#salon_'.$hora->salon;
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $hora->salon_edificio).'#salon_'.$hora->salon;
 				$dia_semana = strtotime ('next Monday');
 				
 				foreach (array ('l', 'm', 'i', 'j', 'v', 's') as $dia) {
 					if ($hora->$dia) {
-						$calendario_materia->events[] = array ('start' => date('Y-m-d ', $dia_semana).Calif_Utils_displayHora($hora->inicio),
-										             'end' => date('Y-m-d ', $dia_semana).Calif_Utils_displayHora($hora->fin),
+						$calendario_materia->events[] = array ('start' => date('Y-m-d ', $dia_semana).$hora->inicio,
+										             'end' => date('Y-m-d ', $dia_semana).$hora->fin,
 										             'title' => $hora->salon_edificio.' '.$hora->salon_aula,
 										             'content' => $cadena_desc,
-										             'url' => $url, 'color' => is_null ($hora->seccion_asignacion_color) ? '' : '#'.dechex ($hora->seccion_asignacion_color));
+										             'url' => $url);
 					}
 					$dia_semana = $dia_semana + 86400;
 				}
 			}
-		}*/
+		}
 		
-		$carreras = $materia->get_carreras_list ();
-		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/ver-materia.html',
-		                                         array('page_title' => $title,
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/ver-horas.html',
+		                                         array('page_title' => (string) $materia,
 		                                               'materia' => $materia,
-		                                               //'calendario' => $calendario_materia,
-		                                               'carreras' => $carreras,
-		                                               //'paginador' => $pag),
-		                                         ),$request);
+		                                               'calendario' => $calendario_materia,
+		                                               'paginador' => $pag),
+		                                         $request);
 	}
 	
 	public function verEval ($request, $match) {
@@ -336,8 +349,6 @@ class Pato_Views_Materia {
 	
 	public $actualizarMateria_precond = array ('Gatuf_Precondition::adminRequired');
 	public function actualizarMateria ($request, $match) {
-		$title = 'Actualizar materia';
-		
 		$materia = new Pato_Materia ();
 		if (false === ($materia->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404 ();
@@ -371,7 +382,7 @@ class Pato_Views_Materia {
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/edit-materia.html',
-		                                         array ('page_title' => $title,
+		                                         array ('page_title' => (string) $materia,
 		                                                'materia' => $materia,
 		                                                'form' => $form),
 		                                         $request);

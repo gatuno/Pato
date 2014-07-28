@@ -5,14 +5,9 @@
 {/if}
 <form method="post" action=".">
 <table>
-	<tr><th><strong>Clave:</strong></th>
-		<td>{$materia.clave}</td>
-	</tr>
-    <tr><th><strong>Materia:</strong></th>
-		<td>{$materia.descripcion}</td>
-	</tr>
+    <tr><th><strong>Materia:</strong></th><td>{$materia}</td></tr>
 	{$form.render_table}
-	<tr><td>&nbsp;</td><td><input type="submit" value="Hecho" /></td></tr>
+	<tr><td>&nbsp;</td><td><input type="submit" value="Hecho" /> | <a href="{url 'Pato_Views_Materia::verMateria', array ($materia.clave)}">Cancelar</a></td></tr>
 </table>
 </form>
 {/block}

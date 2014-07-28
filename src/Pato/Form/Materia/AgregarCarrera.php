@@ -21,7 +21,7 @@ class Pato_Form_Materia_AgregarCarrera extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Carrera',
 				'initial' => '',
-				'help_text' => 'Elige la carrera a la que la materia pertenece',
+				'help_text' => 'Elija la carrera a asociar',
 				'widget_attrs' => array (
 					'choices' => $choices,
 				),
