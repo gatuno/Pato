@@ -239,35 +239,28 @@ $ctl[] = array(
 $ctl[] = array (
 	'regex' => '#^/materias/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Materia',
+	'model' => 'Pato_Views_Materia',
 	'method' => 'index',
 );
 
 $ctl[] = array (
 	'regex' => '#^/materias/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Materia',
+	'model' => 'Pato_Views_Materia',
 	'method' => 'agregarMateria',
-);
-
-$ctl[] = array (
-	'regex' => '#^/materias/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Materia',
-	'method' => 'porDepartamento',
 );
 
 $ctl[] = array (
 	'regex' => '#^/materias/([A-Za-z]{2,5})/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Materia',
+	'model' => 'Pato_Views_Materia',
 	'method' => 'porCarrera',
 );
 
 $ctl[] = array (
-	'regex' => '#^/materias/nofiltro/([cd])/$#',
+	'regex' => '#^/materias/nofiltro/([c])/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Materia',
+	'model' => 'Pato_Views_Materia',
 	'method' => 'eliminarFiltro',
 );
 
@@ -278,7 +271,7 @@ $ctl[] = array (
 		array (
 			'regex' => '#^([\w-]+)/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Materia',
+			'model' => 'Pato_Views_Materia',
 			'method' => 'verMateria',
 		),
 		array (
@@ -290,7 +283,7 @@ $ctl[] = array (
 		array (
 			'regex' => '#^([\w-]+)/update/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Materia',
+			'model' => 'Pato_Views_Materia',
 			'method' => 'actualizarMateria',
 		),
 		array (
@@ -302,7 +295,7 @@ $ctl[] = array (
 		array (
 			'regex' => '#^([\w-]+)/addcarrera/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Materia',
+			'model' => 'Pato_Views_Materia',
 			'method' => 'agregarACarrera',
 		)
 	)

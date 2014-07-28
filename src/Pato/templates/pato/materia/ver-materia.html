@@ -1,0 +1,26 @@
+{extends 'pato/base.html'}
+{block body}
+<ul style="list-style-type: none;">
+<li style="display: inline;"><a href="{url 'Pato_Views_Materia::verMateria', array ($materia.clave)}">Detalles</a></li>
+<li style="display: inline;"><a href="url 'Pato_Views_Materia::verEval', array ($materia.clave)">Evaluación</a></li>
+{if $user.administrator}
+<li style="display: inline;"><a href="{url 'Pato_Views_Materia::actualizarMateria', array ($materia.clave)}">Editar</a></li>
+{/if}
+</ul>
+<h2>Detalles</h2>
+<p>Créditos: {$materia.creditos}</p>
+{if $carreras}
+	<p>La materia es tomada por: {foreach $carreras as $carrera}<a href="{url 'Pato_Views_Materia::porCarrera', array ($carrera.clave)}"><abbr title="{$carrera.descripcion}">{$carrera.clave}</abbr></a> {/foreach}</p>
+{else}
+	<p>La materia no es tomada por alguna carrera</p>
+{/if}
+{if $user.administrator}<p>Puede <a href="{url 'Pato_Views_Materia::agregarACarrera', array ($materia.clave)}">agregar una nueva carrera</a> a esta materia</p>{/if}
+if $calendario.events
+	<h2>Horas de la materia</h2>
+	$calendario.render
+/if
+<h2>Lista de secciones de {$materia.descripcion}</h2>
+if $user.administrator
+<p>Puede <a href="url 'Calif_Views_Seccion::agregarNrc', array (), array ('materia' => $materia.clave)">agregar una nueva sección</a> a esta materia</p>/if
+$paginador.render
+{/block}
