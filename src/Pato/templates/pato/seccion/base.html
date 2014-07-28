@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block body}
+<ul style="list-style-type: none;">
+<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
+<li style="display: inline;"><a href="url 'Pato_Views_Seccion::verCalificaciones', array ($seccion.nrc)}">Alumnos y Calificaciones</a></li>
+{if $user.administrator}
+<li style="display: inline;"><a href="url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)">Actualizar</a></li>
+<li style="display: inline;"><a href="url 'Pato_Views_Seccion::eliminarNrc', array ($seccion.nrc)">Eliminar</a></li>
+{/if}
+</ul>
+{block body_seccion}{/block}
+{/block}

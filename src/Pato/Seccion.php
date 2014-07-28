@@ -69,7 +69,7 @@ class Pato_Seccion extends Gatuf_Model {
 			'paginador' => array (
 				'select' => $this->_con->pfx.'secciones_view.*',
 				'from' => $this->_con->dbname.'.'.$this->_con->pfx.'secciones_view',
-				'props' => array ('materia_desc', 'materia_departamento', 'maestro_nombre', 'maestro_apellido'),
+				'props' => array ('materia_desc', 'maestro_nombre', 'maestro_apellido'),
 			),
 		);
 	}
@@ -81,9 +81,18 @@ class Pato_Seccion extends Gatuf_Model {
 			'paginador' => array (
 				'select' => $this->_con->pfx.'secciones_view.*',
 				'from' => $this->_con->dbname.'.'.$this->_con->pfx.'secciones_view',
-				'props' => array ('materia_desc', 'materia_departamento', 'maestro_nombre', 'maestro_apellido'),
+				'props' => array ('materia_desc', 'maestro_nombre', 'maestro_apellido'),
 			),
 		);
+	}
+	
+	function preSave ($create = false) {
+		if ($create) {
+			/* Generar el NRC */
+			$max = $this->maxNrc ();
+			
+			$this->nrc = $max + 1;
+		}
 	}
 	
 	function updateAsignacion () {
@@ -112,13 +121,16 @@ class Pato_Seccion extends Gatuf_Model {
 		return true;
 	}
 	
-	function maxNrc () {
+	private function maxNrc () {
 		$req = sprintf ('SELECT MAX(nrc) AS max_nrc FROM %s', $this->getSqlTable ());
 		
 		if (false === ($rs = $this->_con->select($req))) {
 			throw new Exception($this->_con->getError());
 		}
 		
+		if ($rs[0]['max_nrc'] === null) {
+			return 0;
+		}
 		return $rs[0]['max_nrc'];
 	}
 	
@@ -130,16 +142,6 @@ class Pato_Seccion extends Gatuf_Model {
 		}
 		
 		return $rs[0]['max_seccion'];
-	}
-	
-	function cambiaNrc ($new_nrc) {
-		$req = sprintf ('UPDATE %s SET nrc = %s WHERE nrc = %s', $this->getSqlTable (), $new_nrc, $this->nrc);
-		
-		$this->_con->execute($req);
-		
-		$this->nrc = $new_nrc;
-		
-		return true;
 	}
 	
 	public function displaylinkedseccion ($extra=null) {

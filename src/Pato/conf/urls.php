@@ -292,29 +292,15 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/secciones/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Seccion',
+	'model' => 'Pato_Views_Seccion',
 	'method' => 'index',
 );
 
 $ctl[] = array (
 	'regex' => '#^/secciones/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Seccion',
+	'model' => 'Pato_Views_Seccion',
 	'method' => 'agregarNrc',
-);
-
-$ctl[] = array (
-	'regex' => '#^/secciones/f/i/([0-9])/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Seccion',
-	'method' => 'porDivision',
-);
-
-$ctl[] = array (
-	'regex' => '#^/secciones/f/d/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Seccion',
-	'method' => 'porDepartamento',
 );
 
 $ctl[] = array (
@@ -360,21 +346,7 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/secciones/concambios/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Reportes_Oferta',
-	'method' => 'conCambios',
-);
-
-$ctl[] = array (
-	'regex' => '#^/secciones/concambios/(\w+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Reportes_Oferta',
-	'method' => 'conCambiosODS',
-);
-
-$ctl[] = array (
-	'regex' => '#^/secciones/nofiltro/([acdins])/$#',
+	'regex' => '#^/secciones/nofiltro/([acns])/$#',
 	'base' => $base,
 	'model' => 'Calif_Views_Seccion',
 	'method' => 'eliminarFiltro',
@@ -387,13 +359,13 @@ $ctl[] = array (
 		array (
 			'regex' => '#^(\d+)/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
+			'model' => 'Pato_Views_Seccion',
 			'method' => 'verNrc',
 		),
 		array (
 			'regex' => '#^(\d+)/update/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
+			'model' => 'Pato_Views_Seccion',
 			'method' => 'actualizarNrc',
 		),
 		array (
@@ -649,18 +621,6 @@ $ctl[] = array (
 			'model' => 'Calif_Views_Reportes_Maestro',
 			'method' => 'suplenciasPorDepartamento',
 		),
-		array (
-			'regex' => '#^secciones/conteo/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Reportes_Oferta',
-			'method' => 'cantidadSecciones',
-		),
-		array (
-			'regex' => '#^secciones/conteo/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Reportes_Oferta',
-			'method' => 'cantidadSeccionesPorDepartamento',
-		)
 	)
 );
 
