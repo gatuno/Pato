@@ -326,49 +326,52 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $eliminarNrc_precond = array ('Calif_Precondition::jefeRequired');
+	public $eliminarNrc_precond = array ('Gatuf_Precondition::adminRequired');
 	public function eliminarNrc ($request, $match) {
-		$title = 'Eliminar NRC';
-		
-		$seccion = new Calif_Seccion ();
+		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$materia = $seccion->get_materia ();
-		if (!$request->user->hasPerm ('SIIAU.jefe.'.$materia->departamento)) {
-			$request->user->setMessage (2, 'Error al eliminar esta sección. Usted no es jefe de departamento de esta materia');
-			$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::verNrc', array ($seccion->nrc));
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
-		
 		if ($request->method == 'POST') {
-			
 			/* Eliminar todos los alumnos de este grupo */
-			$related = $seccion->get_grupos_list();
+			$related = $seccion->get_alumnos_list();
 			foreach ($related as $rel) {
 				$seccion->delAssoc($rel);
 			}
 			
-			$sql = new Gatuf_SQL ('nrc=%s', $seccion->nrc);
-			
 			/* Eliminar todas los horarios dde esta sección */
-			$horas = Gatuf::factory ('Calif_Horario')->getList (array ('filter' => $sql->gen ()));
+			//$horas = $seccion->get_pato_horario_list ();
 			
 			foreach ($horas as $hora) {
 				$hora->delete ();
 			}
 			
 			$seccion->delete ();
-			$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::index');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
-		return Gatuf_Shortcuts_RenderToResponse ('calif/seccion/eliminar-seccion.html',
-		                                         array ('page_title' => $title,
-		                                                'materia' => $materia,
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/eliminar-seccion.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'seccion' => $seccion),
+		                                         $request);
+	}
+	
+	public function verAlumnos ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$alumnos = $seccion->get_alumnos_list ();
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/ver-alumnos.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'alumnos' => $alumnos,
 		                                                'seccion' => $seccion),
 		                                         $request);
 	}

@@ -1,0 +1,14 @@
+{extends 'pato/seccion/base.html'}
+{block body_seccion}
+<h2>Alumnos y calificaciones</h2>
+{if count($alumnos) != 0}
+	<table>
+		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th></tr></thead>
+		<tbody>{assign $g = 1}
+			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td>{$alumno.codigo}</td><td>{$alumno.apellido} {$alumno.nombre}</td></tr>{/foreach}
+		</tbody>
+	</table>
+{else}
+	<p>La sección no tiene alumnos matriculados</p>
+{/if}
+{/block}

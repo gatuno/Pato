@@ -371,8 +371,14 @@ $ctl[] = array (
 		array (
 			'regex' => '#^(\d+)/delete/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
+			'model' => 'Pato_Views_Seccion',
 			'method' => 'eliminarNrc',
+		),
+		array (
+			'regex' => '#^(\d+)/alumnos/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'verAlumnos',
 		),
 		array (
 			'regex' => '#^(\d+)/timeadd/$#',

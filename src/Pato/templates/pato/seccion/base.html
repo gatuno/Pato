@@ -1,11 +1,18 @@
 {extends 'pato/base.html'}
+{block extratopbody}
+<div style="float:right">
+	<form action="{url 'Pato_Views_Calendario::cambiarCalendario', array (), array ('_redirect_after' => $uri)}" method="post">
+	<strong>{$form_calendario.f.calendario.labelTag}:</strong>{$form_calendario.f.calendario|safe}&nbsp;<input type="submit" value="Cambiar" />
+	</form>
+</div>
+{/block}
 {block body}
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
-<li style="display: inline;"><a href="url 'Pato_Views_Seccion::verCalificaciones', array ($seccion.nrc)}">Alumnos y Calificaciones</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y Calificaciones</a></li>
 {if $user.administrator}
-<li style="display: inline;"><a href="url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)">Actualizar</a></li>
-<li style="display: inline;"><a href="url 'Pato_Views_Seccion::eliminarNrc', array ($seccion.nrc)">Eliminar</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)}">Actualizar</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::eliminarNrc', array ($seccion.nrc)}">Eliminar</a></li>
 {/if}
 </ul>
 {block body_seccion}{/block}
