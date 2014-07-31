@@ -89,7 +89,7 @@ $ctl[] = array (
 $ctl[] = array(
 	'regex' => '#^/password/change/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Usuario',
+	'model' => 'Pato_Views_Usuario',
 	'method' => 'passwordChange',
 );
 
@@ -458,29 +458,15 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/profesores/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Maestro',
+	'model' => 'Pato_Views_Maestro',
 	'method' => 'index',
 );
 
 $ctl[] = array (
 	'regex' => '#^/profesores/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Maestro',
+	'model' => 'Pato_Views_Maestro',
 	'method' => 'agregarMaestro',
-);
-
-$ctl[] = array (
-	'regex' => '#^/profesores/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Maestro',
-	'method' => 'porDepartamento',
-);
-
-$ctl[] = array (
-	'regex' => '#^/profesores/nofiltro/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Maestro',
-	'method' => 'eliminarFiltro',
 );
 
 $ctl[] = array (
@@ -490,51 +476,31 @@ $ctl[] = array (
 		array (
 			'regex' => '#^(\d+)/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
+			'model' => 'Pato_Views_Maestro',
 			'method' => 'verMaestro',
 		),
 		array (
 			'regex' => '#^(\d+)/update/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
+			'model' => 'Pato_Views_Maestro',
 			'method' => 'actualizarMaestro',
 		),
 		array (
 			'regex' => '#^(\d+)/horario/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
+			'model' => 'Pato_Views_Maestro',
 			'method' => 'verHorario',
 		),
 		array (
 			'regex' => '#^(\d+)/horario/PDF/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
+			'model' => 'Pato_Views_Maestro',
 			'method' => 'verHorarioPDF',
-			'params' => array ('general' => 1),
-		),
-		array (
-			'regex' => '#^(\d+)/horario/(\d+)/PDF/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
-			'method' => 'verHorarioPDF',
-			'name' => 'verHorarioPorDepartamentoPDF',
-		),
-		array (
-			'regex' => '#^(\d+)/carga/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
-			'method' => 'verCarga',
-		),
-		array (
-			'regex' => '#^(\d+)/carga/constancia/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
-			'method' => 'constanciaCargaHoraria',
 		),
 		array (
 			'regex' => '#^(\d+)/permisos/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Maestro',
+			'model' => 'Pato_Views_Maestro',
 			'method' => 'permisos',
 		)
 	)
@@ -634,28 +600,28 @@ $ctl[] = array (
 $ctl[] = array(
 	'regex' => '#^/permisos/add/(\d+)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Usuario',
+	'model' => 'Pato_Views_Usuario',
 	'method' => 'agregarPermiso',
 );
 
 $ctl[] = array(
 	'regex' => '#^/permisos/del/(\d+)/(\d+)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Usuario',
+	'model' => 'Pato_Views_Usuario',
 	'method' => 'eliminarPermiso',
 );
 
 $ctl[] = array(
 	'regex' => '#^/grupos/del/(\d+)/(\d+)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Usuario',
+	'model' => 'Pato_Views_Usuario',
 	'method' => 'eliminarGrupo',
 );
 
 $ctl[] = array(
 	'regex' => '#^/permisos/addGrupo/(\d+)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Usuario',
+	'model' => 'Pato_Views_Usuario',
 	'method' => 'agregarGrupo',
 );
 

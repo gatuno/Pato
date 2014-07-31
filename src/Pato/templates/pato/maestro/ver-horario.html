@@ -1,0 +1,21 @@
+{extends 'pato/maestro/base.html'}
+{block body_maestro}
+<h2>Horario del profesor</h2>
+{if $calendario}
+	<p>Vista para <a href="url 'Pato_Views_Maestro::verHorarioPDF', array ($maestro.codigo)">impresión</a>. FIXME: Gestionar como va a ser el formato</p>
+	{$calendario.render()}
+{else}
+	<p>Este profesor no tiene grupos activos</p>
+{/if}
+<h2>Grupos del profesor</h2>
+{if $grupos}
+	<table><thead><tr><th>NRC</th><th>Materia</th><th>Sección</th></tr></thead>
+	<tbody>
+	{foreach $grupos as $g}
+		<tr><td>{$g.displaylinkednrc()|safe}</td><td>{$g.displaylinkedmateria()|safe}</td><td>{$g.displaylinkedseccion()|safe}</td></tr>
+	{/foreach}
+	</tbody></table>
+{else}
+	<p>Este profesor no tiene grupos activos</p>
+{/if}
+{/block}

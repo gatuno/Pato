@@ -1,0 +1,40 @@
+{extends 'pato/maestro/base.html'}
+{block body_maestro}
+<h2>Permisos</h2>
+{if $maestro.user.administrator}
+<p>Este usuario tiene permisos de <b>Administrador</b></p>
+{elseif count ($permisos) != 0}
+		<p>Tiene los siguientes permisos:</p>
+		<ul>{foreach $permisos as $p}
+			<li>Permiso: {$p.application} - <abbr title="{$p.description}">{$p.name}</abbr>. <a href="{url 'Pato_Views_Usuario::eliminarPermiso', array($maestro.user.id,$p.id)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar permiso" /></a></li>
+		{/foreach}</ul>
+{/if}
+<h3>Agregar nuevo permiso</h3>
+{if $form}
+	<form method="post" action="{url 'Pato_Views_Usuario::agregarPermiso', array($maestro->user->id)}">
+		<table>
+			{$form.render_table}
+			<tr><td><input type="submit" value="Agregar permiso" /></td></tr>
+		</table>
+	</form>
+{else}
+	<p>Ya no se pueden agregar más permisos, este usuario ya tiene todos los permisos posibles</p>
+{/if}
+<h3>Agregar nuevo grupo</h3>
+{if count ($grupos) != 0} 	
+	<p>Pertence a los siguiente grupos:</p>
+	<ul>{foreach $grupos as $g}
+		<li>Grupo: <abbr title="{$g.description}">{$g.name}</abbr>. <a href="{url 'Pato_Views_Usuario::eliminarGrupo', array($maestro.user.id,$g.id)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar grupo" /></a></li>
+	{/foreach}</ul>
+{/if}
+{if $form2}
+	<form method="post" action="{url 'Pato_Views_Usuario::agregarGrupo', array($maestro->user->id)}">
+		<table>
+			{$form2.render_table}
+			<tr><td><input type="submit" value="Agregar a grupo" /></td></tr>
+		</table>
+	</form>
+{else}
+	<p>Este usuario ya pertenece a todos los grupos existentes</p>
+{/if}
+{/block}

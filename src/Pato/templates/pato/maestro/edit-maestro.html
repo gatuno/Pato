@@ -1,0 +1,12 @@
+{extends 'pato/maestro/base.html'}
+{block body_maestro}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+<table>
+	<tr><th><strong>Código:</strong></th>
+	<td>{$maestro.codigo}</td>
+	</tr>
+	{$form.render_table}
+	<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar profesor" /></td></tr></table>
+</form>
+{/block}
