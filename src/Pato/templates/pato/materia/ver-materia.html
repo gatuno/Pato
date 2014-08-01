@@ -3,7 +3,7 @@
 <h2>Detalles</h2>
 <p>Créditos: {$materia.creditos}</p>
 {if count ($materia.get_carreras_list) != 0}
-	<p>La materia es tomada por: {foreach $materia.get_carreras_list as $carrera}<a href="{url 'Pato_Views_Materia::porCarrera', array ($carrera.clave)}"><abbr title="{$carrera.descripcion}">{$carrera.clave}</abbr></a> <a href="{url 'Pato_Views_Materia::eliminarDeCarrera', array ($materia.clave, $carrera.clave)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar filtro" /></a> | {/foreach}</p>
+	<p>La materia es tomada por: {foreach $materia.get_carreras_list as $carrera}<a href="{url 'Pato_Views_Materia::porCarrera', array ($carrera.clave)}"><abbr title="{$carrera.descripcion}">{$carrera.clave}</abbr></a>{if $user.administrator} <a href="{url 'Pato_Views_Materia::eliminarDeCarrera', array ($materia.clave, $carrera.clave)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar filtro" /></a>{/if} | {/foreach}</p>
 {else}
 	<p>La materia no es tomada por alguna carrera</p>
 {/if}

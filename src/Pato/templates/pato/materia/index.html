@@ -1,16 +1,13 @@
 {extends 'pato/base.html'}
 {block body}
 <form method="post" action=".">
-	<table>
-		{$form.render_table}
-		<td><input type="submit" value="Filtrar" /></td>
-	</table>
+	<p>{$form.f.filtro.labelTag}: {$form.f.filtro|safe}&nbsp;<input type="submit" value="Filtrar" /></p>
 </form>
-{if $user.administrator}
-	<p><a href="{url 'Pato_Views_Materia::agregarMateria'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar materia" />Agregar una nueva materia</a></p>
-{/if}
 {if $filtro}<ul style="list-style-type: none;">{foreach $filtro as $key => $val}
 <li><a href="{url 'Pato_Views_Materia::eliminarFiltro', array($key)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar filtro" /></a>{$val}</li>
 {/foreach}</ul>{/if}
+{if $user.administrator}
+	<p><a href="{url 'Pato_Views_Materia::agregarMateria'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar materia" />Agregar una nueva materia</a></p>
+{/if}
 {$paginador.render}
 {/block}

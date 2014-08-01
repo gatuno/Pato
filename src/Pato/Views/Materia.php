@@ -47,6 +47,8 @@ class Pato_Views_Materia {
 		}
 		
 		$pag = new Gatuf_Paginator ($materia);
+		if (!is_null ($car)) $pag->model_view = 'paginador';
+		
 		$pag->action = array ('Pato_Views_Materia::index');
 		
 		$pag->summary = 'Lista de las materias';

@@ -65,6 +65,12 @@ class Pato_Materia extends Gatuf_Model {
 			       'model' => 'Pato_Carrera',
 			       'relate_name' => 'materias',
 			),
+			'cuatrimestre' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Integer',
+			       'blank' => false,
+			       'default' => 0,
+			),
 		);
 		
 		$this->default_order = 'clave ASC, descripcion ASC';
