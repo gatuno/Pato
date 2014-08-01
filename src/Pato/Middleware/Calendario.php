@@ -23,7 +23,7 @@ class Pato_Middleware_Calendario {
 		
 		if ($cal == null) {
 			/* TODO: Leer desde la base de datos o leer desde el archivo de configuración */
-			$cal = '2014C';
+			$cal = '2014D';
 		}
 		
 		if (false === $request->calendario->get($cal)) {

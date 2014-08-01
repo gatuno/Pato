@@ -60,7 +60,7 @@ class Pato_Form_Password extends Gatuf_Form {
 				                      'urlik' => Gatuf_Template::markSafe ($urlic),
 				                      'user' => $user,
 				                      'key' => Gatuf_Template::markSafe ($code)));
-				$email = new Gatuf_Mail (Gatuf::config ('from_email'), $user->email, 'Recuperar contraseña - Sistema Pato');
+				$email = new Gatuf_Mail (Gatuf::config ('from_email'), $user->email, 'Recuperar contraseña - Sistema Patricia');
 				$email->setReturnPath (Gatuf::config ('bounce_email', Gatuf::config ('from_email')));
 				$email->addTextMessage ($tmpl->render ($context));
 				$email->sendMail ();

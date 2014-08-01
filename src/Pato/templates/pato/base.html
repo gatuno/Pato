@@ -5,23 +5,27 @@
 	<meta name="author" content="Félix Arreola Rodríguez" />
 	<link rel="stylesheet" media="all" type="text/css" href="{media}/css/theme.css" />
 	{block extrahead}{/block}
-	<title>Pato - {$page_title}</title>
+	<title>Patricia - {$page_title}</title>
 </head>
 <body>
 	<div class="topmenu">
 		<table class="topmenu-table"><tr>
 			<td>
 				<ul class="nav">
-					<li class="general"><a href="{url 'Pato_Views::index'}">General</a>
+					<li class="general"><a href="{url 'Pato_Views::index'}">Académico</a>
+						<ul>
+							<li><a href="{url 'Pato_Views_Alumno::index'}">Alumnos</a></li>
+							<li><a href="{url 'Pato_Views_Maestro::index'}">Profesores</a></li>
+							<li><a href="{url 'Pato_Views_Seccion::index'}">Secciones</a></li>
+							<li><a href="{url 'Pato_Views_Materia::index'}">Materias</a></li>
+							<li><a href="{url 'Pato_Views_Carrera::index'}">Carreras</a></li>
+						</ul>
+					</li>
+					<!-- <li class="calificaciones"><a href="#">Calificaciones</a>
 						<ul>
 							<li><a href="#">Enlaces</a></li>
 						</ul>
-					</li>
-					<li class="calificaciones"><a href="#">Calificaciones</a>
-						<ul>
-							<li><a href="#">Enlaces</a></li>
-						</ul>
-					</li>
+					</li>-->
 				</ul>
 			</td>
 			<td><!-- Esta es la información del usuario -->

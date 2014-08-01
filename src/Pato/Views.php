@@ -5,7 +5,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views {
 	function index ($request, $match) {
-		return Gatuf_Shortcuts_RenderToResponse ('pato/index.html', array (), $request);
+		return Gatuf_Shortcuts_RenderToResponse ('pato/index.html', array ('page_title' => 'Portada'), $request);
 	}
 	
 	function login ($request, $match, $success_url = '', $extra_context=array()) {
