@@ -1,0 +1,20 @@
+{extends 'pato/alumno/base.html'}
+{block extratopbody}
+<div style="float:right">
+	<form action="{url 'Pato_Views_Calendario::cambiarCalendario', array (), array ('_redirect_after' => $uri)}" method="post">
+	<strong>{$form_calendario.f.calendario.labelTag}:</strong>{$form_calendario.f.calendario|safe}&nbsp;<input type="submit" value="Cambiar" />
+	</form>
+</div>
+{/block}
+{block body_alumno}
+<h2>Calificaciones del Alumno</h2>
+{if count ($secciones) != 0}{foreach $secciones as $seccion}
+	<h3>{$seccion.get_materia} - {$seccion.seccion}</h3>
+	<p>Nrc: <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.nrc}</a></p>
+	<p>Profesor: {if $seccion.suplente}{$seccion.get_suplente}{else}{$seccion.get_maestro}{/if}</p>
+	<hr />
+{/foreach}
+{else}
+	<p>Este alumno no tiene grupos activos</p>
+{/if}
+{/block}

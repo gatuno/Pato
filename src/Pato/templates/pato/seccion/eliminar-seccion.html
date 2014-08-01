@@ -1,7 +1,7 @@
 {extends 'pato/seccion/base.html'}
 {block body_seccion}
 <form method="POST" action="{url 'Pato_Views_Seccion::eliminarNrc', array ($seccion.nrc)}">
-<h2>¿Esta seguro de que desea eliminar el NRC {$seccion.nrc}?</h2>
+<h2>¿Está seguro de que desea eliminar el NRC {$seccion.nrc}?</h2>
 <p>El NRC pertenece a la materia {$seccion.get_materia} sección {$seccion.seccion}</p>
 <p>Esto desmatriculará todos los alumnos y eliminará sus respectivas calificaciones</p>
 <p>Esta acción no se puede deshacer</p>

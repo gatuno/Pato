@@ -19,6 +19,7 @@ class Pato_Inscripcion extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'blank' => false,
 			       'model' => 'Pato_Alumno',
+			       'relate_name' => 'inscripciones',
 			),
 			'carrera' =>
 			array (
@@ -47,6 +48,13 @@ class Pato_Inscripcion extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'blank' => false,
 			       'model' => 'Pato_Estatus',
+			),
+		);
+		$this->_a['idx'] = array (
+			'calificacion_idx' =>
+			array (
+				   'col' => 'alumno, carrera, ingreso',
+				   'type' => 'unique',
 			),
 		);
 	}

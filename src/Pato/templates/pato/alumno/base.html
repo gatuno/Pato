@@ -3,12 +3,12 @@
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verAlumno', array ($alumno.codigo)}">Perfil</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verInscripciones', array ($alumno.codigo)}">Historial académico</a></li>
-<li style="display: inline;"><a href="url 'Calif_Views_Alumno::verGruposAlumno', array ($alumno.codigo)">Grupos y Calificaciones</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verGrupos', array ($alumno.codigo)}">Grupos y Calificaciones</a></li>
 {if $user.administrator}<!-- Actualizar con el permiso correspondiente -->
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::actualizarAlumno', array ($alumno.codigo)}">Actualizar</a></li>
 {/if}
 {if $user.login == $alumno.codigo}
-<li style="display: inline;"><a href="url 'Calif_Views_Usuario::passwordChange', array ($alumno.codigo)">Cambiar Contraseña</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar Contraseña</a></li>
 {/if}
 </ul>
 {block body_alumno}{/block}

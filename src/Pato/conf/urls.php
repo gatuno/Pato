@@ -157,8 +157,8 @@ $ctl[] = array(
 		array(
 			'regex' => '#^(\d{8})/grupos/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Alumno',
-			'method' => 'verGruposAlumno',
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'verGrupos',
 		),
 		array(
 			'regex' => '#^(\d{8})/update/$#',

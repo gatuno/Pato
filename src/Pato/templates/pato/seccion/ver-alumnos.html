@@ -5,7 +5,7 @@
 	<table>
 		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th></tr></thead>
 		<tbody>{assign $g = 1}
-			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td>{$alumno.codigo}</td><td>{$alumno.apellido} {$alumno.nombre}</td></tr>{/foreach}
+			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td></tr>{/foreach}
 		</tbody>
 	</table>
 {else}

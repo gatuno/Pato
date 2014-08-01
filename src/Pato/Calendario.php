@@ -65,6 +65,10 @@ class Pato_Calendario extends Gatuf_Model {
 			Gatuf_Signal::send ('Pato_Calendario::created', 'Pato_Calendario', $params);
 		}
 	}
+	
+	function __toString () {
+		return $this->descripcion.' ('.$this->clave.')';
+	}
 }
 
 function Pato_Calendario_getDBForCal ($calendario) {

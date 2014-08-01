@@ -29,4 +29,8 @@ class Pato_Estatus extends Gatuf_Model {
 			)
 		);
 	}
+	
+	function __toString () {
+		return $this->descripcion.' ('.$this->clave.')';
+	}
 }

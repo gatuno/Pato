@@ -68,71 +68,36 @@ class Pato_Views_Alumno {
 		                                               'alumno' => $alumno),
                                                  $request);
 	}
-
-	public function verGruposAlumno($request, $match) {
-		$alumno = new Calif_Alumno ();
+	
+	public function verInscripciones ($request, $match) {
+		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1] ) ) ) {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$alumno->getUser ();
-		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
-		if ($secciones->count () == 0) $secciones = array ();
+		$inscripciones = $alumno->get_inscripciones_list (array ('order' => 'ingreso DESC'));
 		
-		$grupos = array ();
-		foreach (Gatuf::factory('Calif_GrupoEvaluacion')->getList() as $g){
-			$grupos[$g->id] = $g;
-		}
-		
-		$evaluaciones = array ();
-		foreach (Gatuf::factory('Calif_Evaluacion')->getList() as $e){
-			$evaluaciones[$e->id] = $e;
-		}
-		
-		$calificaciones = array ();
-		$promedios = array ();
-		$porcentajes = array ();
-		$calif_model = new Calif_Calificacion ();
-		$materia_model = new Calif_Materia ();
-		$array_eval = array(-1 => 'NP', -2 => 'SD');
-		
-		foreach ($secciones as $seccion) {
-			$materia_model->get ($seccion->materia);
-			$porcentajes[$seccion->nrc] = array ();
-			
-			foreach ($grupos as $geval) {
-				$prom = Calif_Calificacion::getPromedio ($alumno->codigo, $seccion->nrc, $geval->id);
-				
-				if ($prom !== false) {
-					$promedios[$seccion->nrc][$geval->id] = $prom;
-					$sql = new Gatuf_SQL ('grupo=%s', $geval->id);
-					$porcentajes[$seccion->nrc][$geval->id] = $materia_model->get_calif_porcentaje_list (array ('filter' => $sql->gen ()));
-				}
-			}
-			$sql = new Gatuf_SQL ('nrc=%s', $seccion->nrc);
-			
-			$calificaciones[$seccion->nrc] = array ();
-			foreach ($alumno->get_calif_calificacion_list (array ('filter' => $sql->gen ())) as $calif) {
-				if ($calif->valor === null) {
-					$calificaciones[$seccion->nrc][$calif->evaluacion] = null;
-				} else if (array_key_exists ($calif->valor, $array_eval)) {
-					$calificaciones[$seccion->nrc][$calif->evaluacion] = $array_eval[$calif->valor];
-				} else {
-					$calificaciones[$seccion->nrc][$calif->evaluacion] = $calif->valor.'%';
-				}
-			}
-		}
-		
-		return Gatuf_Shortcuts_RenderToResponse ('calif/alumno/ver-grupos.html',
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-inscripciones.html',
 		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
 		                                               'alumno' => $alumno,
-		                                               'secciones' => $secciones,
-		                                               'promedios' => $promedios,
-		                                               'calificaciones' => $calificaciones,
-		                                               'porcentajes' => $porcentajes,
-		                                               'grupos' => $grupos,
-		                                               'evaluaciones' => $evaluaciones),
+		                                               'inscripciones' => $inscripciones),
+                                                 $request);
+	}
+	
+	public function verGrupos ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1] ) ) ) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-grupos.html',
+		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                               'alumno' => $alumno,
+		                                               'secciones' => $secciones),
                                                  $request);
 	}
 
