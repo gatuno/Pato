@@ -14,7 +14,7 @@ class Pato_Views_Calendario {
 		                                         $request);
 	}
 	
-	public $agregarCalendario = array ('Gatuf_Precondition::adminRequired');
+	public $agregarCalendario_precond = array ('Gatuf_Precondition::adminRequired');
 	public function agregarCalendario ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Calendario_Agregar ($request->POST);

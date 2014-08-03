@@ -159,63 +159,6 @@ class Pato_Views_Seccion {
 		
 		//$horarios = $seccion->get_pato_horario_list (array ('view' => 'paginador'));
 		$horarios = array ();
-		/*$alumnos = $seccion->get_grupos_list (array ('order' => 'apellido ASC, nombre ASC'));
-		if (count ($alumnos) == 0) $alumnos = array ();
-		
-		// Llenar arreglo $evaluacion[Grupos_Evaluaciones->id][Porcentajes->evaluacion]=Evaluaciones->descripcion
-		$todas_evaluaciones = array ();
-		
-		foreach (Gatuf::factory('Calif_Evaluacion')->getList() as $e){
-			$todas_evaluaciones[$e->id] = $e;
-		}
-		
-		$porcentajes = array ();
-		$grupo_evals = (array) Gatuf::factory('Calif_GrupoEvaluacion')->getList();
-		foreach ($grupo_evals as $key => $geval) {
-			$sql = new Gatuf_SQL ('grupo=%s', array($geval->id));
-			$porcentajes[$geval->id] = (array) $materia->get_calif_porcentaje_list (array ('filter' => $sql->gen()));
-		
-			if (count ($porcentajes[$geval->id]) == 0) {
-				unset ($grupo_evals[$key]);
-			}
-		}
-		$calificacion = array();
-		$promedios = array ();
-		$promedios_eval = array();
-		if (count ($grupo_evals) != 0) {
-			// Llenar Arreglo $calificacion[calificaciones->alumno][calificaciones->evaluacion]=calificaciones->valor; 
-			$array_eval = array(-1 => 'NP', -2 => 'SD');
-			$sql = new Gatuf_SQL ('nrc=%s', $seccion->nrc);
-			$where = $sql->gen ();
-		
-			foreach ($alumnos as $alumno) {
-				$calificacion[$alumno->codigo] = array ();
-				$promedios[$alumno->codigo] = array ();
-				foreach ($alumno->get_calif_calificacion_list(array ('filter' => $where)) as $t_calif) {
-					if (array_key_exists($t_calif->valor , $array_eval)) {
-						$t_calif->valor = $array_eval[$t_calif->valor];
-					} else if($t_calif->valor) {
-						$t_calif->valor .='%';
-					}
-					$calificacion[$t_calif->alumno][$t_calif->evaluacion] = $t_calif->valor;
-				}
-				foreach ($grupo_evals as $geval) {
-					$promedios[$alumno->codigo][$geval->id] = Calif_Calificacion::getPromedio ($alumno->codigo, $seccion->nrc, $geval->id);
-				}
-			}
-		
-			// LLenar arreglo con los promedios de la
-			$promedio_model = new Calif_Promedio ();
-			
-			foreach ($grupo_evals as $geval) {
-				foreach ($porcentajes[$geval->id] as $eval) {
-					$promedio_model->getPromedioEval ($seccion->nrc, $eval->evaluacion);
-					$promedios_eval[$eval->evaluacion] = $promedio_model->promedio.'%';
-				}
-			}
-		} else {
-			$grupo_evals = array ();
-		}*/
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/ver-seccion.html',
 		                                          array ('page_title' => 'NRC '.$seccion->nrc,
@@ -367,16 +310,98 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$alumnos = $seccion->get_alumnos_list ();
+		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
+		
+		$porc_t = Gatuf::factory ('Pato_Porcentaje')->getSqlTable ();
+		$eval = new Pato_Evaluacion ();
+		$eval_t = $eval->getSqlTable ();
+		$eval->_a['views']['join_materia'] = array ('join' => 'LEFT JOIN '.$porc_t.' ON '.$eval_t.'.id=evaluacion');
+		
+		$sql = new Gatuf_SQL ('materia=%s', $seccion->materia);
+		$evaluaciones = $eval->getList (array ('view' => 'join_materia', 'filter' => $sql->gen ()));
+		
+		$boleta = array ();
+		$sql = new Gatuf_SQL ('nrc=%s', $seccion->nrc);
+		foreach ($alumnos as $al) {
+			$boleta[$al->codigo] = array ();
+			foreach ($al->get_boleta_list (array ('filter' => $sql->gen ())) as $b) {
+				$boleta[$al->codigo][$b->evaluacion] = $b->calificacion;
+			}
+		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/ver-alumnos.html',
 		                                         array ('page_title' => 'NRC '.$seccion->nrc,
 		                                                'alumnos' => $alumnos,
+		                                                'seccion' => $seccion,
+		                                                'boleta' => $boleta,
+		                                                'evals' => $evaluaciones),
 		                                                'seccion' => $seccion),
 		                                         $request);
 	}
 	
-	public $reclamarNrc_precond = array ('Calif_Precondition::coordinadorRequired');
+	
+	public $evaluar_precond = array ('Gatuf_Precondition::loginRequired');
+	public function evaluar ($request, $match) {
+		if ($request->user->type != 'm') {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$eval = new Pato_Evaluacion ();
+		
+		if (false === ($eval->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($request->user->login != $seccion->maestro) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Si hay suplente, el suplente puede subir calificaciones */
+		if ($seccion->suplente && $request->user->login != $seccion->suplente) {
+			$request->user->setMessage (3, 'Usted no puede subir calificaciones. Hay un suplente asignado a esta sección');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		/* Revisar que el porcentaje exista para esta materia */
+		$sql = new Gatuf_SQL ('materia=%s AND evaluacion=%s', array ($seccion->materia, $eval->id));
+		
+		$ps = Gatuf::factory ('Pato_Porcentaje')->getList (array ('filter' => $sql->gen ()));
+		
+		if (count ($ps) == 0) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('porcentaje' => $ps[0], 'seccion' => $seccion);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Seccion_Evaluar ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Seccion_Evaluar (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/evaluar.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'seccion' => $seccion,
+		                                                'porcentaje' => $ps[0],
+		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	/*public $reclamarNrc_precond = array ('Calif_Precondition::coordinadorRequired');
 	public function reclamarNrc ($request, $match) {
 		$seccion = new Calif_Seccion ();
 		

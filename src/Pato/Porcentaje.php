@@ -20,6 +20,7 @@ class Pato_Porcentaje extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'blank' => false,
 			       'model' => 'Pato_Materia',
+			       'relate_name' => 'porcentajes',
 			),
 			'evaluacion' =>
 			array (

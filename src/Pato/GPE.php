@@ -23,4 +23,8 @@ class Pato_GPE extends Gatuf_Model {
 			),
 		);
 	}
+	
+	function __toString () {
+		return $this->descripcion;
+	}
 }

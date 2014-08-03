@@ -37,4 +37,8 @@ class Pato_Evaluacion extends Gatuf_Model {
 		
 		$this->default_order = 'grupo ASC, descripcion ASC';
 	}
+	
+	function __toString () {
+		return $this->descripcion;
+	}
 }

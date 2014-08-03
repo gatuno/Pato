@@ -345,8 +345,14 @@ $ctl[] = array (
 			'regex' => '#^(\d+)/matricular/$#',
 			'base' => $base,
 			'model' => 'Calif_Views_Seccion',
-			'method' => 'matricular'
-		)
+			'method' => 'matricular',
+		),
+		array (
+			'regex' => '#^(\d+)/evaluar/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'evaluar',
+		),
 	)
 );
 

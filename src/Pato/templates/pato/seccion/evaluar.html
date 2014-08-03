@@ -1,0 +1,20 @@
+{extends 'pato/seccion/base.html'}
+{block extratopbody}
+<div style="float:right">
+	<form action="{url 'Pato_Views_Calendario::cambiarCalendario', array (), array ('_redirect_after' => $uri)}" method="post">
+	<strong>{$form_calendario.f.calendario.labelTag}:</strong>{$form_calendario.f.calendario|safe}&nbsp;<input type="submit" value="Cambiar" />
+	</form>
+</div>
+{/block}
+{block body_seccion}
+<p>Evaluando al grupo: {$seccion.get_materia} {$seccion.seccion}</p>
+<p>Tiene disponibles las siguientes opciones:</p>
+<ul><li>SD => Sin derecho por faltas</li><li>IN => Curso incompleto</li><li>NA => No acreditó</li></ul>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Guardar en boleta" /></td></tr>
+	</table>
+</form>
+{/block}

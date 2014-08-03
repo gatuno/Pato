@@ -2,12 +2,30 @@
 {block body_seccion}
 <h2>Alumnos y calificaciones</h2>
 {if count($alumnos) != 0}
+	{regroup $evals, 'grupo', 'por_grupo'}
+	{foreach $por_grupo as $gpe}
+	<h1>Forma de evaluación: {$gpe.list[0].get_grupo}</h1>
+	{if $user.type == 'm' && ($seccion.maestro == $user.login || $seccion.suplente == $user.login)}
+		{foreach $gpe.list as $eval}
+		{if $eval.maestro}<p>Puede evaluar este grupo en <a href="{url 'Pato_Views_Seccion::evaluar', array ($seccion.nrc, $eval.id)}">{$eval.descripcion}</a></p>{/if}
+		{/foreach}
+	{/if}
 	<table>
-		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th></tr></thead>
+		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th>{foreach $gpe.list as $eval}<th>{$eval.descripcion}</th>{/foreach}</tr></thead>
 		<tbody>{assign $g = 1}
-			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td></tr>{/foreach}
+			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
+			{foreach $gpe.list as $eval}
+			{if isset ($boleta[$alumno.codigo][$eval.id])}
+				<td>{$boleta[$alumno.codigo][$eval.id]}</td>
+			{else}
+				<td>-</td>
+			{/if}
+			{/foreach}
+			</tr>{/foreach}
 		</tbody>
 	</table>
+	<hr />
+	{/foreach}
 {else}
 	<p>La sección no tiene alumnos matriculados</p>
 {/if}
