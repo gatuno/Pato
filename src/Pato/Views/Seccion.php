@@ -343,7 +343,7 @@ class Pato_Views_Seccion {
 			
 			/* Eliminar todas los horarios dde esta sección */
 			//$horas = $seccion->get_pato_horario_list ();
-			
+			$horas = array ();
 			foreach ($horas as $hora) {
 				$hora->delete ();
 			}
@@ -389,9 +389,9 @@ class Pato_Views_Seccion {
 		
 		if (false === ($carrera_a_reclamar->get ($match[2]))) {
 			throw new Gatuf_HTTP_Error404 ();
-		}
+		}*/
 		
-		/* Verificar que la materia pertenezca a la carrera */
+		/* Verificar que la materia pertenezca a la carrera
 		$materia = new Calif_Materia ($seccion->materia);
 		
 		$carreras = $materia->get_carreras_list ();
@@ -405,21 +405,21 @@ class Pato_Views_Seccion {
 		if ($permiso == false) {
 			$request->user->setMessage (2, sprintf ('No puede reclamar esta sección. La materia "%s" no pertenece a la carrera %s', $materia->descripcion, $carrera_a_reclamar->descripcion));
 			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
+		} */
 		
-		 /* Verificar que el maestro sea coordinador de la carrera que quiere reclamar */
+		/* Verificar que el maestro sea coordinador de la carrera que quiere reclamar
 		if (!$request->user->hasPerm ('SIIAU.coordinador.'.$carrera_a_reclamar->clave)) {
 			$request->user->setMessage (2, 'No puede reclamar secciones para '.$carrera_a_reclamar->clave.'. Usted no es coordinador de esta carrera');
 			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
+		} */
 		
-		/* Si ya está asignado, marcar error */
+		/* Si ya está asignado, marcar error
 		if (!is_null ($seccion->asignacion)) {
 			$request->user->setMessage (2, 'La sección ya ha sido reclamada por '.$seccion->asignacion);
 			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
+		} */
 		
-		/* Ahora, intentar asignar el nrc */
+		/* Ahora, intentar asignar el nrc
 		$seccion->asignacion = $carrera_a_reclamar;
 		
 		if ($seccion->updateAsignacion () === true) {
@@ -429,9 +429,9 @@ class Pato_Views_Seccion {
 		}
 		
 		return new Gatuf_HTTP_Response_Redirect ($url);
-	}
+	}*/
 	
-	public $liberarNrc_precond = array ('Calif_Precondition::coordinadorRequired');
+	/*public $liberarNrc_precond = array ('Calif_Precondition::coordinadorRequired');
 	public function liberarNrc ($request, $match) {
 		$seccion = new Calif_Seccion ();
 		
@@ -476,5 +476,5 @@ class Pato_Views_Seccion {
 		                                         array ('page_title' => $title,
 		                                                'form' => $form),
 		                                         $request);
-	}
+	}*/
 }

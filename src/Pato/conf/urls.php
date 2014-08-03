@@ -56,14 +56,6 @@ $ctl[] = array (
 	'method' => 'agregarCalendario',
 );
 
-/* Reportes y acciones varias */
-$ctl[] = array (
-	'regex' => '#^/sistema/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_System',
-	'method' => 'index',
-);
-
 /* Recuperación de contraseñas */
 $ctl[] = array (
 	'regex' => '#^/password/$#',
@@ -172,12 +164,6 @@ $ctl[] = array(
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'verInscripciones',
 		),
-		/*array ( FIXME: Mal acomodada
-			'regex' => '#^(\d{8})/evaluar/(\d+)/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Alumno',
-			'method' => 'evaluar',
-		)*/
 	)
 );
 
@@ -221,12 +207,6 @@ $ctl[] = array (
 			'method' => 'verMateria',
 		),
 		array (
-			'regex' => '#^([\w-]+)/evals/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Materia',
-			'method' => 'verEval',
-		),
-		array (
 			'regex' => '#^([\w-]+)/update/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Materia',
@@ -237,12 +217,6 @@ $ctl[] = array (
 			'base' => $base,
 			'model' => 'Pato_Views_Materia',
 			'method' => 'verHoras',
-		),
-		array (
-			'regex' => '#^([\w-]+)/addeval/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Materia',
-			'method' => 'agregarEval',
 		),
 		array (
 			'regex' => '#^([\w-]+)/addcarrera/$#',
@@ -257,35 +231,6 @@ $ctl[] = array (
 			'method' => 'eliminarDeCarrera',
 		)
 	)
-);
-
-/* Las evaluaciones */
-$ctl[] = array (
-	'regex' => '#^/evaluaciones/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Evaluacion',
-	'method' => 'index',
-);
-
-$ctl[] = array (
-	'regex' => '#^/evaluaciones/add/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Evaluacion',
-	'method' => 'agregarEval',
-);
-
-$ctl[] = array (
-	'regex' => '#^/evaluacion/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Evaluacion',
-	'method' => 'verEval',
-);
-
-$ctl[] = array (
-	'regex' => '#^/evaluacion/(\d+)/update/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Evaluacion',
-	'method' => 'actualizarEval',
 );
 
 /* Las secciones */
@@ -329,20 +274,6 @@ $ctl[] = array (
 	'base' => $base,
 	'model' => 'Calif_Views_Seccion',
 	'method' => 'porSuplente',
-);
-
-$ctl[] = array (
-	'regex' => '#^/secciones/error/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Seccion',
-	'method' => 'errorHoras',
-);
-
-$ctl[] = array (
-	'regex' => '#^/secciones/reporte/ODS/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Reportes_Oferta',
-	'method' => 'reporteODS',
 );
 
 $ctl[] = array (
@@ -409,12 +340,6 @@ $ctl[] = array (
 			'base' => $base,
 			'model' => 'Calif_Views_Seccion',
 			'method' => 'liberarNrc',
-		),
-		array (
-			'regex' => '#^(\d+)/evaluar/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
-			'method' => 'evaluar'
 		),
 		array (
 			'regex' => '#^(\d+)/matricular/$#',
@@ -526,74 +451,6 @@ $ctl[] = array (
 	'base' => $base,
 	'model' => 'Calif_Views_Edificio',
 	'method' => 'agregarEdificio',
-);
-
-/* Departamentos */
-$ctl[] = array (
-	'regex' => '#^/departamentos/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Departamento',
-	'method' => 'index',
-);
-
-$ctl[] = array (
-	'regex' => '#^/departamentos/buscarerror/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Departamento',
-	'method' => 'buscarErrorHoras',
-);
-
-$ctl[] = array (
-	'regex' => '#^/departamentos/add/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Departamento',
-	'method' => 'agregarDepartamento',
-);
-
-/* Número de Puestos */
-$ctl[] = array (
-	'regex' => '#^/puesto/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Puestos',
-	'method' => 'actualizarPuesto',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/$#',
-	'base' => $base,
-	'model' => 'Calif_Views_Reportes',
-	'method' => 'index',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reporte/#',
-	'base' => $base,
-	'sub' => array (
-		array (
-			'regex' => '#^profesores/carga/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Reportes_Maestro',
-			'method' => 'cargaHoraria',
-		),
-		array (
-			'regex' => '#^profesores/carga/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Reportes_Maestro',
-			'method' => 'cargaHorariaPorDepartamento',
-		),
-		array (
-			'regex' => '#^profesores/suplencias/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Reportes_Maestro',
-			'method' => 'suplencias',
-		),
-		array (
-			'regex' => '#^profesores/suplencias/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Reportes_Maestro',
-			'method' => 'suplenciasPorDepartamento',
-		),
-	)
 );
 
 /* usuarios*/
