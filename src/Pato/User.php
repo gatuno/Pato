@@ -220,7 +220,7 @@ class Pato_User extends Gatuf_Model {
 		
 		$perms = $this->getAllPermissions ();
 		
-		$coords = preg_grep ('/Pato.coordinador.*/', $perms);
+		$coords = preg_grep ('/Patricia.coordinador.*/', $perms);
 		
 		if (count ($coords) > 0) return true;
 		return false;
@@ -231,7 +231,7 @@ class Pato_User extends Gatuf_Model {
 		
 		$perms = $this->getAllPermissions ();
 		
-		$coords = preg_grep ('/Pato.coordinador.*/', $perms);
+		$coords = preg_grep ('/Patricia.coordinador.*/', $perms);
 		
 		return $coords;
 	}
