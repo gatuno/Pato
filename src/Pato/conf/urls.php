@@ -353,6 +353,12 @@ $ctl[] = array (
 			'model' => 'Pato_Views_Seccion',
 			'method' => 'evaluar',
 		),
+		array (
+			'regex' => '#^(\d+)/asistencias/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'evaluarAsistencias',
+		),
 	)
 );
 

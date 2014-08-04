@@ -321,11 +321,19 @@ class Pato_Views_Seccion {
 		$evaluaciones = $eval->getList (array ('view' => 'join_materia', 'filter' => $sql->gen ()));
 		
 		$boleta = array ();
+		$asistencias = array ();
 		$sql = new Gatuf_SQL ('nrc=%s', $seccion->nrc);
+		$asis = new Pato_Asistencia ();
 		foreach ($alumnos as $al) {
 			$boleta[$al->codigo] = array ();
 			foreach ($al->get_boleta_list (array ('filter' => $sql->gen ())) as $b) {
 				$boleta[$al->codigo][$b->evaluacion] = $b->calificacion;
+			}
+			$t_as = $al->get_asistencias_list (array ('filter' => $sql->gen ()));
+			if (count ($t_as) == 0) {
+				$asistencias[$al->codigo] = null;
+			} else {
+				$asistencias[$al->codigo] = $t_as[0];
 			}
 		}
 		
@@ -334,8 +342,8 @@ class Pato_Views_Seccion {
 		                                                'alumnos' => $alumnos,
 		                                                'seccion' => $seccion,
 		                                                'boleta' => $boleta,
-		                                                'evals' => $evaluaciones),
-		                                                'seccion' => $seccion),
+		                                                'evals' => $evaluaciones,
+		                                                'asistencias' => $asistencias),
 		                                         $request);
 	}
 	
@@ -397,6 +405,51 @@ class Pato_Views_Seccion {
 		                                         array ('page_title' => 'NRC '.$seccion->nrc,
 		                                                'seccion' => $seccion,
 		                                                'porcentaje' => $ps[0],
+		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	public $evaluarAsistencias_precond = array ('Gatuf_Precondition::loginRequired');
+	public function evaluarAsistencias ($request, $match) {
+		if ($request->user->type != 'm') {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($request->user->login != $seccion->maestro) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Si hay suplente, el suplente puede subir asistencias */
+		if ($seccion->suplente && $request->user->login != $seccion->suplente) {
+			$request->user->setMessage (3, 'Usted no puede subir asistencias. Hay un suplente asignado a esta sección');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$extra = array ('seccion' => $seccion);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Seccion_Asistencia ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Seccion_Asistencia (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/asistencias.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'seccion' => $seccion,
 		                                                'form' => $form),
 		                                         $request);
 	}
