@@ -57,7 +57,7 @@ class Pato_Views_Alumno {
 	public function verAlumno ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
-		if (false === ($alumno->get ($match[1] ) ) ) {
+		if (false === ($alumno->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
 		}
 		

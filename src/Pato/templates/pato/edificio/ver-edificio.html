@@ -1,0 +1,37 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Se muestran los horarios de todos los salones</p>
+{if $user.administrator}
+<p><a href="{url 'Pato_Views_Salon::agregarSalon', array($edificio.clave)}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar salon" />Agregar nuevo salon</a></p>
+{/if}
+<p><a href="{url 'Pato_Views_Salon::buscarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/edit-find.png'}" alt="Buscar salon" />Buscar un salon en este edificio</a></p>
+{if count ($salones) != 0}
+	<div id="salones_tabs"><ul>
+	{foreach $salones as $salon}
+		<li><a href="#salon_{$salon.id}">{$salon.aula}</a></li>
+	{/foreach}</ul>
+	{foreach $salones as $salon}
+		<div id="salon_{$salon.id}">
+			<p>Este es el salón {$salon.aula}, del edificio {$edificio.descripcion}. Tiene una capacidad de {$salon.cupo}. {if $user.administrator}<a href="{url 'Pato_Views_Salon::actualizarSalon', array ($salon.id)}">Cambiar cupo</a>{/if}</p>
+			{if $calendarios[$salon.id]}
+				{$calendarios[$salon.id].render}
+			{else}
+				<p>Este salón no tiene registrada ninguna hora. En hora buena, está libre.</p>
+			{/if}
+		</div>
+	{/foreach}
+	</div>
+{else}
+	<p>Este edificio no tiene salones registrados</p>
+{/if}
+{/block}
+{block javascript}{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#salones_tabs').tabs ();
+});
+</script>
+{/literal}{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>{/block}

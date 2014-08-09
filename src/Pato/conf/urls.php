@@ -366,28 +366,28 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/salon/(\d+)/update/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Salon',
+	'model' => 'Pato_Views_Salon',
 	'method' => 'actualizarSalon',
 );
 
 $ctl[] = array (
 	'regex' => '#^/salones/add/(.+)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Salon',
+	'model' => 'Pato_Views_Salon',
 	'method' => 'agregarSalon',
 );
 
 $ctl[] = array (
 	'regex' => '#^/salones/buscar/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Salon',
+	'model' => 'Pato_Views_Salon',
 	'method' => 'buscarSalon',
 );
 
 $ctl[] = array (
 	'regex' => '#^/salones/buscar/reporte/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Salon',
+	'model' => 'Pato_Views_Salon',
 	'method' => 'reporteBuscados',
 );
 
@@ -447,21 +447,21 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/edificios/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Edificio',
+	'model' => 'Pato_Views_Edificio',
 	'method' => 'index',
 );
 
 $ctl[] = array (
 	'regex' => '#^/edificio/(.+)/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Edificio',
+	'model' => 'Pato_Views_Edificio',
 	'method' => 'verEdificio',
 );
 
 $ctl[] = array (
 	'regex' => '#^/edificios/add/$#',
 	'base' => $base,
-	'model' => 'Calif_Views_Edificio',
+	'model' => 'Pato_Views_Edificio',
 	'method' => 'agregarEdificio',
 );
 
