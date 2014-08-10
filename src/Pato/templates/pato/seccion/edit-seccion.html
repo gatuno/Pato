@@ -1,6 +1,6 @@
 {extends 'pato/seccion/base.html'}
 {block body_seccion}
-{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p>{if $form.get_top_errors}{$form.render_top_errors}{/if}</div>{/if}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 	<table>
 	<tr><th><strong>Nrc:</strong></th>
@@ -10,10 +10,7 @@
 	<td>{$seccion.get_materia}</td>
 	</tr>
 	{$form.render_table}
-	<tr>
-	<td>&nbsp;</td>
-	<td><input type="submit" value="Actualizar NRC" /></td>
-	</tr>
+	<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar NRC" /></td></tr>
 	</table>
 </form>
 {/block}

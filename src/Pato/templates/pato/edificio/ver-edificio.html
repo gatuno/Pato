@@ -1,4 +1,5 @@
 {extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
 <p>Se muestran los horarios de todos los salones</p>
 {if $user.administrator}

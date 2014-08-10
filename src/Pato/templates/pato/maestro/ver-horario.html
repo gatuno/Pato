@@ -1,11 +1,5 @@
 {extends 'pato/maestro/base.html'}
-{block extratopbody}
-<div style="float:right">
-	<form action="{url 'Pato_Views_Calendario::cambiarCalendario', array (), array ('_redirect_after' => $uri)}" method="post">
-	<strong>{$form_calendario.f.calendario.labelTag}:</strong>{$form_calendario.f.calendario|safe}&nbsp;<input type="submit" value="Cambiar" />
-	</form>
-</div>
-{/block}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body_maestro}
 <h2>Horario del profesor</h2>
 {if $calendario}

@@ -1,4 +1,5 @@
 {extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
 <form method="post" action=".">
 <h2>¿Esta seguro de que desea eliminar esta hora del NRC {$seccion.nrc}?</h2>

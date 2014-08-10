@@ -1,7 +1,7 @@
 {extends 'pato/alumno/base.html'}
 {block body_alumno}
 {if $form.errors}
-<div class="errors"><p>El formulario contiene algunos errores:</p>{if $form.get_top_errors}{$form.render_top_errors}{/if}</div>
+<div class="errors"><p>El formulario contiene algunos errores:</p></div>
 {/if}
 <form method="post" action=".">
 	<table>

@@ -1,4 +1,5 @@
 {extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
 <p>Se buscó un salón desocupado de {$bus_inicio} a {$bus_fin}, los dias {$semana}</p>
 {if $salones}

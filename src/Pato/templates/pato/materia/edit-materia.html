@@ -1,9 +1,7 @@
 {extends 'pato/materia/base.html'}
 {block body_materia}
 <h2>Actualizar materia</h2>
-{if $form.errors}
-	<div class="errors"><p>El formulario contiene algunos errores:</p></div>
-{/if}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 <table>
 	<tr><th><strong>Clave:</strong></th>

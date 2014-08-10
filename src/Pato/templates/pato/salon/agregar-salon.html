@@ -1,10 +1,6 @@
 {extends 'pato/base.html'}
 {block body}
-{if $form.errors}
-	<div class="errors">
-	<p>El formulario contiene algunos errores:</p>
-	</div>
-{/if}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 	<table>
 		{$form.render_table}
