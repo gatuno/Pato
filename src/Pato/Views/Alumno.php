@@ -131,4 +131,27 @@ class Pato_Views_Alumno {
 		                                                'form' => $form),
 		                                         $request);
 	}
+	
+	public $buscarJSON_precond = array ('Gatuf_Precondition::adminRequired');
+	public function buscarJSON ($request, $match) {
+		if (!isset ($request->GET['term'])) {
+			return new Gatuf_HTTP_Response_Json (array ());
+		}
+		
+		$bus = '%'.$request->GET['term'].'%';
+		
+		$sql = new Gatuf_SQL ('nombre LIKE %s OR apellido LIKE %s or codigo LIKE %s', array ($bus, $bus, $bus));
+		$alumnos = Gatuf::factory ('Pato_Alumno')->getList (array ('filter' => $sql->gen ()));
+		
+		$response = array ();
+		foreach ($alumnos as $alumno) {
+			$o = new stdClass();
+			$o->value = (string) $alumno->codigo;
+			$o->label = (string) $alumno;
+			
+			$response[] = $o;
+		}
+		
+		return new Gatuf_HTTP_Response_Json ($response);
+	}
 }

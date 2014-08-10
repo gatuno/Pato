@@ -1,6 +1,9 @@
 {extends 'pato/seccion/base.html'}
 {block body_seccion}
 <h2>Alumnos</h2>
+{if $user.administrator}
+<p>Puede <a href="{url 'Pato_Views_Seccion::matricular', array ($seccion.nrc)}">matricular un alumno</a> a esta sección</p>
+{/if}
 {if count($alumnos) == 0}
 	<p>No hay alumnos matriculados</p>
 {else}
@@ -8,7 +11,7 @@
 		<p>Puede <a href="{url 'Pato_Views_Seccion::evaluarAsistencias', $seccion.nrc}">evaluar asistencias</a> de este grupo.</p>
 	{/if}
 	<table>
-		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th><th>Asistencia</th></tr></thead>
+		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th><th>Asistencia</th>{if $user.administrator}<th>Desmatricular</th>{/if}</tr></thead>
 		<tbody>{assign $g = 1}
 			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
 			{if $asistencias[$alumno.codigo]}
@@ -16,6 +19,7 @@
 			{else}
 				<td>-</td>
 			{/if}
+			{if $user.administrator}<td><a href="{url 'Pato_Views_Seccion::desmatricular', array ($seccion.nrc, $alumno.codigo)}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Desmatricular" /></a></td>{/if}
 			</tr>{/foreach}
 		</tbody>
 	</table>

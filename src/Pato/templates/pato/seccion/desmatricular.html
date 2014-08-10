@@ -1,0 +1,9 @@
+{extends 'pato/seccion/base.html'}
+{block body_seccion}
+<form method="POST" action=".">
+<h2>¿Está seguro de que desea eliminar desmatricular al alumno?</h2>
+<p>El alumno {$alumno} pertenece al grupo {$seccion.materia} - {$seccion.seccion}.</p>
+<p>¡Se perderán sus calificaciones en boleta y asistencias!</p>
+<p>Esta acción no se puede deshacer</p>
+<input type="submit" value="Desmatricular" /> | <a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Cancelar</a>
+{/block}

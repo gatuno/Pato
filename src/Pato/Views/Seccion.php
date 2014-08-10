@@ -524,29 +524,89 @@ class Pato_Views_Seccion {
 		}
 		
 		return new Gatuf_HTTP_Response_Redirect ($url);
-	}
+	}*/
 	
 	public $matricular_precond = array ('Gatuf_Precondition::adminRequired');
 	public function matricular ($request, $match){
-		$seccion =  new Calif_Seccion ();
+		$seccion =  new Pato_Seccion ();
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
 		}
-		$title = 'Matricular Alumno a Seccion '.$seccion->nrc;
-		$extra = array ('nrc' => $seccion);
+		
 		if ($request->method == 'POST') {
-			$form = new Calif_Form_Seccion_Matricular ($request->POST, $extra);
+			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
 			if ($form->isValid ()) {
-				$form->save ();
-				$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::verNrc', array ($seccion->nrc));
+				$alumno = $form->save ();
+				
+				/* TODO: Realizar validaciones antes de matricular al Alumno */
+				$alumno->setAssoc ($seccion);
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Calif_Form_Seccion_Matricular (null, $extra);
+			$form = new Pato_Form_SeleccionarAlumno (null);
 		}
-		return Gatuf_Shortcuts_RenderToResponse ('calif/seccion/matricular.html',
-		                                         array ('page_title' => $title,
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/matricular.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'seccion' => $seccion,
 		                                                'form' => $form),
 		                                         $request);
-	}*/
+	}
+	
+	public $desmatricular_precond = array ('Gatuf_Precondition::adminRequired');
+	public function desmatricular ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Revisar que el alumno esté matriculado */
+		$als = $seccion->get_alumnos_list ();
+		$found = false;
+		foreach ($als as $al) {
+			if ($al->codigo == $alumno->codigo) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($request->method == 'POST') {
+			/* Borrar las calificaciones y asistencias
+			 * TODO: Convertir esto en un TRIGGER */
+			$sql = new Gatuf_SQL ('alumno=%s AND nrc=%s', array ($alumno->codigo, $seccion->nrc));
+			
+			$asistencias = Gatuf::factory ('Pato_Asistencia')->getList (array ('filter' => $sql->gen ()));
+			foreach ($asistencias as $asis) {
+				$asis->delete ();
+			}
+			
+			$boletas = Gatuf::factory ('Pato_Boleta')->getList (array ('filter' => $sql->gen ()));
+			foreach ($boletas as $b) {
+				$b->delete ();
+			}
+			
+			$seccion->delAssoc ($alumno);
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/desmatricular.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'seccion' => $seccion,
+		                                                'alumno' => $alumno),
+		                                         $request);
+	}
 }

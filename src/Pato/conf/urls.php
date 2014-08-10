@@ -129,6 +129,13 @@ $ctl[] = array(
 	'method' => 'agregarAlumno',
 );
 
+$ctl[] = array(
+	'regex' => '#^/alumnos/buscar/JSON/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Alumno',
+	'method' => 'buscarJSON',
+);
+
 /*$ctl[] = array(
 	'regex' => '#^/alumnos/([A-Za-z]{2,5})/$#',
 	'base' => $base,
@@ -344,8 +351,14 @@ $ctl[] = array (
 		array (
 			'regex' => '#^(\d+)/matricular/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
+			'model' => 'Pato_Views_Seccion',
 			'method' => 'matricular',
+		),
+		array (
+			'regex' => '#^(\d+)/desmatricular/(\d{8})/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'desmatricular',
 		),
 		array (
 			'regex' => '#^(\d+)/evaluar/(\d+)/$#',
