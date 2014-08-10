@@ -50,8 +50,8 @@ class Pato_Views_Edificio {
 		$super_calendarios = array ();
 		foreach ($salones as $salon) {
 			$sql = new Gatuf_SQL ('salon=%s', $salon->id);
-			//$horas_salon = $salon->get_pato_horario_list ();
-			$horas_salon = array ();
+			$horas_salon = $salon->get_pato_horario_list ();
+			
 			if (count ($horas_salon) == 0) {
 				$super_calendarios[$salon->id] = null;
 				continue;

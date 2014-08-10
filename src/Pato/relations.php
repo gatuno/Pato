@@ -4,7 +4,7 @@ $m = array ();
 
 $m['Pato_Asistencia'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Alumno'));
 $m['Pato_Evaluacion'] = array ('relate_to' => array ('Pato_GPE'));
-//$m['Pato_Horario'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Salon'));
+$m['Pato_Horario'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Salon'));
 $m['Pato_Materia'] = array ('relate_to_many' => array ('Pato_Carrera'));
 $m['Pato_Porcentaje'] = array ('relate_to' => array ('Pato_Materia', 'Pato_Evaluacion'));
 $m['Pato_Salon'] = array ('relate_to' => array ('Pato_Edificio'));

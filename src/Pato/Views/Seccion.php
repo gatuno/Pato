@@ -157,8 +157,7 @@ class Pato_Views_Seccion {
 			$suplente = null;
 		}
 		
-		//$horarios = $seccion->get_pato_horario_list (array ('view' => 'paginador'));
-		$horarios = array ();
+		$horarios = $seccion->get_pato_horario_list ();
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/ver-seccion.html',
 		                                          array ('page_title' => 'NRC '.$seccion->nrc,
@@ -167,13 +166,6 @@ class Pato_Views_Seccion {
 		                                                 'maestro' => $maestro,
 		                                                 'suplente' => $suplente,
 		                                                 'horarios' => $horarios,
-		                                                 /*'alumnos' => $alumnos,
-		                                                 'evals' => $todas_evaluaciones,
-		                                                 'porcentajes' => $porcentajes,
-		                                                 'grupo_evals' => $grupo_evals,
-		                                                 'calificacion' => $calificacion,
-		                                                 'promedios' => $promedios,
-		                                                 'promedios_eval' => $promedios_eval,*/
 		                                                 ),
 		                                          $request);
 	}
@@ -285,8 +277,8 @@ class Pato_Views_Seccion {
 			}
 			
 			/* Eliminar todas los horarios dde esta sección */
-			//$horas = $seccion->get_pato_horario_list ();
-			$horas = array ();
+			$horas = $seccion->get_pato_horario_list ();
+			
 			foreach ($horas as $hora) {
 				$hora->delete ();
 			}

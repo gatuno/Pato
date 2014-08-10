@@ -314,19 +314,19 @@ $ctl[] = array (
 		array (
 			'regex' => '#^(\d+)/timeadd/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Horario',
+			'model' => 'Pato_Views_Horario',
 			'method' => 'agregarHora',
 		),
 		array (
 			'regex' => '#^(\d+)/timedel/(\d+)/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Horario',
+			'model' => 'Pato_Views_Horario',
 			'method' => 'eliminarHora',
 		),
 		array (
 			'regex' => '#^(\d+)/timeupdate/(\d+)/$#',
 			'base' => $base,
-			'model' => 'Calif_Views_Horario',
+			'model' => 'Pato_Views_Horario',
 			'method' => 'actualizarHora',
 		),
 		array (
