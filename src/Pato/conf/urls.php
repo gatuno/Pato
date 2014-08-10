@@ -85,6 +85,13 @@ $ctl[] = array(
 	'method' => 'passwordChange',
 );
 
+$ctl[] = array(
+	'regex' => '#^/password/reset/(.*)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Usuario',
+	'method' => 'passwordReset',
+);
+
 /* Las carreras */
 $ctl[] = array(
 	'regex' => '#^/carreras/$#',

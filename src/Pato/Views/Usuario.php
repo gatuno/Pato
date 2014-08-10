@@ -141,4 +141,51 @@ class Pato_Views_Usuario {
 		                                                'form' => $form),
 		                                         $request);
 	}
+	
+	public $passwordReset_precond = array ('Gatuf_Precondition::adminRequired');
+	public function passwordReset ($request, $match) {
+		$sql = new Gatuf_SQL ('login=%s', $match[1]);
+		
+		$user = Gatuf::factory ('Pato_User')->getOne ($sql->gen ());
+		
+		if ($user === null) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($user->login == $request->user->login) {
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($user->type == 'a'){
+			$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($user->login));
+		} else {
+			$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($user->login));
+		}
+		
+		if (!$user->active) {
+			$request->user->setMessage (3, 'El usuario se encuentra inactivo');
+			return new Gatuf_HTTP_Response_Redirect ($url_af);
+		}
+		
+		$return_url = Gatuf_HTTP_URL_urlForView ('Pato_Views::passwordRecoveryInputCode');
+		$tmpl = new Gatuf_Template('pato/user/recuperarcontra-email.txt');
+		$cr = new Gatuf_Crypt (md5(Gatuf::config('secret_key')));
+		$code = trim ($cr->encrypt($user->email.':'.$user->id.':'.time()), '~');
+		$code = substr (md5 (Gatuf::config ('secret_key').$code), 0, 2).$code;
+		$url = Gatuf::config ('url_base').Gatuf_HTTP_URL_urlForView ('Pato_Views::passwordRecovery', array ($code), array (), false);
+		$urlic = Gatuf::config ('url_base').Gatuf_HTTP_URL_urlForView ('Pato_Views::passwordRecoveryInputCode', array (), array (), false);
+		$context = new Gatuf_Template_Context (
+		               array ('url' => Gatuf_Template::markSafe ($url),
+		                      'urlik' => Gatuf_Template::markSafe ($urlic),
+		                      'user' => $user,
+		                      'key' => Gatuf_Template::markSafe ($code)));
+		$email = new Gatuf_Mail (Gatuf::config ('from_email'), $user->email, 'Recuperar contraseña - Sistema Patricia');
+		$email->setReturnPath (Gatuf::config ('bounce_email', Gatuf::config ('from_email')));
+		$email->addTextMessage ($tmpl->render ($context));
+		$email->sendMail ();
+		
+		$request->user->setMessage (1, sprintf ('Se ha enviado un correo a "%s" para resetear la contraseña. Expira en 3 horas', $user->email));
+		return new Gatuf_HTTP_Response_Redirect ($url_af);
+	}
 }
