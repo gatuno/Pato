@@ -304,6 +304,7 @@ class Pato_Views_Seccion {
 		
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
 		
+		$especiales = array (-3 => 'IN', -2 => 'SD');
 		$porc_t = Gatuf::factory ('Pato_Porcentaje')->getSqlTable ();
 		$eval = new Pato_Evaluacion ();
 		$eval_t = $eval->getSqlTable ();
@@ -334,6 +335,7 @@ class Pato_Views_Seccion {
 		                                                'alumnos' => $alumnos,
 		                                                'seccion' => $seccion,
 		                                                'boleta' => $boleta,
+		                                                'especial' => $especiales,
 		                                                'evals' => $evaluaciones,
 		                                                'asistencias' => $asistencias),
 		                                         $request);

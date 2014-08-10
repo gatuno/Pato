@@ -171,19 +171,19 @@ class Pato_Views_Materia {
 		$salon_model = new Pato_Salon ();
 		
 		foreach ($secciones as $seccion) {
-			//$horas = $seccion->get_pato_horario_list (array ('view' => 'paginador'));
-			$horas = array ();
+			$horas = $seccion->get_pato_horario_list ();
+			
 			foreach ($horas as $hora) {
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
 				$cadena_desc = sprintf ('%s <a href="%s">%s</a><br />', $seccion->materia, $url, $seccion->seccion);
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $hora->salon_edificio).'#salon_'.$hora->salon;
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $hora->get_salon()->edificio).'#salon_'.$hora->salon;
 				$dia_semana = strtotime ('next Monday');
 				
 				foreach (array ('l', 'm', 'i', 'j', 'v', 's') as $dia) {
 					if ($hora->$dia) {
 						$calendario_materia->events[] = array ('start' => date('Y-m-d ', $dia_semana).$hora->inicio,
 										             'end' => date('Y-m-d ', $dia_semana).$hora->fin,
-										             'title' => $hora->salon_edificio.' '.$hora->salon_aula,
+										             'title' => (string) $hora->get_salon (),
 										             'content' => $cadena_desc,
 										             'url' => $url);
 					}
