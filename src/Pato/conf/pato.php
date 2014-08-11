@@ -117,6 +117,8 @@ $cfg['gatuf_custom_user'] = 'Pato_User';
 
 $cfg['installed_apps'] = array('Gatuf', 'Pato');
 
+$cfg['template_tags'] = array ('matcoord' => 'Pato_Template_Tag_MateriaCoord');
+
 # -------------------------
 # Configuraciones de Pato
 # -------------------------

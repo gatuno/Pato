@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Horario {
-	public $agregarHora_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarHora_precond = array ('Pato_Precondition::coordinadorRequired');
 	public function agregarHora ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -13,6 +13,23 @@ class Pato_Views_Horario {
 		}
 		
 		$materia = $seccion->get_materia ();
+		
+		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
+		$carreras = $materia->get_carreras_list ();
+		
+		$found = false;
+		foreach ($carreras as $carrera) {
+			if ($request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			$request->user->setMessage (3, 'Usted no puede agregar horarios a esta sección por falta de permisos');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
 		
 		$extra = array('seccion' => $seccion);
 		if ($request->method == 'POST') {
@@ -35,12 +52,29 @@ class Pato_Views_Horario {
 		
 	}
 	
-	public $eliminarHora_precond = array ('Gatuf_Precondition::adminRequired');
+	public $eliminarHora_precond = array ('Pato_Precondition::coordinadorRequired');
 	public function eliminarHora ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
+		$carreras = $seccion->get_materia ()->get_carreras_list ();
+		
+		$found = false;
+		foreach ($carreras as $carrera) {
+			if ($request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			$request->user->setMessage (3, 'Usted no puede editar horarios de esta sección por falta de permisos');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$hora = new Pato_Horario ();
@@ -69,12 +103,29 @@ class Pato_Views_Horario {
 		                                         $request);
 	}
 	
-	public $actualizarHora_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarHora_precond = array ('Pato_Precondition::coordinadorRequired');
 	public function actualizarHora ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
+		$carreras = $seccion->get_materia ()->get_carreras_list ();
+		
+		$found = false;
+		foreach ($carreras as $carrera) {
+			if ($request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			$request->user->setMessage (3, 'Usted no puede eliminar horarios de esta sección por falta de permisos');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$hora = new Pato_Horario ();

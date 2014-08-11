@@ -170,73 +170,60 @@ class Pato_Views_Seccion {
 		                                          $request);
 	}
 	
-	public $agregarNrc_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarNrc_precond = array ('Pato_Precondition::coordinadorRequired');
 	public function agregarNrc ($request, $match) {
 		$extra = array ('user' => $request->user);
 		
-		/*if ($request->user->isJefe ()) { */
-			/* Formulario completo para los administradores, o la otra condición */
-			if ($request->method == 'POST') {
-				$form = new Pato_Form_Seccion_Agregar ($request->POST, $extra);
-				
-				if ($form->isValid()) {
-					$seccion = $form->save ();
-					
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($seccion->nrc));
-					return new Gatuf_HTTP_Response_Redirect ($url);
-				}
-			} else {
-				if (isset ($request->REQUEST['materia'])) {
-					$materia = new Pato_Materia ();
-					if (false === ($materia->get($request->REQUEST['materia']))) {
-						$extra['materia'] = '';
-					} else {
-						$extra['materia'] = $materia->clave;
-					}
-				}
-				$form = new Pato_Form_Seccion_Agregar (null, $extra);
-			}
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Seccion_Agregar ($request->POST, $extra);
 			
-			return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/agregar-seccion.html',
-			                                         array ('page_title' => 'Crear sección',
-			                                                'form' => $form),
-			                                         $request);
-		//} else {
-			/* El caso de los coordinadores */
-			/*if ($request->method == 'POST') {
-				$form = new Calif_Form_Seccion_AgregarMini ($request->POST, $extra);
+			if ($form->isValid()) {
+				$seccion = $form->save ();
 				
-				if ($form->isValid ()) {
-					$seccion = $form->save ();
-					
-					$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::verNrc', array ($seccion->nrc));
-					return new Gatuf_HTTP_Response_Redirect ($url);
-				}
-			} else {
-				if (isset ($request->REQUEST['materia'])) {
-					$materia = new Calif_Materia ();
-					if (false === ($materia->get($request->REQUEST['materia']))) {
-						$extra['materia'] = '';
-					} else {
-						$extra['materia'] = $materia->clave;
-					}
-				}
-				$form = new Calif_Form_Seccion_AgregarMini (null, $extra);
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($seccion->nrc));
+				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
-			
-			return Gatuf_Shortcuts_RenderToResponse ('calif/seccion/agregar-mini.html',
-			                                         array ('page_title' => $title,
-			                                                'form' => $form),
-			                                         $request);
-		}*/
+		} else {
+			if (isset ($request->REQUEST['materia'])) {
+				$materia = new Pato_Materia ();
+				if (false === ($materia->get($request->REQUEST['materia']))) {
+					$extra['materia'] = '';
+				} else {
+					$extra['materia'] = $materia->clave;
+				}
+			}
+			$form = new Pato_Form_Seccion_Agregar (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/agregar-seccion.html',
+		                                         array ('page_title' => 'Crear sección',
+		                                                'form' => $form),
+		                                         $request);
 	}
 	
-	public $actualizarNrc_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarNrc_precond = array ('Pato_Precondition::coordinadorRequired');
 	public function actualizarNrc ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
+		$carreras = $seccion->get_materia ()->get_carreras_list ();
+		
+		$found = false;
+		foreach ($carreras as $carrera) {
+			if ($request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			$request->user->setMessage (3, 'Usted no puede editar esta sección por falta de permisos');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$extra = array ('seccion' => $seccion);
