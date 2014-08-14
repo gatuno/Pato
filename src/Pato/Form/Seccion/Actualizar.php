@@ -57,8 +57,8 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 		
 		if ($this->seccion->seccion == $seccion) return $this->seccion->seccion;
 		
-		if (!preg_match ("/^\w\d+[MV]\w$/", $seccion)) {
-			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con una letra, seguida de un número, luego el turno (MV) y al final la letra del grupo');
+		if (!preg_match ("/^\w\d+[MV]\w$/", $seccion) && !preg_match("/^[AB]\d+$/", $seccion)) {
+			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con una letra, seguida de un número, luego el turno (MV) y al final la letra del grupo; ó estilo SIIAU las letras A o B seguidas de un número.');
 		}
 		
 		$sql = new Gatuf_SQL ('materia=%s AND seccion=%s', array ($this->seccion->materia, $seccion));

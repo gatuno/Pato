@@ -125,6 +125,8 @@ class Pato_Views_Usuario {
 			if ($form->isValid()) {
 				$usuario = $form->save ();
 				
+				$usuario->setMessage (1, 'Contraseña cambiada correctamente');
+				
 				if($usuario->type == 'a'){
 					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($usuario->login));
 				} else {

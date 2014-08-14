@@ -4,7 +4,7 @@
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>
-{matcoord 'puede_editar', $user, $materia}
+{matcoord 'puede_editar', $user, $seccion.get_materia()}
 {if $puede_editar}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)}">Actualizar</a></li>
 {/if}

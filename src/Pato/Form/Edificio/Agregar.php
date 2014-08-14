@@ -11,7 +11,7 @@ class Pato_Form_Edificio_Agregar extends Gatuf_Form {
 				'initial' => '',
 				'help_text' => 'La clave del edificio',
 				'max_length' => 5,
-				'min_length' => 4,
+				'min_length' => 3,
 				'widget_attrs' => array(
 					'maxlength' => 5,
 				),
