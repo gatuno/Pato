@@ -326,6 +326,18 @@ $ctl[] = array (
 			'method' => 'verAlumnos',
 		),
 		array (
+			'regex' => '#^(\d+)/formatos/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'verFormatos',
+		),
+		array (
+			'regex' => '#^(\d+)/formato/acta_calif/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'actaCalificaciones',
+		),
+		array (
 			'regex' => '#^(\d+)/timeadd/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Horario',

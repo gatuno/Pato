@@ -328,6 +328,39 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
+	public $verFormatos_precond = array ('Gatuf_Precondition::adminRequired');
+	public function verFormatos ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/formatos.html',
+		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'seccion' => $seccion),
+		                                         $request);
+	}
+	
+	public $actaCalificaciones_precond = array ('Gatuf_Precondition::adminRequired');
+	public function actaCalificaciones ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$pdf = new Pato_PDF_Seccion_Acta ('P', 'mm', 'Letter');
+		
+		$pdf->renderPreacta ($seccion);
+		$pdf->renderActa ($seccion);
+		$pdf->Close ();
+		
+		$nombre = 'acta_preacta_'.$seccion->nrc.'.pdf';
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+	}
 	
 	public $evaluar_precond = array ('Gatuf_Precondition::loginRequired');
 	public function evaluar ($request, $match) {
