@@ -41,8 +41,8 @@
 			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
 			{foreach $gpe.list as $eval}
 			{if isset ($boleta[$alumno.codigo][$eval.id])}
-				{if $boleta[$alumno.codigo][$eval.id] < 0}
-					<td>{$especial[$boleta[$alumno.codigo][$eval.id]]}</td>
+				{if $boleta[$alumno.codigo][$eval.id] < 0}{assign $x = $boleta[$alumno.codigo][$eval.id] * -1}
+					<td>{$especial[$x]}</td>
 				{elseif $boleta[$alumno.codigo][$eval.id] == 0}
 					<td>NA</td>
 				{else}

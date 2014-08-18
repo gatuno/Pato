@@ -526,6 +526,20 @@ $ctl[] = array(
 	'method' => 'agregarGrupo',
 );
 
+$ctl[] = array (
+	'regex' => '#^/preferencias/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/preferencias/folio/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'cambiarFolio',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

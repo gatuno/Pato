@@ -22,11 +22,14 @@
 							<li><a href="{url 'Pato_Views_Edificio::index'}">Edificios y salones</a></li>
 						</ul>
 					</li>
-					<!-- <li class="calificaciones"><a href="#">Calificaciones</a>
+					{if $user.administrator}
+					<li class="calificaciones"><a href="#">Sistema</a>
 						<ul>
-							<li><a href="#">Enlaces</a></li>
+							<li><a href="{url 'Pato_Views_Calendario::index'}">Calendarios</a></li>
+							<li><a href="{url 'Pato_Views_Preferencias::index'}">Preferencias</a></li>
 						</ul>
-					</li>-->
+					</li>
+					{/if}
 				</ul>
 			</td>
 			<td><!-- Esta es la información del usuario -->

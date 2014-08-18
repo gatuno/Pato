@@ -213,7 +213,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->Cell (60, 6, 'Director de Programa Educativo', 0, 0, 'C');
 	}
 	
-	function renderActa ($seccion) {
+	function renderActa ($seccion, $folio = 1) {
 		$this->SetFont('Times', '', 12);
 		$fecha = '22 de Agosto de 2014';
 		
@@ -230,6 +230,11 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->SetY (30);
 		$this->SetX (53);
 		$this->CellSmallCaps (151, 6, 'Departamento  de  Servicios  Escolares', 0, 0, 'C');
+		
+		$this->SetY (40);
+		$this->SetX (13);
+		$text = sprintf ('Folio: %06d', $folio);
+		$this->Cell (191, 6, $text, 0, 0, 'R');
 		
 		$this->Rect (13, 52, 135, 8);
 		
@@ -383,7 +388,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->SetX (140);
 		$this->Cell (64, 8, 'Lic. M. Estela Padilla de Anda', 0, 0, 'C');
 		
-		$this->SetY (270);
+		$this->SetY (265);
 		$this->SetX (20);
 		
 		$this->Cell (0, 8, 'F-SE-04-05');

@@ -1,0 +1,15 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Esta opción corresponde al foliador interno. Cada vez que un folio sea usado, se incrementará automáticamente. El folio actual es: <strong>{$folio}</strong></p>
+{if $form.errors}
+	<div class="errors">
+	<p>El formulario contiene algunos errores:</p>
+	</div>
+{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Cambiar folio inicial" /></td></tr>
+	</table>
+</form>
+{/block}

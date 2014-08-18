@@ -291,7 +291,7 @@ class Pato_Views_Seccion {
 		
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
 		
-		$especiales = array (-3 => 'IN', -2 => 'SD');
+		$especiales = array (3 => 'IN', 2 => 'SD');
 		$porc_t = Gatuf::factory ('Pato_Porcentaje')->getSqlTable ();
 		$eval = new Pato_Evaluacion ();
 		$eval_t = $eval->getSqlTable ();
@@ -353,7 +353,12 @@ class Pato_Views_Seccion {
 		$pdf = new Pato_PDF_Seccion_Acta ('P', 'mm', 'Letter');
 		
 		$pdf->renderPreacta ($seccion);
-		$pdf->renderActa ($seccion);
+		
+		/* Usar e incrementar el folio */
+		$folio = $request->session->getData ('numero_folio', 1);
+		$pdf->renderActa ($seccion, $folio++);
+		$request->session->setData ('numero_folio', $folio);
+		
 		$pdf->Close ();
 		
 		$nombre = 'acta_preacta_'.$seccion->nrc.'.pdf';
