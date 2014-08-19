@@ -94,10 +94,43 @@ class Pato_Views_Alumno {
 		
 		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
 		
+		$especiales = array (3 => 'IN', 2 => 'SD');
+		
+		/* Conseguir todas las formas de evaluación para todas las secciones */
+		$porc_t = Gatuf::factory ('Pato_Porcentaje')->getSqlTable ();
+		$eval = new Pato_Evaluacion ();
+		$eval_t = $eval->getSqlTable ();
+		$eval->_a['views']['join_materia'] = array ('join' => 'LEFT JOIN '.$porc_t.' ON '.$eval_t.'.id=evaluacion');
+		
+		$evaluaciones = array ();
+		$asistencias = array ();
+		$boleta = array ();
+		$sql_al = new Gatuf_SQL ('alumno=%s', $alumno->codigo);
+		foreach ($secciones as $seccion) {
+			$sql = new Gatuf_SQL ('materia=%s', $seccion->materia);
+			$evaluaciones[$seccion->nrc] = $eval->getList (array ('view' => 'join_materia', 'filter' => $sql->gen ()));
+			$t_as = $seccion->get_pato_asistencia_list (array ('filter' => $sql_al->gen ()));
+			
+			if (count ($t_as) == 0) {
+				$asistencias[$seccion->nrc] = null;
+			} else {
+				$asistencias[$seccion->nrc] = $t_as[0];
+			}
+			$boleta[$seccion->nrc] = array ();
+			foreach ($seccion->get_pato_boleta_list (array ('filter' => $sql_al->gen ())) as $b) {
+				$boleta[$seccion->nrc][$b->evaluacion] = $b->calificacion;
+			}
+		}
+		
+		/* Recoger las asistencias */
 		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-grupos.html',
 		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
 		                                               'alumno' => $alumno,
-		                                               'secciones' => $secciones),
+		                                               'secciones' => $secciones,
+		                                               'evals' => $evaluaciones,
+		                                               'boleta' => $boleta,
+		                                               'especial' => $especiales,
+		                                               'asistencias' => $asistencias),
                                                  $request);
 	}
 

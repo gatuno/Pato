@@ -3,9 +3,28 @@
 {block body_alumno}
 <h2>Calificaciones del Alumno</h2>
 {if count ($secciones) != 0}{foreach $secciones as $seccion}
-	<h3>{$seccion.get_materia} - {$seccion.seccion}</h3>
-	<p>Nrc: <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.nrc}</a></p>
+	<h3>{$seccion.get_materia} - <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.seccion}</a></h3>
+	<!--<p>Nrc: <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.nrc}</a></p>-->
 	<p>Profesor: {if $seccion.suplente}{$seccion.get_suplente}{else}{$seccion.get_maestro}{/if}</p>
+	<p>Asistencia para este grupo: {if $asistencias[$seccion.nrc]}{$asistencias[$seccion.nrc].asistencia}%{else}-{/if}</p>
+	{regroup $evals[$seccion.nrc], 'grupo', 'por_grupo'}
+	{foreach $por_grupo as $gpe}
+		<h3>Forma de evaluación: {$gpe.list[0].get_grupo}</h3>
+		{foreach $gpe.list as $eval}
+			<p>{$eval.descripcion}: 
+			{if isset ($boleta[$seccion.nrc][$eval.id])}
+				{if $boleta[$seccion.nrc][$eval.id] < 0}{assign $x = $boleta[$seccion.nrc][$eval.id] * -1}
+					<td>{$especial[$x]}</td>
+				{elseif $boleta[$seccion.nrc][$eval.id] == 0}
+					<td>NA</td>
+				{else}
+					<td>{$boleta[$seccion.nrc][$eval.id]}</td>
+				{/if}
+			{else}
+				<td>-</td>
+			{/if}
+		{/foreach}
+	{/foreach}
 	<hr />
 {/foreach}
 {else}
