@@ -255,7 +255,11 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$carrera = $inscripciones[0]->get_carrera ();
 		
 		$this->SetY (60); $this->SetX (13);
-		$this->Cell (191, 8, 'Programa educativo: '.$carrera->descripcion, 1);
+		$this->Cell (135, 8, 'Programa educativo: '.$carrera->descripcion, 1);
+		
+		/* Condicionado a que esto se elimine */
+		$this->SetX (148);
+		$this->Cell (56, 8, 'Ciclo: 2013-2014', 1, 0, 'L');
 		
 		$this->SetY (68); $this->SetX (13);
 		$this->Cell (42, 8, 'Cuatrimestre: '.$materia->cuatrimestre.'º', 1);
@@ -265,7 +269,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		$calendario = new Pato_Calendario (Pato_Calendario_getDefault ());
 		$this->SetX (148);
-		$this->Cell (56, 8, 'Ciclo: '.$calendario->descripcion, 1);
+		$this->Cell (56, 8, 'Periodo: '.$calendario->descripcion, 1);
 		
 		$this->SetFont('Times', 'B', 12);
 		$this->SetY (79); $this->SetX (13);
@@ -371,7 +375,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->CellSmallCaps (64, 8, 'Profesor', 0, 0, 'C');
 		
 		$this->SetX (77);
-		$this->MultiCellSmallCaps (63, 4, "Director  de\nPrograma  Educativo", 0, 0, 'L');
+		$this->CellSmallCaps (63, 8, "Dir.  de  Prog.  Educativo", 0, 0, 'C');
 		
 		$this->SetY ($y);
 		$this->SetX (140);
@@ -383,7 +387,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->Cell (64, 8, $maestro->displaygrado().' '.$maestro->nombre.' '.$maestro->apellido, 0, 0, 'C');
 		
 		$this->SetX (77);
-		$this->Cell (63, 8, 'Mtro. Pedro Alonso Mayoral Ruiz', 0, 0, 'C');
+		$this->Cell (63, 8, '', 0, 0, 'C');
 		
 		$this->SetX (140);
 		$this->Cell (64, 8, 'Lic. M. Estela Padilla de Anda', 0, 0, 'C');
@@ -394,7 +398,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->Cell (0, 8, 'F-SE-04-05');
 		
 		$this->SetX (100);
-		$this->Cell (0, 8, 'Revisión: 01');
+		$this->Cell (0, 8, 'Revisión: 00');
 		
 		$this->SetX (150);
 		$this->Cell (0, 8, 'Fecha: 6 de marzo de 2013');
