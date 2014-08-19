@@ -6,12 +6,17 @@
 	<h3>{$seccion.get_materia} - <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.seccion}</a></h3>
 	<!--<p>Nrc: <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.nrc}</a></p>-->
 	<p>Profesor: {if $seccion.suplente}{$seccion.get_suplente}{else}{$seccion.get_maestro}{/if}</p>
-	<p>Asistencia para este grupo: {if $asistencias[$seccion.nrc]}{$asistencias[$seccion.nrc].asistencia}%{else}-{/if}</p>
 	{regroup $evals[$seccion.nrc], 'grupo', 'por_grupo'}
+	<p>Asistencia para este grupo: {if $asistencias[$seccion.nrc]}{$asistencias[$seccion.nrc].asistencia}%{else}-{/if}</p>
+	<div id="tabs_{$seccion.nrc}">
+	<ul>{foreach $por_grupo as $gpe}<li><a href="#t_{$seccion.nrc}_{$gpe.grouper}">{$gpe.list[0].get_grupo}</a></li>{/foreach}</ul>
 	{foreach $por_grupo as $gpe}
-		<h3>Forma de evaluación: {$gpe.list[0].get_grupo}</h3>
-		{foreach $gpe.list as $eval}
-			<p>{$eval.descripcion}: 
+	<div id="t_{$seccion.nrc}_{$gpe.grouper}">
+	<table border="1">
+		<thead><tr><td />{foreach $gpe.list as $eval}<td>{$eval.descripcion}</td>{/foreach}</tr></thead>
+		<tbody>
+			<tr><td>{$alumno}</td>
+			{foreach $gpe.list as $eval}
 			{if isset ($boleta[$seccion.nrc][$eval.id])}
 				{if $boleta[$seccion.nrc][$eval.id] < 0}{assign $x = $boleta[$seccion.nrc][$eval.id] * -1}
 					<td>{$especial[$x]}</td>
@@ -23,11 +28,30 @@
 			{else}
 				<td>-</td>
 			{/if}
-		{/foreach}
+			{/foreach}</tr>
+		</tbody>
+	</table>
+	</div>
 	{/foreach}
-	<hr />
+	</div>
 {/foreach}
 {else}
 	<p>Este alumno no tiene grupos activos</p>
 {/if}
 {/block}
+{block javascript}{literal}
+<script type="text/javascript">
+// <![CDATA[
+	$(document).ready(function() {
+	{/literal}
+	{foreach $secciones as $seccion}
+		$('#tabs_{$seccion.nrc}').tabs();
+	{/foreach}
+	{literal}
+	});
+// ]]>
+</script>
+{/literal}{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>{/block}

@@ -385,7 +385,7 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if ($request->user->login != $seccion->maestro) {
+		if ($request->user->login != $seccion->maestro && !$request->user->administrator) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
@@ -440,7 +440,8 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if ($request->user->login != $seccion->maestro) {
+		/* TODO: Eliminar el permiso de que si es administrador */
+		if ($request->user->login != $seccion->maestro && !$request->user->administrator) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
