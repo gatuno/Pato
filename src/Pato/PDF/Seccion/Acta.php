@@ -31,8 +31,8 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->Cell (0, 0, 'Programa educativo:', 0, 0, 'L');
 		
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
-		$inscripciones = $alumnos[0]->get_inscripciones_list ();
-		$carrera = $inscripciones[0]->get_carrera ();
+		$inscripcion = $alumnos[0]->get_current_inscripcion ();
+		$carrera = $inscripcion->get_carrera ();
 		$this->SetX (58);
 		$this->Cell (100, 0, $carrera->descripcion, 0, 0, 'L');
 		
@@ -164,8 +164,11 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			if ($boleta != null) {
 				$this->SetY ($y);
 				$this->SetX (153);
-				if ($boleta->calificacion < 0) {
+				if ($boleta->calificacion <= 0) {
 					switch ($boleta->calificacion) {
+						case 0:
+							$letra = 'No acreditó';
+							break;
 						case -2:
 							$letra = 'Sin derecho';
 							break;
@@ -251,8 +254,8 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		/* FIXME: Esto está mal */
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
-		$inscripciones = $alumnos[0]->get_inscripciones_list ();
-		$carrera = $inscripciones[0]->get_carrera ();
+		$inscripcion = $alumnos[0]->get_current_inscripcion ();
+		$carrera = $inscripcion->get_carrera ();
 		
 		$this->SetY (60); $this->SetX (13);
 		$this->Cell (135, 8, 'Programa educativo: '.$carrera->descripcion, 1);
@@ -316,8 +319,8 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			if ($boleta === null) {
 				$this->Cell (24, $altura, '--', 1, 0, 'C');
 			} else {
-				if ($boleta->calificacion < 0) {
-					$especiales = array (-3 => 'IN', -2 => 'SD');
+				if ($boleta->calificacion <= 0) {
+					$especiales = array (-3 => 'IN', -2 => 'SD', 0 => 'NA');
 					$this->Cell (24, $altura, $especiales[(int) $boleta->calificacion], 1, 0, 'C');
 				} else {
 					$this->Cell (24, $altura, $boleta->calificacion, 1, 0, 'C');
@@ -326,8 +329,11 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			
 			if ($boleta != null) {
 				$this->SetX (148);
-				if ($boleta->calificacion < 0) {
+				if ($boleta->calificacion <= 0) {
 					switch ($boleta->calificacion) {
+						case 0:
+							$letra = 'No acreditó';
+							break;
 						case -2:
 							$letra = 'Sin derecho';
 							break;

@@ -2,7 +2,7 @@
 {block body_seccion}
 <p>Evaluando al grupo: {$seccion.get_materia} {$seccion.seccion}</p>
 <p>Tiene disponibles las siguientes opciones:</p>
-<ul><li>SD => Sin derecho por faltas</li><li>IN => Curso incompleto</li><li>NA => No acreditó</li></ul>
+<ul><li>NA => No acreditó</li></ul>
 {if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 	<table>

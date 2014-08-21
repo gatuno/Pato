@@ -8,7 +8,7 @@ class Pato_Form_Seccion_Evaluar extends Gatuf_Form {
 		
 		$alumnos = $this->seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
 		
-		$choices = array ('No aprobatorias' => array ('IN' => -3, 'SD' => -2, 'NA' => 0), 'Aprobatorias' => array ('7.0' => 7.0, '7.5' => 7.5, '8.0' => 8.0, '8.5' => 8.5, '9.0' => 9.0, '9.5' => 9.5, '10' => 10));
+		$choices = array ('No aprobatoria' => array ('NA' => 0), 'Aprobatorias' => array ('7.0' => 7.0, '7.5' => 7.5, '8.0' => 8.0, '8.5' => 8.5, '9.0' => 9.0, '9.5' => 9.5, '10' => 10));
 		
 		$eval_id = $this->porcentaje->evaluacion;
 		/* Revisar por SD e IN en las asistencias */

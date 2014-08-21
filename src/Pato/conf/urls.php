@@ -155,25 +155,25 @@ $ctl[] = array(
 	'base' => $base,
 	'sub' => array (
 		array(
-			'regex' => '#^(\d{8})/$#',
+			'regex' => '#^(\w\d{7})/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'verAlumno',
 		),
 		array(
-			'regex' => '#^(\d{8})/grupos/$#',
+			'regex' => '#^(\w\d{7})/grupos/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'verGrupos',
 		),
 		array(
-			'regex' => '#^(\d{8})/update/$#',
+			'regex' => '#^(\w\d{7})/update/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'actualizarAlumno',
 		),
 		array (
-			'regex' => '#^(\d{8})/inscripciones/$#',
+			'regex' => '#^(\w\d{7})/inscripciones/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'verInscripciones',
@@ -374,7 +374,7 @@ $ctl[] = array (
 			'method' => 'matricular',
 		),
 		array (
-			'regex' => '#^(\d+)/desmatricular/(\d{8})/$#',
+			'regex' => '#^(\d+)/desmatricular/(\w\d{7})/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Seccion',
 			'method' => 'desmatricular',

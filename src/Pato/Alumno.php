@@ -69,6 +69,20 @@ class Pato_Alumno extends Gatuf_Model {
 		return '<a href="'.Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($this->codigo)).'">'.$this->codigo.'</a>';
 	}
 	
+	public function get_current_inscripcion () {
+		/* Recoger todas las inscripciones y regresar única activa */
+		$inscripciones = $this->get_inscripciones_list (array ('order' => 'clave DESC'));
+		
+		if (count ($inscripciones) == 0) return null;
+		foreach ($inscripciones as $ins) {
+			$estatus = $ins->get_estatus ();
+			
+			if ($estatus->activo) return $ins;
+		}
+		
+		return null;
+	}
+	
 	function __toString () {
 		return $this->apellido.' '.$this->nombre.' ('.$this->codigo.')';
 	}
