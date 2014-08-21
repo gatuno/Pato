@@ -255,7 +255,31 @@ $ctl[] = array (
 			'base' => $base,
 			'model' => 'Pato_Views_Materia',
 			'method' => 'eliminarDeCarrera',
-		)
+		),
+		array (
+			'regex' => '#^([\w-]+)/evals/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Materia',
+			'method' => 'verEvals',
+		),
+		array (
+			'regex' => '#^([\w-]+)/evals/add/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Materia',
+			'method' => 'agregarEval',
+		),
+		array (
+			'regex' => '#^([\w-]+)/evals/update/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Materia',
+			'method' => 'editarEval',
+		),
+		array (
+			'regex' => '#^([\w-]+)/evals/delete/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Materia',
+			'method' => 'eliminarEval',
+		),
 	)
 );
 

@@ -55,6 +55,15 @@ class Pato_Porcentaje extends Gatuf_Model {
 			       'default' => null,
 			),
 		);
+		
+		$this->_a['idx'] = array (
+			'porcentaje_idx' =>
+			array (
+			       'col' => 'materia, evaluacion',
+			       'type' => 'unique',
+			),
+		);
+		
 		$this->default_order = 'evaluacion ASC';
 		
 		Gatuf::loadFunction ('Pato_Calendario_getDefault');

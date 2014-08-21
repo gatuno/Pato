@@ -1,0 +1,9 @@
+{extends 'pato/materia/base.html'}
+{block body_materia}
+<form method="POST" action="{url 'Pato_Views_Materia::eliminarEval', array ($materia.clave, $eval.id)}">
+<h2>¿Está seguro de que desea eliminar la evaluación "{$eval.descripcion}" de la materia {$materia}?</h2>
+<p>La forma de evaluación suma {$porcentaje.porcentaje} puntos en la calificación del alumno en la modalidad {$eval.get_grupo}</p>
+<p>Se eliminarán todas las calificaciones en boleta de esta materia y forma de evaluación.</p>
+<p>Esta acción no se puede deshacer</p>
+<input type="submit" value="Borrar" /> | <a href="{url 'Pato_Views_Materia::verEvals', $materia.clave}">Cancelar</a>
+{/block}

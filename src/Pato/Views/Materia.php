@@ -200,50 +200,6 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public function verEval ($request, $match) {
-		$materia = new Calif_Materia ();
-		
-		if (false === ($materia->get($match[1]))) {
-			throw new Gatuf_HTTP_Error404();
-		}
-		
-		$nueva_clave = mb_strtoupper ($match[1]);
-		if ($match[1] != $nueva_clave) {
-			$url = Gatuf_HTTP_URL_urlForView('Calif_Views_Materia::verMateria', array ($nueva_clave));
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
-		
-		$grupos = Gatuf::factory ('Calif_GrupoEvaluacion')->getList ();
-		
-		$porcentajes = array ();
-		$disponibles = array ();
-		$sumas = array ();
-		
-		foreach ($grupos as $gp) {
-			$sql = new Gatuf_SQL ('grupo=%s', $gp->id);
-			$porcentajes[$gp->id] = $materia->get_calif_porcentaje_list (array ('filter' => $sql->gen()));
-			if ($porcentajes[$gp->id]->count () == 0) $porcentajes[$gp->id] = array ();
-			$sumas[$gp->id] = Gatuf::factory ('Calif_Porcentaje')->getGroupSum ($materia->clave, $gp->id);
-			$disponibles[$gp->id] = $materia->getNotEvals ($gp->id, true);
-		}
-		
-		$evals = array ();
-		
-		foreach (Gatuf::factory ('Calif_Evaluacion')->getList () as $eval) {
-			$evals[$eval->id] = $eval;
-		}
-		
-		return Gatuf_Shortcuts_RenderToResponse ('calif/materia/ver-eval.html',
-		                                         array('page_title' => 'Ver materia',
-		                                               'evals' => $evals,
-		                                               'grupos' => $grupos,
-		                                               'materia' => $materia,
-		                                               'disponibles' => $disponibles,
-		                                               'porcentajes' => $porcentajes,
-		                                               'sumas' => $sumas),
-		                                         $request);
-	}
-		
 	public $agregarACarrera_precond = array ('Gatuf_Precondition::adminRequired');
 	public function agregarACarrera ($request, $match) {
 		$materia = new Pato_Materia();
@@ -390,53 +346,164 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
+	public function verEvals ($request, $match) {
+		$materia = new Pato_Materia ();
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$evals = Gatuf::factory ('Pato_Evaluacion')->getList ();
+		$eval_t = Gatuf::factory ('Pato_Evaluacion')->getSqlTable ();
+		$p_model = new Pato_Porcentaje ();
+		$p_model->_a['views']['join_eval'] = array ('join' => 'LEFT JOIN '.$eval_t.' ON evaluacion='.$eval_t.'.id');
+		
+		$porcentajes = array ();
+		foreach (Gatuf::factory ('Pato_GPE')->getList () as $gpe) {
+			$sql = new Gatuf_SQL ('materia=%s AND grupo=%s', array ($materia->clave, $gpe->id));
+			$porcentajes[$gpe->id] = $p_model->getList (array ('view' => 'join_eval', 'filter' => $sql->gen ()));
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/ver-evals.html',
+		                                         array ('page_title' => (string) $materia,
+		                                                'materia' => $materia,
+		                                                'evals' => $evals,
+		                                                'porcentajes' => $porcentajes),
+		                                         $request);
+	}
+	
 	public $agregarEval_precond = array ('Gatuf_Precondition::adminRequired');
 	public function agregarEval ($request, $match) {
-		$extra = array ();
+		$materia = new Pato_Materia ();
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
 		
 		/* Verificar que el grupo de evaluación exista */
-		$grupo_eval = new Calif_GrupoEvaluacion  ();
+		$grupo_eval = new Pato_GPE ();
 		
 		if (false === ($grupo_eval->get ($match[2]))) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$materia = new Calif_Materia ();
-		if (false === ($materia->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
 		/* Verificar que la materia esté en mayúsculas */
 		$nueva_clave = mb_strtoupper ($match[1]);
 		if ($match[1] != $nueva_clave) {
-			$url = Gatuf_HTTP_URL_urlForView('Calif_Views_Materia::agregarEval', array ($nueva_clave, $match[2]));
+			$url = Gatuf_HTTP_URL_urlForView('Pato_Views_Materia::agregarEval', array ($nueva_clave, $match[2]));
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$disponibles = $materia->getNotEvals ($grupo_eval->id, true);
 		
-		if (count ($disponibles) == 0) {
-			/* TODO: Lanzar un lindo mensaje de error */
-			throw new Gatuf_HTTP_Error404 ();
+		if ($disponibles == 0) {
+			$request->user->setMessage (3, 'No hay formas de evaluación para agregar a esta materia en la modalidad '.$grupo_eval->descripcion);
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', array ($materia->clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
-		
-		$title = 'Agregar evaluación a la materia "' . $materia->descripcion .'", para '.$grupo_eval->descripcion;
 		
 		$extra = array ('gp' => $grupo_eval->id, 'materia' => $materia);
 		if ($request->method == 'POST') {
-			$form = new Calif_Form_Materia_AgregarEval ($request->POST, $extra);
+			$form = new Pato_Form_Materia_AgregarEval ($request->POST, $extra);
 			
 			if ($form->isValid ()) {
 				$form->save ();
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Materia::verMateria', array ($materia->clave));
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', array ($materia->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Calif_Form_Materia_AgregarEval (null, $extra);
+			$form = new Pato_Form_Materia_AgregarEval (null, $extra);
 		}
 		
-		return Gatuf_Shortcuts_RenderToResponse ('calif/materia/add-eval.html',
-		                                         array ('page_title' => $title,
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/agregar-eval.html',
+		                                         array ('page_title' => (string) $materia,
+		                                                'materia' => $materia,
+		                                                'gpe' => $grupo_eval,
+		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	public $eliminarEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public function eliminarEval ($request, $match) {
+		$materia = new Pato_Materia ();
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$eval = new Pato_Evaluacion ();
+		if (false === ($eval->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$sql = new Gatuf_SQL ('materia=%s AND evaluacion=%s', array ($materia->clave, $eval->id));
+		$porcentaje = Gatuf::factory ('Pato_Porcentaje')->getOne ($sql->gen ());
+		
+		if ($porcentaje === null) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($request->method == 'POST') {
+			/* Si el formulario viene de regreso, eliminar el porcentaje y todas las calificaciones en boleta */
+			$boleta_t = Gatuf::factory ('Pato_Boleta')->getSqlTable ();
+			$seccion_t = Gatuf::factory ('Pato_Seccion')->getSqlTable ();
+			
+			$query = sprintf ('DELETE B FROM %s AS B, %s AS S WHERE B.nrc = S.nrc AND S.materia="%s" AND B.evaluacion=%s', $boleta_t, $seccion_t, $porcentaje->materia, $porcentaje->evaluacion);
+			
+			$db = Gatuf::db ();
+			$db->execute ($query);
+			
+			$porcentaje->delete ();
+			
+			$request->user->setMessage (1, 'La forma de evaluación "'.$eval->descripcion.'" ha sido eliminada de la materia');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', $materia->clave);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/eliminar-eval.html',
+		                                         array ('page_title' => (string) $materia,
+		                                                'materia' => $materia,
+		                                                'eval' => $eval,
+		                                                'porcentaje' => $porcentaje),
+		                                         $request);
+	}
+	
+	public $editarEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public function editarEval ($request, $match) {
+		$materia = new Pato_Materia ();
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$eval = new Pato_Evaluacion ();
+		if (false === ($eval->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$sql = new Gatuf_SQL ('materia=%s AND evaluacion=%s', array ($materia->clave, $eval->id));
+		$porcentaje = Gatuf::factory ('Pato_Porcentaje')->getOne ($sql->gen ());
+		
+		if ($porcentaje === null) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('porcentaje' => $porcentaje);
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Materia_EditarEval ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$request->user->setMessage (1, 'Se ha ajustado la forma de evaluación');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', array ($materia->clave));
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Materia_EditarEval (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/editar-eval.html',
+		                                         array ('page_title' => (string) $materia,
+		                                                'materia' => $materia,
+		                                                'evaluacion' => $eval,
 		                                                'form' => $form),
 		                                         $request);
 	}

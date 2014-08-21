@@ -1,0 +1,11 @@
+{extends 'pato/materia/base.html'}
+{block body_materia}
+<p>Agregar nueva forma de evaluación a la materia {$materia} en la modalidad {$gpe.descripcion}</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Agregar evaluación" /></td></tr>
+	</table>
+</form>
+{/block}

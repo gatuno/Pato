@@ -1,0 +1,12 @@
+{extends 'pato/materia/base.html'}
+{block body_materia}
+<p>Está editando a la materia {$materia} en la modalidad {$evaluacion.get_grupo}</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		<tr><td><strong>Evaluación:</strong></td><td>{$evaluacion.descripcion}</td></tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar evaluación" /></td></tr>
+	</table>
+</form>
+{/block}
