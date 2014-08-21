@@ -1,0 +1,7 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<p>Los siguientes formatos están disponibles:</p>
+<ul>
+	<li><a href="{url 'Pato_Views_Alumno::boleta', $alumno.codigo}">Boleta calificaciones</a></li>
+</ul>
+{/block}

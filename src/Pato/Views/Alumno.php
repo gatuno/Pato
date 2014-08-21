@@ -187,4 +187,38 @@ class Pato_Views_Alumno {
 		
 		return new Gatuf_HTTP_Response_Json ($response);
 	}
+	
+	public $verFormatos_precond = array ('Gatuf_Precondition::adminRequired');
+	public function verFormatos ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/formatos.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno),
+		                                         $request);
+	}
+	
+	public $boleta_precond = array ('Gatuf_Precondition::adminRequired');
+	public function boleta ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$pdf = new Pato_PDF_Alumno_Boleta ('P', 'mm', 'Letter');
+		
+		$pdf->renderBoleta ($alumno);
+		
+		$pdf->Close ();
+		
+		$nombre = 'boleta_'.$alumno->codigo.'.pdf';
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+	}
 }

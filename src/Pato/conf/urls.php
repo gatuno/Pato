@@ -178,6 +178,18 @@ $ctl[] = array(
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'verInscripciones',
 		),
+		array (
+			'regex' => '#^(\w\d{7})/formatos/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'verFormatos',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/formato/boleta/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'boleta',
+		),
 	)
 );
 

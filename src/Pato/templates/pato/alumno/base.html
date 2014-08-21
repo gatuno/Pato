@@ -5,6 +5,7 @@
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verInscripciones', array ($alumno.codigo)}">Historial académico</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verGrupos', array ($alumno.codigo)}">Grupos y calificaciones</a></li>
 {if $user.administrator}<!-- Actualizar con el permiso correspondiente -->
+<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verFormatos', array ($alumno.codigo)}">Formatos</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::actualizarAlumno', array ($alumno.codigo)}">Actualizar</a></li>
 {/if}
 {if $user.login == $alumno.codigo}
