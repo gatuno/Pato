@@ -399,13 +399,21 @@ class Pato_Views_Seccion {
 		/* Revisar que el porcentaje exista para esta materia */
 		$sql = new Gatuf_SQL ('materia=%s AND evaluacion=%s', array ($seccion->materia, $eval->id));
 		
-		$ps = Gatuf::factory ('Pato_Porcentaje')->getList (array ('filter' => $sql->gen ()));
+		$ps = Gatuf::factory ('Pato_Porcentaje')->getOne ($sql->gen ());
 		
-		if (count ($ps) == 0) {
+		if ($ps === null) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$extra = array ('porcentaje' => $ps[0], 'seccion' => $seccion);
+		if (!$request->user->administrator && $ps->abierto == 0) {
+			$request->user->setMessage (3, 'La subida de calificaciones para '.$eval->descripcion.' está cerrada.');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		/* TODO: Revisar las horas aquí */
+		
+		$extra = array ('porcentaje' => $ps, 'seccion' => $seccion);
 		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Seccion_Evaluar ($request->POST, $extra);
@@ -423,7 +431,7 @@ class Pato_Views_Seccion {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/evaluar.html',
 		                                         array ('page_title' => 'NRC '.$seccion->nrc,
 		                                                'seccion' => $seccion,
-		                                                'porcentaje' => $ps[0],
+		                                                'porcentaje' => $ps,
 		                                                'form' => $form),
 		                                         $request);
 	}

@@ -4,9 +4,50 @@
 {if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 	<table>
+		<tr><td><strong>Modalidad:</strong></td><td>{$evaluacion.get_grupo}</td></tr>
 		<tr><td><strong>Evaluación:</strong></td><td>{$evaluacion.descripcion}</td></tr>
 		{$form.render_table}
 		<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar evaluación" /></td></tr>
 	</table>
 </form>
 {/block}
+{block javascript}{literal}
+<script type="text/javascript">
+	// <![CDATA[
+		function on_change_sel () {
+			var sel = document.getElementById ('id_sel');
+			var apertura = document.getElementById ('id_apertura');
+			var cierre = document.getElementById ('id_cierre');
+			
+			switch (sel.value) {
+				case '0':
+				case '1':
+					apertura.disabled = true;
+					cierre.disabled = true;
+					break;
+				case '2':
+					apertura.disabled = false;
+					cierre.disabled = true;
+					break;
+				case '3':
+					apertura.disabled = true;
+					cierre.disabled = false;
+					break;
+				case '4':
+					apertura.disabled = false;
+					cierre.disabled = false;
+					break;
+			}
+		}
+		
+		var sel = document.getElementById ('id_sel');
+		sel.onchange = on_change_sel;
+		on_change_sel ();
+	// ]]>
+</script>
+{/literal}{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="{media '/js/jquery-ui-timepicker-addon.js'}"></script>
+	<script type="text/javascript" src="{media '/js/ui-timepicker-es.js'}"></script>{/block}

@@ -73,8 +73,8 @@ class Pato_Views_Maestro {
 			
 			foreach ($grupos as $grupo) {
 				if ($grupo->suplente && $grupo->suplente != $maestro->codigo) continue;
-				//$horas = $grupo->get_pato_horario_list (array ('view' => 'paginador'));
-				$horas = array ();
+				$horas = $grupo->get_pato_horario_list ();
+				
 				foreach ($horas as $hora) {
 					$cadena_desc = $grupo->materia.' '.$grupo->seccion;
 					$dia_semana = strtotime ('next Monday');
@@ -83,7 +83,7 @@ class Pato_Views_Maestro {
 						if ($hora->$dia) {
 							$horario_maestro->events[] = array ('start' => date('Y-m-d ', $dia_semana).$hora->inicio,
 											             'end' => date('Y-m-d ', $dia_semana).$hora->fin,
-											             'content' => $hora->salon_edificio.' '.$hora->salon_aula.'<br />'.$cadena_desc,
+											             'content' => ((string) $hora->get_salon ()).'<br />'.$cadena_desc,
 											             'title' => '',
 											             'url' => '.');
 						}
