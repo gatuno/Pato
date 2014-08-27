@@ -576,6 +576,27 @@ $ctl[] = array (
 	'method' => 'cambiarFolio',
 );
 
+$ctl[] = array (
+	'regex' => '#^/utils/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/utils/boletas-lote/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'loteBoletas',
+);
+
+$ctl[] = array (
+	'regex' => '#^/utils/boletas-lote/([A-Za-z]{2,5})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'loteBoletaCarrera',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

@@ -171,3 +171,8 @@ td .icon {
 .titulo {
 	padding-top: 10px;
 }
+
+.helptext {
+  font-size: 80%;
+  color: #555753;
+}

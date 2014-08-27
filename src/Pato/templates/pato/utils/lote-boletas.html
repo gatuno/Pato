@@ -1,0 +1,8 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Seleccione un carrera:</p>
+<ul>{foreach $carreras as $carrera}
+<li><a href="{url 'Pato_Views_Utils::loteBoletaCarrera', $carrera->clave}">Lote de boletas para {$carrera.descripcion}</a></li>
+{/foreach}</ul>
+{/block}

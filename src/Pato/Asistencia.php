@@ -1,7 +1,7 @@
 <?php
 
 class Pato_Asistencia extends Gatuf_Model {
-	/* Manejador de la tabla de calificaciones */
+	/* Manejador de la tabla de asistencias */
 	public $_model = __CLASS__;
 	
 	function init () {
