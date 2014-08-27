@@ -190,6 +190,12 @@ $ctl[] = array(
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'boleta',
 		),
+		array (
+			'regex' => '#^(\w\d{7})/agenda/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'agenda',
+		),
 	)
 );
 

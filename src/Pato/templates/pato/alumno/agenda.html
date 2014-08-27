@@ -1,0 +1,10 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<h2>Agenda para el calendario {$calendario.descripcion}</h2>
+{if $agenda}
+	<p>La agenda del alumno permite el registro de materias para el {$calendario.clave}</p>
+	<p>Programada para el día {$agenda.hora}</p>
+{else}
+	<p>La agenda del alumno <strong>NO</strong> permite el registro</p>
+{/if}
+{/block}

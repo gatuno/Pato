@@ -22,8 +22,10 @@ class Pato_Middleware_Calendario {
 		$cal = $request->session->getData ('CAL_ACTIVO', null);
 		
 		if ($cal == null) {
-			/* TODO: Leer desde la base de datos o leer desde el archivo de configuración */
-			$cal = '2014D';
+			$gsettings = new Gatuf_GSettings ();
+			$gsettings->setApp ('Patricia');
+			
+			$cal = $gsettings->getVal ('calendario', null);
 		}
 		
 		if (false === $request->calendario->get($cal)) {

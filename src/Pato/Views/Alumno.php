@@ -221,4 +221,39 @@ class Pato_Views_Alumno {
 		
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
+	
+	public $agenda_precond = array ('Gatuf_Precondition::loginRequired');
+	public function agenda ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator) {
+			if ($request->user->login != $alumno->codigo) {
+				throw new Gatuf_HTTP_Error404 ();
+			}
+		}
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		$calendario = new Pato_Calendario ($gconf->getVal ('calendario'));
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		
+		$list = $alumno->get_agenda_list ();
+		if (count ($list) == 0) {
+			$agenda = null;
+		} else {
+			$agenda = $list[0];
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/agenda.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'calendario' => $calendario,
+		                                                'agenda' => $agenda),
+		                                         $request);
+	}
 }

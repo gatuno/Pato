@@ -35,7 +35,8 @@ class Pato_Calendario extends Gatuf_Model {
 	public function postSave ($create = true) {
 		if ($create) {
 			/* Crear todos las tablas que cambian entre semestre y semestre */
-			$models = array ('Pato_Asistencia',
+			$models = array ('Pato_Agenda',
+			                 'Pato_Asistencia',
 			                 'Pato_Boleta',
 			                 'Pato_Horario',
 			                 'Pato_Porcentaje',

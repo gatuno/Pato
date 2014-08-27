@@ -71,7 +71,7 @@ class Pato_Alumno extends Gatuf_Model {
 	
 	public function get_current_inscripcion () {
 		/* Recoger todas las inscripciones y regresar única activa */
-		$inscripciones = $this->get_inscripciones_list (array ('order' => 'clave DESC'));
+		$inscripciones = $this->get_inscripciones_list (array ('filter' => 'egreso IS NULL', 'order' => 'clave DESC'));
 		
 		if (count ($inscripciones) == 0) return null;
 		foreach ($inscripciones as $ins) {

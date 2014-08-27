@@ -9,7 +9,8 @@
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::actualizarAlumno', array ($alumno.codigo)}">Actualizar</a></li>
 {/if}
 {if $user.login == $alumno.codigo}
-<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar Contraseña</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::agenda', array ($alumno.codigo)}">Agenda</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar contraseña</a></li>
 {/if}
 </ul>
 {block body_alumno}{/block}

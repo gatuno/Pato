@@ -60,6 +60,14 @@ class Pato_Seccion extends Gatuf_Model {
 			),
 		);
 		
+		$this->_a['idx'] = array (
+			'mat_sec_idx' =>
+			array (
+			       'col' => 'materia, seccion',
+			       'type' => 'unique',
+			),
+		);
+		
 		$this->default_order = 'materia ASC, seccion ASC';
 		
 		Gatuf::loadFunction ('Pato_Calendario_getDefault');

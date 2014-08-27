@@ -2,6 +2,7 @@
 
 $m = array ();
 
+$m['Pato_Agenda'] = array ('relate_to' => array ('Pato_Alumno'));
 $m['Pato_Asistencia'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Alumno'));
 $m['Pato_Evaluacion'] = array ('relate_to' => array ('Pato_GPE'));
 $m['Pato_Horario'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Salon'));
