@@ -51,6 +51,12 @@ class Pato_Seccion extends Gatuf_Model {
 			       'is_null' => true,
 			       'default' => null,
 			),
+			'cupo' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Integer',
+			       'blank' => false,
+			       'default' => 0,
+			),
 			'alumnos' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Manytomany',

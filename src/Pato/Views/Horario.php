@@ -38,6 +38,16 @@ class Pato_Views_Horario {
 			if ($form->isValid ()) {
 				$horario = $form->save ();
 				
+				/* Actualizar el mínimo cupo disponible */
+				$min = $horario->get_salon ()->cupo;
+				
+				foreach ($seccion->get_pato_horario_list () as $h) {
+					if ($min > $h->get_salon ()->cupo) $min = $h->get_salon ()->cupo;
+				}
+				
+				$seccion->cupo = $min;
+				$seccion->update ();
+				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($horario->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -91,6 +101,19 @@ class Pato_Views_Horario {
 			/* Adelante, eliminar esta hora */
 			$hora->delete ();
 			
+			/* Actualizar el mínimo cupo disponible */
+			$horas = $seccion->get_pato_horario_list ();
+			if (count ($horas) == 0) {
+				$seccion->cupo = 0;
+			} else {
+				$min = $horas[0]->get_salon ()->cupo;
+				foreach ($horas as $h) {
+					if ($min > $h->get_salon ()->cupo) $min = $h->get_salon ()->cupo;
+				}
+				$seccion->cupo = $min;
+			}
+			
+			$seccion->update ();
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($seccion->nrc));
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
@@ -144,6 +167,16 @@ class Pato_Views_Horario {
 			
 			if ($form->isValid ()) {
 				$horario = $form->save ();
+				
+				/* Actualizar el mínimo cupo disponible */
+				$min = $horario->get_salon ()->cupo;
+				
+				foreach ($seccion->get_pato_horario_list () as $h) {
+					if ($min > $h->get_salon ()->cupo) $min = $h->get_salon ()->cupo;
+				}
+				
+				$seccion->cupo = $min;
+				$seccion->update ();
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($horario->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
