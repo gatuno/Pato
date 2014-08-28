@@ -1,0 +1,23 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<h2>Registro para el calendario {$calendario.descripcion}</h2>
+<p>Ingresa los NRCs en los que te vas a registrar</p>
+<form action="." method="POST">
+<table>
+	<tr><td>{$form.f.nrc1|safe}</td><td>{$form.f.nrc2|safe}</td><td>{$form.f.nrc3|safe}</td><td>{$form.f.nrc4|safe}</td><td>{$form.f.nrc5|safe}</td></tr>
+	<tr><td>{$form.f.nrc6|safe}</td><td>{$form.f.nrc7|safe}</td><td>{$form.f.nrc8|safe}</td><td>{$form.f.nrc9|safe}</td><td>{$form.f.nrc10|safe}</td></tr>
+	<tr><td colspan="5"><input type="submit" value="Registrar" /> | <a href="{url 'Pato_Views_Alumno::verGrupos', $alumno.codigo}">Salir de la agenda</a></td></tr>
+</table>
+</form>
+<h3>Lista de NRCs ya registrados</h3>
+{if count($secciones) != 0}
+<table>
+	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Eliminar</th></tr></thead>
+	<tbody>{foreach $secciones as $seccion}
+	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td><a href="{url 'Pato_Views_Alumno::registroEliminar', array ($alumno.codigo, $seccion.nrc)}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Eliminar" /></a></td></tr>
+	{/foreach}</tbody>
+</table>
+{else}
+	<p>Ninguno</p>
+{/if}
+{/block}

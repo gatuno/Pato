@@ -3,8 +3,10 @@
 <h2>Agenda para el calendario {$calendario.descripcion}</h2>
 {if $agenda}
 	<p>La agenda del alumno permite el registro de materias para el {$calendario.clave}</p>
-	<p>Programada para el día {$agenda.hora}</p>
+	<p>Programada para el día {$agenda.inicio|date:"%d/%m/%Y %H:%M"}</p>
+	{if $abierta}<p>Pasar al <a href="{url 'Pato_Views_Alumno::registro', $alumno.codigo}">registro de materias</a></p>{/if}
 {else}
 	<p>La agenda del alumno <strong>NO</strong> permite el registro</p>
 {/if}
+
 {/block}

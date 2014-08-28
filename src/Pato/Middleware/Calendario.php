@@ -22,10 +22,10 @@ class Pato_Middleware_Calendario {
 		$cal = $request->session->getData ('CAL_ACTIVO', null);
 		
 		if ($cal == null) {
-			$gsettings = new Gatuf_GSettings ();
+			$gsettings = new Gatuf_GSetting ();
 			$gsettings->setApp ('Patricia');
 			
-			$cal = $gsettings->getVal ('calendario', null);
+			$cal = $gsettings->getVal ('calendario_activo', null);
 		}
 		
 		if (false === $request->calendario->get($cal)) {

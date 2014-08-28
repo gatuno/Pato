@@ -196,6 +196,18 @@ $ctl[] = array(
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'agenda',
 		),
+		array (
+			'regex' => '#^(\w\d{7})/agenda/registro/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'registro',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/agenda/eliminar/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'registroEliminar',
+		),
 	)
 );
 
