@@ -133,7 +133,51 @@ class Pato_Views_Alumno {
 		                                               'asistencias' => $asistencias),
                                                  $request);
 	}
-
+	
+	public function verHorario ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1] ) ) ) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
+		
+		$calendario = new Gatuf_Calendar ();
+		$calendario->events = array ();
+		$calendario->opts['conflicts'] = false;
+		
+		foreach ($secciones as $seccion) {
+			$horas = $seccion->get_pato_horario_list ();
+			
+			foreach ($horas as $hora) {
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+				$cadena_desc = sprintf ('%s <a href="%s">%s</a><br />', $seccion->materia, $url, $seccion->seccion);
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $hora->get_salon()->edificio).'#salon_'.$hora->salon;
+				$dia_semana = strtotime ('next Monday');
+				
+				foreach (array ('l', 'm', 'i', 'j', 'v', 's') as $dia) {
+					if ($hora->$dia) {
+						$calendario->events[] = array ('start' => date('Y-m-d ', $dia_semana).$hora->inicio,
+										             'end' => date('Y-m-d ', $dia_semana).$hora->fin,
+										             'title' => (string) $hora->get_salon (),
+										             'content' => $cadena_desc,
+										             'url' => $url);
+					}
+					$dia_semana = $dia_semana + 86400;
+				}
+			}
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-horario.html',
+		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                               'alumno' => $alumno,
+		                                               'secciones' => $secciones,
+		                                               'calendario' => $request->calendario,
+		                                               'horario' => $calendario),
+                                                 $request);
+	}
+	
 	public $actualizarAlumno_precond = array ('Gatuf_Precondition::adminRequired');
 	public function actualizarAlumno ($request, $match) {
 		$alumno = new Pato_Alumno ();
@@ -328,6 +372,13 @@ class Pato_Views_Alumno {
 					/* Intentar matricular el alumno en los nrc */
 					if (false === ($seccion->get ($nrc_nuevo))) continue;
 					
+					/* Revisar cupos aquí */
+					$count = $seccion->get_alumnos_list (array ('count' => true));
+					if ($count >= $seccion->cupo) {
+						$request->user->setMessage (2, 'El NRC '.$seccion->nrc.' tiene cupo lleno');
+						continue;
+					}
+					
 					$secciones_al = $alumno->get_grupos_list ();
 					/* Revisar que no haya matriculado otro curso de la misma materia */
 					$choque = false;
@@ -343,8 +394,6 @@ class Pato_Views_Alumno {
 							$choque = true;
 							continue;
 						}
-						
-						/* TODO: Revisar cupos aquí */
 					}
 					
 					if ($choque) continue;

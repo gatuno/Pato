@@ -167,6 +167,12 @@ $ctl[] = array(
 			'method' => 'verGrupos',
 		),
 		array(
+			'regex' => '#^(\w\d{7})/horario/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'verHorario',
+		),
+		array(
 			'regex' => '#^(\w\d{7})/update/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
