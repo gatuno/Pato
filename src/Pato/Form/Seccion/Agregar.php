@@ -26,7 +26,7 @@ class Pato_Form_Seccion_Agregar extends Gatuf_Form {
 				'widget_attrs' => array(
 					'choices' => $choices,
 				),
-				'widget' => 'Gatuf_Form_Widget_SelectInput',
+				'widget' => 'Gatuf_Form_Widget_DobleInput',
 		));
 		
 		$this->fields['seccion'] = new Gatuf_Form_Field_Varchar(
@@ -34,7 +34,7 @@ class Pato_Form_Seccion_Agregar extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Seccion',
 				'initial' => '',
-				'help_text' => 'La sección, como M15VC o M14MB',
+				'help_text' => 'La sección, como A01 o B03. Se utiliza "A" para Lomas de Tejeda y "B" para Cajititlán',
 				'max_length' => 15,
 				'widget_attrs' => array(
 					'maxlength' => 15,
@@ -55,9 +55,10 @@ class Pato_Form_Seccion_Agregar extends Gatuf_Form {
 				'initial' => '',
 				'help_text' => 'El profesor de este grupo',
 				'widget_attrs' => array(
-					'choices' => $choices,
+					'json' => Gatuf::config ('url_base').Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::buscarJSON'),
+					'min_length' => 2,
 				),
-				'widget' => 'Gatuf_Form_Widget_SelectInput',
+				'widget' => 'Gatuf_Form_Widget_AutoCompleteInput',
 		));
 
 		$choices = array('Sin suplente' => 0) + $choices;
@@ -78,8 +79,8 @@ class Pato_Form_Seccion_Agregar extends Gatuf_Form {
 	public function clean_seccion () {
 		$seccion = mb_strtoupper($this->cleaned_data['seccion']);
 		
-		if (!preg_match ("/^\w\d+[MV]\w$/", $seccion) && !preg_match("/^[AB]\d+$/", $seccion)) {
-			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con una letra, seguida de un número, luego el turno (MV) y al final la letra del grupo; ó estilo SIIAU las letras A o B seguidas de un número.');
+		if (!preg_match("/^[AB]\d+$/", $seccion)) {
+			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con las letras A o B seguidas de un número.');
 		}
 		
 		return $seccion;

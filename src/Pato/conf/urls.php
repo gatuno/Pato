@@ -498,6 +498,13 @@ $ctl[] = array (
 	'method' => 'agregarMaestro',
 );
 
+$ctl[] = array(
+	'regex' => '#^/profesores/buscar/JSON/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Maestro',
+	'method' => 'buscarJSON',
+);
+
 $ctl[] = array (
 	'regex' => '#^/profesor/#',
 	'base' => $base,

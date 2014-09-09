@@ -1,0 +1,22 @@
+{extends 'pato/alumno/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body_alumno}
+<h2>Horario</h2>
+<p>Horario para el alumno {$alumno} en el ciclo escolar <strong>{$calendario.descripcion}</strong></p>
+{if $horario.events}
+	{$horario.render}
+{else}
+	<p>Esta alumno no tiene horas clase programadas.</p>
+{/if}
+<h2>Materias</h2>
+{if count($secciones) != 0}
+<table>
+	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</tr></thead>
+	<tbody>{foreach $secciones as $seccion}
+	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td>{$seccion.get_maestro}</td></tr>
+	{/foreach}</tbody>
+</table>
+{else}
+	<p>Ninguno</p>
+{/if}
+{/block}

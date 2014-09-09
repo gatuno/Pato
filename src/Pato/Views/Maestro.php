@@ -1,6 +1,7 @@
 <?php
 
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
+Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Maestro {
 	public function index ($request, $match) {
@@ -153,6 +154,29 @@ class Pato_Views_Maestro {
 		                                                'maestro' => $maestro,
 		                                                'form' => $form),
 		                                         $request);
+	}
+	
+	public $buscarJSON_precond = array ('Gatuf_Precondition::adminRequired');
+	public function buscarJSON ($request, $match) {
+		if (!isset ($request->GET['term'])) {
+			return new Gatuf_HTTP_Response_Json (array ());
+		}
+		
+		$bus = '%'.$request->GET['term'].'%';
+		
+		$sql = new Gatuf_SQL ('nombre LIKE %s OR apellido LIKE %s or codigo LIKE %s', array ($bus, $bus, $bus));
+		$maestros = Gatuf::factory ('Pato_Maestro')->getList (array ('filter' => $sql->gen ()));
+		
+		$response = array ();
+		foreach ($maestros as $maestro) {
+			$o = new stdClass();
+			$o->value = (string) $maestro->codigo;
+			$o->label = (string) $maestro;
+			
+			$response[] = $o;
+		}
+		
+		return new Gatuf_HTTP_Response_Json ($response);
 	}
 	
 	public function verHorarioPDF ($request, $match, $params = array ()) {

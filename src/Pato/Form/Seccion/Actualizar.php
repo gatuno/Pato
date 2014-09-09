@@ -11,7 +11,7 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Seccion',
 				'initial' => $this->seccion->seccion,
-				'help_text' => 'La sección, como M15VC o M14MB',
+				'help_text' => 'La sección, como A01 o B03. Se utiliza "A" para Lomas de Tejeda y "B" para Cajititlán',
 				'max_length' => 15,
 				'widget_attrs' => array(
 					'maxlength' => 15,
@@ -25,6 +25,14 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 			$choices[$m->apellido . ' ' . $m->nombre] = $m->codigo;
 		}
 		
+		$this->fields['cupo'] = new Gatuf_Form_Field_Integer (
+			array (
+				'required' => true,
+				'label' => 'Cupo',
+				'initial' => $this->seccion->cupo,
+				'help_text' => 'El cupo de este grupo. Recuerde que el cupo se actualiza automáticamente en base a los salones programados para este NRC',
+		));
+		
 		$this->fields['maestro'] = new Gatuf_Form_Field_Integer(
 			array(
 				'required' => true,
@@ -32,9 +40,10 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 				'initial' => $this->seccion->maestro,
 				'help_text' => 'El profesor de este grupo',
 				'widget_attrs' => array(
-					'choices' => $choices,
+					'json' => Gatuf::config ('url_base').Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::buscarJSON'),
+					'min_length' => 2,
 				),
-				'widget' => 'Gatuf_Form_Widget_SelectInput',
+				'widget' => 'Gatuf_Form_Widget_AutoCompleteInput',
 		));
 
 		$choices = array('No asignado' => 0) + $choices;
@@ -57,8 +66,8 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 		
 		if ($this->seccion->seccion == $seccion) return $this->seccion->seccion;
 		
-		if (!preg_match ("/^\w\d+[MV]\w$/", $seccion) && !preg_match("/^[AB]\d+$/", $seccion)) {
-			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con una letra, seguida de un número, luego el turno (MV) y al final la letra del grupo; ó estilo SIIAU las letras A o B seguidas de un número.');
+		if (!preg_match("/^[AB]\d+$/", $seccion)) {
+			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con las letras A o B seguidas de un número.');
 		}
 		
 		$sql = new Gatuf_SQL ('materia=%s AND seccion=%s', array ($this->seccion->materia, $seccion));
