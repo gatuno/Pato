@@ -13,6 +13,7 @@ $m['Pato_Seccion'] = array ('relate_to' => array ('Pato_Materia', 'Pato_Maestro'
                             'relate_to_many' => array ('Pato_Alumno'));
 $m['Pato_Boleta'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Alumno', 'Pato_Evaluacion'));
 $m['Pato_Inscripcion'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_Carrera', 'Pato_Calendario', 'Pato_Estatus'));
+$m['Pato_Kardex'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_Materia', 'Pato_Calendario', 'Pato_GPE'));
 
 /* Conexión de señales aquí */
 return $m;

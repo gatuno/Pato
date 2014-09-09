@@ -212,7 +212,7 @@ class Pato_Views_Seccion {
 		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
 		$carreras = $seccion->get_materia ()->get_carreras_list ();
 		
-		$found = false;
+		$found = $request->user->administrator;
 		foreach ($carreras as $carrera) {
 			if ($request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
 				$found = true;

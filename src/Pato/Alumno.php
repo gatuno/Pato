@@ -83,6 +83,7 @@ class Pato_Alumno extends Gatuf_Model {
 		return null;
 	}
 	
+	/* TODO: Función para regresar la inscripción activa en dado calendario */
 	function __toString () {
 		return $this->apellido.' '.$this->nombre.' ('.$this->codigo.')';
 	}

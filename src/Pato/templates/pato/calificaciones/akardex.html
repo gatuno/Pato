@@ -1,0 +1,10 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Esta operación convertirá todas las calificaciones que están actualmente en boleta a Kardex. Una vez creada la calificación en Kardex, será imposible modificar las boletas. Esta operación crea todas las calificaciones en Kardex de un calendario.</p>
+<form action="." method="post">
+	<table>
+		{$form.render_table}
+		<tr><td colspan="2"><input type="submit" value="Convertir a Kardex" /></td></tr>
+	</table>
+</form>
+{/block}

@@ -628,6 +628,20 @@ $ctl[] = array (
 	'method' => 'loteBoletaCarrera',
 );
 
+$ctl[] = array (
+	'regex' => '#^/calificaciones/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calificaciones',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/calificaciones/a-kardex/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calificaciones',
+	'method' => 'aKardex',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,
