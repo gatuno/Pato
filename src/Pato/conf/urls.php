@@ -203,6 +203,24 @@ $ctl[] = array(
 			'method' => 'agenda',
 		),
 		array (
+			'regex' => '#^(\w\d{7})/agenda/nueva/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'crearAgenda',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/agenda/cambiar/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'cambiarAgenda',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/agenda/eliminar/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'eliminarAgenda',
+		),
+		array (
 			'regex' => '#^(\w\d{7})/agenda/registro/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',

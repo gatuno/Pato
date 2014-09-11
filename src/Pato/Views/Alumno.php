@@ -312,6 +312,116 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
+	public $crearAgenda_precond = array ('Gatuf_Precondition::adminRequired');
+	public function crearAgenda ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		$calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		
+		$list = $alumno->get_agenda_list ();
+		if (count ($list) != 0) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('alumno' => $alumno);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Alumno_CrearAgenda ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$agenda = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::agenda', $alumno->codigo);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Alumno_CrearAgenda (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/crear-agenda.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'calendario' => $request->calendario,
+		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	public $cambiarAgenda_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cambiarAgenda ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		$calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		
+		$list = $alumno->get_agenda_list ();
+		if (count ($list) == 0) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		$extra = array ('agenda' => $list[0]);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Alumno_CambiarAgenda ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$agenda = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::agenda', $alumno->codigo);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Alumno_CambiarAgenda (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/cambiar-agenda.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'calendario' => $request->calendario,
+		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	public $eliminarAgenda_precond = array ('Gatuf_Precondition::adminRequired');
+	public function eliminarAgenda ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		$calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		
+		$list = $alumno->get_agenda_list ();
+		if (count ($list) == 0) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$list[0]->delete ();
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::agenda', $alumno->codigo);
+		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
 	public $registro_precond = array ('Gatuf_Precondition::loginRequired');
 	public function registro ($request, $match) {
 		$alumno = new Pato_Alumno ();

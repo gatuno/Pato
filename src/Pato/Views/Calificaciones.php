@@ -4,7 +4,6 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Calificaciones {
-	
 	public $index_precond = array ('Gatuf_Precondition::adminRequired');
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/index.html',

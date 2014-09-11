@@ -1,0 +1,21 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<h2>Ajustar agenda</h2>
+{if $form.errors}
+<div class="errors"><p>El formulario contiene algunos errores:</p></div>
+{/if}
+<form method="post" action=".">
+	<table>
+		<tr><td><strong>Código:</strong></td><td>{$alumno.codigo}</td></tr>
+		<tr><td><strong>Nombre:</strong></td><td>{$alumno.nombre} {$alumno.apellido}</td></tr>
+		<tr><td><strong>Calendario:</strong></td><td>{$calendario.descripcion}</td></tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Cambiar agenda" /></td></tr>
+	</table>
+</form>
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="{media '/js/jquery-ui-timepicker-addon.js'}"></script>
+	<script type="text/javascript" src="{media '/js/ui-timepicker-es.js'}"></script>{/block}
