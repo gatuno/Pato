@@ -660,6 +660,34 @@ $ctl[] = array (
 	'method' => 'aKardex',
 );
 
+$ctl[] = array (
+	'regex' => '#^/reportes/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/matriculados/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculados',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/matriculados/(\w+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculadosCalendario',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/matriculados/(\w+)/ODS/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculadosCalendarioODS',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

@@ -1,0 +1,11 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Este reporte determinará los alumnos matriculados y no matriculados en el calendario seleccionado.</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Ver reporte" /></td></tr>
+	</table>
+</form>
+{/block}
