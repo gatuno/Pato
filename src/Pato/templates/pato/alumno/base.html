@@ -14,6 +14,9 @@
 {if $user.login == $alumno.codigo}
 <li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar contraseña</a></li>
 {/if}
+{if $user.administrator}
+<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordReset', array ($alumno.codigo)}">Resetear contraseña</a></li>
+{/if}
 </ul>
 {block body_alumno}{/block}
 {/block}

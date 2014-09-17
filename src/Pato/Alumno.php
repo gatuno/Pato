@@ -83,7 +83,35 @@ class Pato_Alumno extends Gatuf_Model {
 		return null;
 	}
 	
-	/* TODO: Función para regresar la inscripción activa en dado calendario */
+	public function get_inscripcion_for_cal ($calendario) {
+		/* Buscar la inscripcion para el alumno que está en el periodo indicado */
+		$inscripciones = $this->get_inscripciones_list ();
+		
+		foreach ($inscripciones as $ins) {
+			$cal = $ins->get_ingreso ();
+			
+			if ($calendario->anio < $cal->anio) continue;
+			if ($calendario->anio == $cal->anio && $calendario->letra < $cal->letra) {
+				/* No es la inscripción que busco */
+				continue;
+			}
+			
+			if ($ins->egreso != null) {
+				/* También revisar la salida */
+				$cal = $ins->get_egreso ();
+				
+				if ($calendario->anio > $cal->anio) continue;
+				if ($calendario->anio == $cal->anio && $calendario->letra > $cal->letra) {
+					/* No es la inscripción que busco */
+					continue;
+				}
+			}
+			
+			return $ins;
+		}
+		
+		return null;
+	}
 	function __toString () {
 		return $this->apellido.' '.$this->nombre.' ('.$this->codigo.')';
 	}
