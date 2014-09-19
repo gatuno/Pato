@@ -21,4 +21,17 @@ class Pato_Precondition {
 		
 		return new Gatuf_HTTP_Response_Forbidden ($request);
 	}
+	
+	static public function maestroRequired ($request) {
+		$res = Gatuf_Precondition::loginRequired($request);
+		if (true !== $res) {
+			return $res;
+		}
+		
+		if ($request->user->administrator || $request->user->type == 'm') {
+			return true;
+		}
+		
+		return new Gatuf_HTTP_Response_Forbidden ($request);
+	}
 }

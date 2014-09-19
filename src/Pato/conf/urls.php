@@ -416,6 +416,12 @@ $ctl[] = array (
 			'method' => 'actaCalificaciones',
 		),
 		array (
+			'regex' => '#^(\d+)/formato/lista_asistencias/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'listaAsistencia',
+		),
+		array (
 			'regex' => '#^(\d+)/timeadd/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Horario',

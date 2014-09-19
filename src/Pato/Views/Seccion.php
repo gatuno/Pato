@@ -328,7 +328,6 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $verFormatos_precond = array ('Gatuf_Precondition::adminRequired');
 	public function verFormatos ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -371,6 +370,30 @@ class Pato_Views_Seccion {
 		$pdf->Close ();
 		
 		$nombre = 'acta_preacta_'.$seccion->nrc.'.pdf';
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+	}
+	
+	public $listaAsistencia_precond = array ('Pato_Precondition::maestroRequired');
+	public function listaAsistencia ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator && $request->user->login != $seccion->maestro) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$pdf = new Pato_PDF_Seccion_Asistencia ('L', 'mm', 'Letter');
+		
+		$pdf->renderGrupo ($seccion);
+		
+		$pdf->Close ();
+		
+		$nombre = 'Lista_asistencias_'.$seccion->nrc.'_'.$seccion->materia.'_'.$seccion->seccion.'.pdf';
 		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
 		
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);

@@ -5,5 +5,6 @@
 	{if $user.administrator}
 	{foreach $gpe as $pe}<li><a href="{url 'Pato_Views_Seccion::actaCalificaciones', array ($seccion.nrc, $pe.id)}">Acta y Pre Acta de calificaciones de {$pe.descripcion}</a></li>{/foreach}
 	{/if}
+	{if $user.administrator || $user.login == $seccion.maestro}<li><a href="{url 'Pato_Views_Seccion::listaAsistencia', $seccion.nrc}">Lista de asistencias</a></li></li>{/if}
 </ul>
 {/block}
