@@ -4,7 +4,7 @@ Gatuf::loadFunction ('Pato_Utils_numeroLetra');
 Gatuf::loadFunction ('Pato_Calendario_getDefault');
 
 class Pato_PDF_Seccion_Acta extends External_FPDF {
-	function renderPreacta ($seccion) {
+	function renderPreacta ($seccion, $gpe) {
 		$this->SetFont('Times', '', 12);
 		$fecha = '22 de Agosto de 2014';
 		
@@ -23,18 +23,30 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->SetFont('Times', '', 12);
 		$this->SetY (28);
 		$this->SetX (150);
-		$this->Cell (0, 0, 'Evaluación Ordinaria', 0, 0, 'L');
+		$this->Cell (0, 0, 'Evaluación '.$gpe->descripcion, 0, 0, 'L');
 		
 		/* Carrera */
 		$this->SetY (42);
 		$this->SetX (18);
 		$this->Cell (0, 0, 'Programa educativo:', 0, 0, 'L');
 		
+		$calendario = new Pato_Calendario ($GLOBALS['CAL_ACTIVO']);
+		/* Arreglado */
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
-		$inscripcion = $alumnos[0]->get_current_inscripcion ();
-		$carrera = $inscripcion->get_carrera ();
+		if (count ($alumnos) == 0) {
+			$car_desc = '';
+		} else {
+			$inscripcion = $alumnos[0]->get_inscripcion_for_cal($calendario);
+			if ($inscripcion == null) {
+				$car_desc = '';
+			} else {
+				$carrera = $inscripcion->get_carrera ();
+				$car_desc = $carrera->descripcion;
+			}
+		}
+		
 		$this->SetX (58);
-		$this->Cell (100, 0, $carrera->descripcion, 0, 0, 'L');
+		$this->Cell (100, 0, $car_desc, 0, 0, 'L');
 		
 		/* El cuatrimestre */
 		$this->SetY (47);
@@ -146,26 +158,27 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			$this->SetY ($y);
 			$this->SetX (131);
 			
-			/* FIXME: Esto está mal porque asumo que solo habrá una calificación en boleta
-			 * Debe tomar la calificación final que debe ser la de Kardex */
-			$boleta = Gatuf::factory ('Pato_Boleta')->getOne ($sql->gen ());
+			/* Arreglado */
+			$sql = new Gatuf_SQL ('calendario=%s AND materia=%s AND gpe=%s', array ($GLOBALS['CAL_ACTIVO'], $seccion->materia, $gpe->id));
+			$kardexs = $alumno->get_kardex_list (array ('filter' => $sql->gen ()));
 			
-			if ($boleta === null) {
+			if (count ($kardexs) == 0) {
+				/* Aún no genera calificación en kardex, no entra a acta */
 				$this->Cell (22, $altura, '--', 1, 0, 'C');
 			} else {
-				if ($boleta->calificacion < 0) {
+				if ($kardexs[0]->calificacion < 0) {
 					$especiales = array (-3 => 'IN', -2 => 'SD');
-					$this->Cell (22, $altura, $especiales[(int) $boleta->calificacion], 1, 0, 'C');
+					$this->Cell (22, $altura, $especiales[(int) $kardexs[0]->calificacion], 1, 0, 'C');
 				} else {
-					$this->Cell (22, $altura, $boleta->calificacion, 1, 0, 'C');
+					$this->Cell (22, $altura, $kardexs[0]->calificacion, 1, 0, 'C');
 				}
 			}
 			
-			if ($boleta != null) {
+			if (count ($kardexs) != 0) {
 				$this->SetY ($y);
 				$this->SetX (153);
-				if ($boleta->calificacion <= 0) {
-					switch ($boleta->calificacion) {
+				if ($kardexs[0]->calificacion <= 0) {
+					switch ($kardexs[0]->calificacion) {
 						case 0:
 							$letra = 'No acreditó';
 							break;
@@ -177,7 +190,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 							break;
 					}
 				} else {
-					$letra = mb_convert_case (Pato_Utils_numeroLetra ($boleta->calificacion), MB_CASE_TITLE);
+					$letra = mb_convert_case (Pato_Utils_numeroLetra ($kardexs[0]->calificacion), MB_CASE_TITLE);
 				}
 				$this->Cell (52, $altura, $letra, 1, 0, 'C');
 			} else {
@@ -216,7 +229,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->Cell (60, 6, 'Director de Programa Educativo', 0, 0, 'C');
 	}
 	
-	function renderActa ($seccion, $folio = 1) {
+	function renderActa ($seccion, $gpe, $folio = 1) {
 		$this->SetFont('Times', '', 12);
 		$fecha = '22 de Agosto de 2014';
 		
@@ -247,18 +260,28 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		$this->Cell (135, 8, 'Materia: '.$materia->descripcion, 0, 0, 'L');
 		$this->SetX (13);
-		$this->Cell (135, 8, 'Evaluación: Ordinaria', 0, 0, 'R');
+		$this->Cell (135, 8, 'Evaluación: '.$gpe->descripcion, 0, 0, 'R');
 		
 		$this->SetX (148);
 		$this->Cell (56, 8, 'Clave: '.$materia->clave, 1, 0, 'L');
 		
-		/* FIXME: Esto está mal */
+		$calendario = new Pato_Calendario ($GLOBALS['CAL_ACTIVO']);
+		/* Arreglado */
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
-		$inscripcion = $alumnos[0]->get_current_inscripcion ();
-		$carrera = $inscripcion->get_carrera ();
+		if (count ($alumnos) == 0) {
+			$car_desc = '';
+		} else {
+			$inscripcion = $alumnos[0]->get_inscripcion_for_cal($calendario);
+			if ($inscripcion == null) {
+				$car_desc = '';
+			} else {
+				$carrera = $inscripcion->get_carrera ();
+				$car_desc = $carrera->descripcion;
+			}
+		}
 		
 		$this->SetY (60); $this->SetX (13);
-		$this->Cell (135, 8, 'Programa educativo: '.$carrera->descripcion, 1);
+		$this->Cell (135, 8, 'Programa educativo: '.$car_desc, 1);
 		
 		/* Condicionado a que esto se elimine */
 		$this->SetX (148);
@@ -270,7 +293,6 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->SetX (55);
 		$this->Cell (93, 8, 'Fecha: '.$fecha, 1);
 		
-		$calendario = new Pato_Calendario (Pato_Calendario_getDefault ());
 		$this->SetX (148);
 		$this->Cell (56, 8, 'Periodo: '.$calendario->descripcion, 1);
 		
@@ -312,25 +334,24 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			/* Recuperar la calificación final */
 			$this->SetX (124);
 			
-			/* FIXME: Esto está mal porque asumo que solo habrá una calificación en boleta
-			 * Debe tomar la calificación final que debe ser la de Kardex */
-			$boleta = Gatuf::factory ('Pato_Boleta')->getOne ($sql->gen ());
+			$sql = new Gatuf_SQL ('calendario=%s AND materia=%s AND gpe=%s', array ($GLOBALS['CAL_ACTIVO'], $seccion->materia, $gpe->id));
+			$kardexs = $alumno->get_kardex_list (array ('filter' => $sql->gen ()));
 			
-			if ($boleta === null) {
+			if (count ($kardexs) == 0) {
 				$this->Cell (24, $altura, '--', 1, 0, 'C');
 			} else {
-				if ($boleta->calificacion <= 0) {
+				if ($kardexs[0]->calificacion <= 0) {
 					$especiales = array (-3 => 'IN', -2 => 'SD', 0 => 'NA');
-					$this->Cell (24, $altura, $especiales[(int) $boleta->calificacion], 1, 0, 'C');
+					$this->Cell (24, $altura, $especiales[(int) $kardexs[0]->calificacion], 1, 0, 'C');
 				} else {
-					$this->Cell (24, $altura, $boleta->calificacion, 1, 0, 'C');
+					$this->Cell (24, $altura, $kardexs[0]->calificacion, 1, 0, 'C');
 				}
 			}
 			
-			if ($boleta != null) {
+			if (count ($kardexs) != 0) {
 				$this->SetX (148);
-				if ($boleta->calificacion <= 0) {
-					switch ($boleta->calificacion) {
+				if ($kardexs[0]->calificacion <= 0) {
+					switch ($kardexs[0]->calificacion) {
 						case 0:
 							$letra = 'No acreditó';
 							break;
@@ -342,7 +363,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 							break;
 					}
 				} else {
-					$letra = mb_convert_case (Pato_Utils_numeroLetra ($boleta->calificacion), MB_CASE_TITLE);
+					$letra = mb_convert_case (Pato_Utils_numeroLetra ($kardexs[0]->calificacion), MB_CASE_TITLE);
 				}
 				$this->Cell (56, $altura, $letra, 1, 0, 'C');
 			} else {

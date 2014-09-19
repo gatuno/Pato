@@ -336,8 +336,11 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$gpe = Gatuf::factory ('Pato_GPE')->getList ();
+		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/formatos.html',
 		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                                'gpe' => $gpe,
 		                                                'seccion' => $seccion),
 		                                         $request);
 	}
@@ -350,13 +353,19 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$gpe = new Pato_GPE ();
+		
+		if (false === ($gpe->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
 		$pdf = new Pato_PDF_Seccion_Acta ('P', 'mm', 'Letter');
 		
-		$pdf->renderPreacta ($seccion);
+		$pdf->renderPreacta ($seccion, $gpe);
 		
 		/* Usar e incrementar el folio */
 		$folio = $request->session->getData ('numero_folio', 1);
-		$pdf->renderActa ($seccion, $folio++);
+		$pdf->renderActa ($seccion, $gpe, $folio++);
 		$request->session->setData ('numero_folio', $folio);
 		
 		$pdf->Close ();

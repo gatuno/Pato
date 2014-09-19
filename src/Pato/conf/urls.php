@@ -410,7 +410,7 @@ $ctl[] = array (
 			'method' => 'verFormatos',
 		),
 		array (
-			'regex' => '#^(\d+)/formato/acta_calif/$#',
+			'regex' => '#^(\d+)/formato/acta_calif/(\d+)/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Seccion',
 			'method' => 'actaCalificaciones',

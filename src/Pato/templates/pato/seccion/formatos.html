@@ -2,6 +2,8 @@
 {block body_seccion}
 <p>Los siguientes formatos están disponibles:</p>
 <ul>
-	<li><a href="{url 'Pato_Views_Seccion::actaCalificaciones', $seccion.nrc}">Acta y Pre Acta de calificaciones</a></li>
+	{if $user.administrator}
+	{foreach $gpe as $pe}<li><a href="{url 'Pato_Views_Seccion::actaCalificaciones', array ($seccion.nrc, $pe.id)}">Acta y Pre Acta de calificaciones de {$pe.descripcion}</a></li>{/foreach}
+	{/if}
 </ul>
 {/block}
