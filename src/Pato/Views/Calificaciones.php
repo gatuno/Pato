@@ -26,6 +26,7 @@ class Pato_Views_Calificaciones {
 				
 				/* Hacer cambio de calendario */
 				$request->session->setData ('CAL_ACTIVO', $calendario->clave);
+				$request->user->setMessage (1, 'El calendario ha sido cambiado a '.$calendario->descripcion);
 				$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
 				
 				/* Preparar el join SQL */
@@ -33,6 +34,8 @@ class Pato_Views_Calificaciones {
 				$porc_model = new Pato_Porcentaje ();
 				$porc_t = $porc_model->getSqlTable ();
 				$porc_model->_a['views']['join_materia'] = array ('join' => 'LEFT JOIN '.$eval_t.' ON '.$eval_t.'.id=evaluacion');
+				
+				$totales = array ('generados' => 0, 'enkardex' => 0);
 				
 				/* Recorrer cada sección de este calendario */
 				$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
@@ -53,9 +56,20 @@ class Pato_Views_Calificaciones {
 						/* Si el alumno ya tiene una calificación en kardex de este calendario y materia, omitir */
 						$sql = new Gatuf_SQL ('materia=%s AND calendario=%s AND gpe=%s', array ($seccion->materia, $calendario->clave, $gpe->id));
 						
-						$kardxs = $alumno->get_kardex_list (array ('filter' => $sql->gen ()));
-						if (count ($kardxs) != 0) {
+						$kardxs = $alumno->get_kardex_list (array ('count' => true, 'filter' => $sql->gen ()));
+						if ($kardxs != 0) {
 							/* Este alumno YA tiene registrada una calificación en kardex, omitir */
+							$totales['enkardex']++;
+							continue;
+						}
+						
+						/* Si el alumno ya tiene una calificación en kardex aprobatoria, omitir */
+						$sql = new Gatuf_SQL ('materia=%s AND aprobada=1', array ($seccion->materia));
+						
+						$kardxs = $alumno->get_kardex_list (array ('count' => true, 'filter' => $sql->gen ()));
+						if ($kardxs != 0) {
+							/* Este alumno YA tiene registrada una calificación en kardex, omitir */
+							$totales['enkardex']++;
 							continue;
 						}
 						
@@ -83,10 +97,16 @@ class Pato_Views_Calificaciones {
 						$kardex->aprobada = ($suma >= 7);
 						
 						$kardex->create ();
+						$totales['generados']++;
 					}
 				}
 				
-				return new Gatuf_HTTP_Response ('OK');
+				return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/akardex-reporte.html',
+						                                 array('page_title' => 'Convertir a Kardex - Completo',
+						                                       'calendario' => $calendario,
+						                                       'gpe' => $gpe,
+						                                       'total' => $totales),
+				                                         $request);
 			}
 		} else {
 			$form = new Pato_Form_Calificaciones_AKardex (null, $extra);
@@ -94,6 +114,34 @@ class Pato_Views_Calificaciones {
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/akardex.html',
 		                                         array('page_title' => 'Convertir a Kardex',
+		                                               'form' => $form),
+                                                 $request);
+	}
+	
+	public $levantarKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public function levantarKardex ($request, $match) {
+		$extra = array ('cal_activo' => $request->session->getData ('CAL_ACTIVO', ''));
+		
+		if (isset ($request->GET['materia'])) $extra['materia'] = $request->GET['materia'];
+		if (isset ($request->GET['gpe'])) $extra['gpe'] = $request->GET['gpe'];
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Calificaciones_NuevaKardex ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$kardex = $form->save ();
+				
+				$request->user->setMessage (1, 'Calificación en Kardex creada correctamente para el alumno '.$kardex->alumno.' en la materia '.$kardex->materia);
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calificaciones::levantarKardex', array (), array ('materia' => $kardex->materia, 'gpe' => $kardex->gpe), false);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Calificaciones_NuevaKardex (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/levantar-kardex.html',
+		                                         array('page_title' => 'Levantar calificación en Kardex',
 		                                               'form' => $form),
                                                  $request);
 	}

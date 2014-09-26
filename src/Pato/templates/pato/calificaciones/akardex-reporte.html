@@ -1,0 +1,6 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Se convirtieron a kardex todas las calificaciones en boleta del calendario {$calendario.descripcion} en la forma de evaluación {$gpe.descripcion}.</p>
+<p>En esta pasada fueron generadas {$total['generados']} calificaciones en Kardex.</p>
+<p>Se omitieron {$total['enkardex']} porque ya existían en kardex.</p>
+{/block}

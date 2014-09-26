@@ -667,6 +667,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/calificaciones/nueva-kardex/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calificaciones',
+	'method' => 'levantarKardex',
+);
+
+$ctl[] = array (
 	'regex' => '#^/reportes/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes',
