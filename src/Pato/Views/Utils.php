@@ -47,4 +47,130 @@ class Pato_Views_Utils {
 		
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
+	
+	public $altasBajasMasivas_precond = array ('Gatuf_Precondition::adminRequired');
+	public function altasBajasMasivas ($request, $match) {
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Utils_AltasBajas ($request->POST);
+			
+			if ($form->isValid ()) {
+				$cambios = $form->save ();
+				
+				$horario_check = $cambios['opc']['horario'];
+				
+				$seccion = new Pato_Seccion ();
+				$alumno = new Pato_Alumno ();
+				
+				/* Realizar primero las bajas */
+				foreach ($cambios['bajas'] as $cambio) {
+					if ($seccion->get ($cambio[0]) === false) {
+						$request->user->setMessage (3, 'El nrc '.$cambio[0].' no existe');
+						continue;
+					}
+					
+					if ($alumno->get ($cambio[1]) === false) {
+						$request->user->setMessage (3, 'El alumno '.$cambio[1].' no existe');
+						continue;
+					}
+					$sql = new Gatuf_SQL ('pato_alumno_codigo=%s', $alumno->codigo);
+					
+					$alumnos = $seccion->get_alumnos_list (array ('filter' => $sql->gen ()));
+					
+					if (count ($alumnos) == 0) {
+						$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' no está registrado en el nrc '.$seccion->nrc);
+						continue;
+					}
+					
+					/* Borrar las calificaciones y asistencias
+					 * TODO: Convertir esto en un TRIGGER */
+					$sql = new Gatuf_SQL ('alumno=%s AND nrc=%s', array ($alumno->codigo, $seccion->nrc));
+			
+					$asistencias = Gatuf::factory ('Pato_Asistencia')->getList (array ('filter' => $sql->gen ()));
+					foreach ($asistencias as $asis) {
+						$asis->delete ();
+					}
+			
+					$boletas = Gatuf::factory ('Pato_Boleta')->getList (array ('filter' => $sql->gen ()));
+					foreach ($boletas as $b) {
+						$b->delete ();
+					}
+					
+					$alumno->delAssoc ($seccion);
+					$request->user->setMessage (1, 'El alumno '.$alumno->codigo.' fué desmatriculado del nrc '.$seccion->nrc);
+				}
+				
+				/* Realizar las altas */
+				foreach ($cambios['altas'] as $cambio) {
+					if ($seccion->get ($cambio[0]) === false) {
+						$request->user->setMessage (3, 'El nrc '.$cambio[0].' no existe');
+						continue;
+					}
+					
+					if ($alumno->get ($cambio[1]) === false) {
+						$request->user->setMessage (3, 'El alumno '.$cambio[1].' no existe');
+						continue;
+					}
+					
+					$sql = new Gatuf_SQL ('pato_alumno_codigo=%s', $alumno->codigo);
+					
+					$alumnos = $seccion->get_alumnos_list (array ('filter' => $sql->gen ()));
+					
+					if (count ($alumnos) != 0) {
+						$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' ya está registrado en el nrc '.$seccion->nrc.', ignorando');
+						continue;
+					}
+					
+					$secciones = $alumno->get_grupos_list ();
+					$found = false;
+					
+					/* Para acumular las horas que lleva ese alumno */
+					$horas = array ();
+					
+					/* Recorrer todas las secciones que ya tiene matriculado este alumno */
+					foreach ($secciones as $s) {
+						if ($s->materia == $seccion->materia) {
+							$request->user->setMessage (3, 'El alumno '.$alumno->codigo.' ya tiene matriculada una materia '.$seccion->materia.', por lo tanto, el NRC '.$seccion->nrc.' no se pudo dar de alta');
+							$found = true;
+							break;
+						}
+						if ($horario_check) {
+							foreach ($s->get_pato_horario_list () as $h_al) {
+								$horas[] = $h_al;
+							}
+						}
+					}
+					
+					if ($found) continue;
+					
+					if ($horario_check) {
+						$choque = false;
+						foreach ($horas as $h_al) {
+							foreach ($seccion->get_pato_horario_list () as $h_sec) {
+								if (Pato_Horario::chocan ($h_al, $h_sec)) $choque = true;
+							}
+						}
+						
+						if ($choque) {
+							$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' tiene conflictos de horario al matricular el NRC '.$seccion->nrc);
+							continue;
+						}
+					}
+					
+					$alumno->setAssoc ($seccion);
+					$request->user->setMessage (1, 'Alumno '.$alumno->codigo.' matriculado en el NRC '.$seccion->nrc);
+				}
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::altasBajasMasivas');
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Utils_AltasBajas (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/altas-bajas.html',
+		                                         array('page_title' => 'Altas y Bajas masivas',
+                                                       'form' => $form),
+                                                 $request);
+	}
 }
