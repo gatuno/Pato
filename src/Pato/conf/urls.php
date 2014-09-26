@@ -701,6 +701,20 @@ $ctl[] = array (
 	'method' => 'matriculadosCalendarioODS',
 );
 
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/maestros-activos/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'maestrosActivos',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/maestros-activos/(\w+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'maestrosActivosCalendario',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,
