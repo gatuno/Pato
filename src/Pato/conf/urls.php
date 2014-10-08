@@ -722,6 +722,20 @@ $ctl[] = array (
 	'method' => 'maestrosActivosCalendario',
 );
 
+$ctl[] = array (
+	'regex' => '#^/reportes/calificaciones/subida-tarde/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Calificaciones',
+	'method' => 'subidaTarde',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/calificaciones/subida-tarde/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Calificaciones',
+	'method' => 'subidaTardeReporte',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

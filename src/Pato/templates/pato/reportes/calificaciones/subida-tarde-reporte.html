@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+	<p>Lista de sus <del>quemados</del> <ins>profesores</ins> que no han subido calificaciones en la forma de evaluación {$eval.descripcion}:</p>
+	<table><thead><tr><th>Profesor</th><th>NRC</th><th>Materia</th><th>Sección</th><th>Total de alumnos</th><th>Calificaciones subidas</th><th>Faltantes</th></tr></thead>
+	<tbody>
+		{foreach $incompletos as $i}
+		<tr><td>{$i.nrc.get_maestro}</td><td>{$i.nrc.nrc}</td><td>{$i.nrc.get_materia}</td><td>{$i.nrc.seccion}</td><td>{$i.total}</td><td>{$i.calif}</td><td>{$i.faltantes}</td></tr>
+		{/foreach}
+	</tbody>
+	</table>
+{/block}

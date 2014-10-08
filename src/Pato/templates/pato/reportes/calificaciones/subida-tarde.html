@@ -1,0 +1,10 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+	<p>Este reporte <del>quemará</del> <ins>listará</ins> a los profesores que aún no han subido calificaciones.</p>
+	<p>A continuación, elija la forma de evaluación a revisar:</p>
+	<form action="." method="post">
+		{$form.render_p}
+		<p><input type="submit" value="Consultar" /></p>
+	</form>
+{/block}

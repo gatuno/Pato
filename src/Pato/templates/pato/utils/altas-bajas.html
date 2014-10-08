@@ -6,21 +6,24 @@
 	<p><strong>Reglas:</strong></p>
 	{if $form.f.horarios.errors}<div class="errors">{$form.f.horarios.fieldErrors}</div>{/if}
 	<p>{$form.f.horarios.label}: {$form.f.horarios|safe}</p>
-		<table>
-			<thead><tr><th>NRC</th><th>Alumno</th><th>Tipo</th></tr></thead>
-			<tbody>
-				<tr><td>{$form.f.nrc_0|safe}</td><td>{$form.f.al_0|safe}</td><td>{$form.f.tipo_0|safe}</td></tr>
-				<tr><td>{$form.f.nrc_1|safe}</td><td>{$form.f.al_1|safe}</td><td>{$form.f.tipo_1|safe}</td></tr>
-				<tr><td>{$form.f.nrc_2|safe}</td><td>{$form.f.al_2|safe}</td><td>{$form.f.tipo_2|safe}</td></tr>
-				<tr><td>{$form.f.nrc_3|safe}</td><td>{$form.f.al_3|safe}</td><td>{$form.f.tipo_3|safe}</td></tr>
-				<tr><td>{$form.f.nrc_4|safe}</td><td>{$form.f.al_4|safe}</td><td>{$form.f.tipo_4|safe}</td></tr>
-				<tr><td>{$form.f.nrc_5|safe}</td><td>{$form.f.al_5|safe}</td><td>{$form.f.tipo_5|safe}</td></tr>
-				<tr><td>{$form.f.nrc_6|safe}</td><td>{$form.f.al_6|safe}</td><td>{$form.f.tipo_6|safe}</td></tr>
-				<tr><td>{$form.f.nrc_7|safe}</td><td>{$form.f.al_7|safe}</td><td>{$form.f.tipo_7|safe}</td></tr>
-				<tr><td>{$form.f.nrc_8|safe}</td><td>{$form.f.al_8|safe}</td><td>{$form.f.tipo_8|safe}</td></tr>
-				<tr><td>{$form.f.nrc_9|safe}</td><td>{$form.f.al_9|safe}</td><td>{$form.f.tipo_9|safe}</td></tr>
-				<tr><td colspan="3"><input type="submit" value="Ejecutar altas y bajas" /></tr>
-			</tbody>
+	<p>
+	<table>
+		<thead><tr><th>NRC</th><th>Alumno</th><th>Tipo</th></tr></thead>
+		<tbody>
+			{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+			<tr><td>{$form.f.nrc_0|safe}</td><td>{$form.f.al_0|safe}</td><td>{$form.f.tipo_0|safe}</td></tr>
+			<tr><td>{$form.f.nrc_1|safe}</td><td>{$form.f.al_1|safe}</td><td>{$form.f.tipo_1|safe}</td></tr>
+			<tr><td>{$form.f.nrc_2|safe}</td><td>{$form.f.al_2|safe}</td><td>{$form.f.tipo_2|safe}</td></tr>
+			<tr><td>{$form.f.nrc_3|safe}</td><td>{$form.f.al_3|safe}</td><td>{$form.f.tipo_3|safe}</td></tr>
+			<tr><td>{$form.f.nrc_4|safe}</td><td>{$form.f.al_4|safe}</td><td>{$form.f.tipo_4|safe}</td></tr>
+			<tr><td>{$form.f.nrc_5|safe}</td><td>{$form.f.al_5|safe}</td><td>{$form.f.tipo_5|safe}</td></tr>
+			<tr><td>{$form.f.nrc_6|safe}</td><td>{$form.f.al_6|safe}</td><td>{$form.f.tipo_6|safe}</td></tr>
+			<tr><td>{$form.f.nrc_7|safe}</td><td>{$form.f.al_7|safe}</td><td>{$form.f.tipo_7|safe}</td></tr>
+			<tr><td>{$form.f.nrc_8|safe}</td><td>{$form.f.al_8|safe}</td><td>{$form.f.tipo_8|safe}</td></tr>
+			<tr><td>{$form.f.nrc_9|safe}</td><td>{$form.f.al_9|safe}</td><td>{$form.f.tipo_9|safe}</td></tr>
+			<tr><td colspan="3"><input type="submit" value="Ejecutar altas y bajas" /></tr>
+		</tbody>
+	</table>
 	</form>
 {/block}
 {block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
