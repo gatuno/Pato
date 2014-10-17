@@ -173,4 +173,43 @@ class Pato_Views_Utils {
                                                        'form' => $form),
                                                  $request);
 	}
+	
+	public $cambiarFechaEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cambiarFechaEval ($request, $match) {
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Utils_ActualizarEval ($request->POST);
+			
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				/* Recoger todos los porcentajes de esta forma de evaluación y actualizarlos */
+				$eval = new Pato_Evaluacion ($data['evaluacion']);
+				
+				$pors = $eval->get_pato_porcentaje_list ();
+				
+				foreach ($pors as $p) {
+					$p->abierto = $data['abierto'];
+					
+					$p->apertura = $data['apertura'];
+					$p->cierre = $data['cierre'];
+					
+					$p->update ();
+				}
+				
+				$request->user->setMessage (1, 'Las fechas de la forma de evaluación '.$eval->descripcion.' han sido cambiadas correctamente');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::cambiarFechaEval');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Utils_ActualizarEval (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/cambiar-fechas.html',
+		                                         array('page_title' => 'Cambiar fechas de evaluación',
+                                                       'form' => $form),
+                                                 $request);
+	}
 }

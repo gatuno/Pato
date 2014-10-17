@@ -660,6 +660,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/utils/cambiar-fechas-eval/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'cambiarFechaEval',
+);
+
+$ctl[] = array (
 	'regex' => '#^/calificaciones/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Calificaciones',

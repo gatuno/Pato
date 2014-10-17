@@ -61,6 +61,7 @@ class Pato_Views_Reportes_Calificaciones {
 					$i->nrc = $sec;
 					$i->total = $total;
 					$i->calif = $boletas;
+					$i->faltantes = $total - $boletas;
 					
 					$incompletos[] = $i;
 				}
