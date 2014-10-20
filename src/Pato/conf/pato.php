@@ -108,6 +108,7 @@ $cfg['bounce_email'] = 'pato@upzmg.edu.mx';
 $cfg['middleware_classes'] = array(
 	'Gatuf_Middleware_Session',
 	'Pato_Middleware_Calendario',
+	'Pato_Middleware_Password',
 );
 
 $cfg['gatuf_custom_user'] = 'Pato_User';
