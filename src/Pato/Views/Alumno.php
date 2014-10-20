@@ -85,11 +85,16 @@ class Pato_Views_Alumno {
                                                  $request);
 	}
 	
+	public $verGrupos_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verGrupos ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1] ) ) ) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if (!$request->user->administrator && $request->user->login != $alumno->codigo) {
+			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
 		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
@@ -134,11 +139,16 @@ class Pato_Views_Alumno {
                                                  $request);
 	}
 	
+	public $verHorario_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verHorario ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
-		if (false === ($alumno->get ($match[1] ) ) ) {
+		if (false === ($alumno->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if (!$request->user->administrator && $request->user->login != $alumno->codigo) {
+			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
 		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));

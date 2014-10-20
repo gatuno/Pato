@@ -282,11 +282,16 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
+	public $verAlumnos_precond = array ('Pato_Precondition::maestroRequired');
 	public function verAlumnos ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator && $request->user->login != $seccion->maestro) {
+			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
 		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));

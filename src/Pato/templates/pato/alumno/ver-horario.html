@@ -11,7 +11,7 @@
 <h2>Materias</h2>
 {if count($secciones) != 0}
 <table>
-	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</tr></thead>
+	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</th></tr></thead>
 	<tbody>{foreach $secciones as $seccion}
 	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td>{$seccion.get_maestro}</td></tr>
 	{/foreach}</tbody>
