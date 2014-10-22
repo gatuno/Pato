@@ -743,6 +743,27 @@ $ctl[] = array (
 	'method' => 'subidaTardeReporte',
 );
 
+$ctl[] = array (
+	'regex' => '#^/estatus/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/licencia/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'licenciaSeleccionar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/licencia/(\w\d{7})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'licenciaEjecutar',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

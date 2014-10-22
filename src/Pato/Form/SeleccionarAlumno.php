@@ -7,7 +7,7 @@ class Pato_Form_SeleccionarAlumno extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Alumno',
 				'initial' => '',
-				'help_text' => 'El codigo, nombre o apellidos del alumno a matricular',
+				'help_text' => 'El codigo, nombre o apellidos del alumno.',
 				'widget_attrs' => array(
 					'json' => Gatuf::config ('url_base').Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::buscarJSON'),
 					'min_length' => 2,
