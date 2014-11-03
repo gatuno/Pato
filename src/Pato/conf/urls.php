@@ -632,6 +632,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/preferencias/folio/(\d+)/eliminar$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'eliminarFolio',
+);
+
+$ctl[] = array (
 	'regex' => '#^/utils/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Utils',

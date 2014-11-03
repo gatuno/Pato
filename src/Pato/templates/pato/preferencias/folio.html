@@ -12,4 +12,12 @@
 		<tr><td>&nbsp;</td><td><input type="submit" value="Cambiar folio inicial" /></td></tr>
 	</table>
 </form>
+{if count ($usados) != 0}
+<p>Los siguientes folios están en uso:</p>
+<ul>{foreach $usados as $k => $u}
+	<li>Folio {$k} usado en: {$u}. <a href="{url 'Pato_Views_Preferencias::eliminarFolio', $k}">Borrar</a></li>
+{/foreach}</ul>
+{else}
+<p>No hay folios en uso actualmente</p>
+{/if}
 {/block}

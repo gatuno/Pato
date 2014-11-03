@@ -367,10 +367,27 @@ class Pato_Views_Seccion {
 		
 		$pdf->renderPreacta ($seccion, $gpe);
 		
-		/* Usar e incrementar el folio */
-		$folio = $request->session->getData ('numero_folio', 1);
-		$pdf->renderActa ($seccion, $gpe, $folio++);
-		$request->session->setData ('numero_folio', $folio);
+		/* Revisar si para esta acta ya hay un folio usado previamente */
+		$usados = $request->session->getData ('folios_usados', array ());
+		
+		$buscar = 'NRC '.$seccion->nrc;
+		$found = array_search ($buscar, $usados);
+		if ($found !== false) {
+			/* No tomar un nuevo folio, porque ya se imprimió antes el acta */
+			$pdf->renderActa ($seccion, $gpe, $found);
+		} else {
+			/* Usar e incrementar el folio */
+			
+			$folio = $request->session->getData ('numero_folio', 1);
+			$pdf->renderActa ($seccion, $gpe, $folio);
+			
+			/* Guardar el folio para una futura segunda impresión */
+			$usados[$folio] = 'NRC '.$seccion->nrc;
+			$request->session->setData ('folios_usados', $usados);
+			
+			$folio++;
+			$request->session->setData ('numero_folio', $folio);
+		}
 		
 		$pdf->Close ();
 		
@@ -610,6 +627,34 @@ class Pato_Views_Seccion {
 				$alumno = $form->save ();
 				
 				/* TODO: Realizar validaciones antes de matricular al Alumno */
+				$ins = $alumno->get_current_inscripcion();
+				$est = $ins->get_estatus ();
+				
+				if (!$est->activo) {
+					$request->user->setMessage (3, 'No se puede matricular al alumno '.((string) $alumno).' porque está inactivo');
+					
+					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
+					return new Gatuf_HTTP_Response_Redirect ($url);
+				}
+				
+				if ($est->clave == 'LI') {
+					$request->user->setMessage (3, 'No se puede matricular al alumno '.((string) $alumno).' porque está de Licencia');
+					
+					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
+					return new Gatuf_HTTP_Response_Redirect ($url);
+				}
+				
+				/* Buscar que no esté matriculado en otra seccion de esta misma materia */
+				$grupos = $alumno->get_grupos_list ();
+				foreach ($grupos as $g) {
+					if ($seccion->materia == $g->materia) {
+						$request->user->setMessage (3, 'El alumno '.((string) $alumno).' ya está matriculado en otra sección ('.$g->seccion.') de esta misma materia');
+					
+						$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
+						return new Gatuf_HTTP_Response_Redirect ($url);
+					}
+				}
+				
 				$alumno->setAssoc ($seccion);
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
