@@ -26,7 +26,7 @@ class Pato_Views_Preferencias {
 				$request->session->setData ('numero_folio', $folio);
 				$request->user->setMessage (1, 'Número de folio cambiado a: '.$folio);
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Preferencias::index');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Preferencias::cambiarFolio');
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
@@ -56,5 +56,33 @@ class Pato_Views_Preferencias {
 		
 		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Preferencias::cambiarFolio');
 		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
+	public $cambiarFecha_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cambiarFecha ($request, $match) {
+		$fecha = $request->session->getData ('fecha', date ('d/m/Y'));
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_SeleccionarFecha ($request->POST, array ('fecha' => $fecha));
+			
+			if ($form->isValid ()) {
+				$fecha = $form->save ();
+				
+				$request->session->setData ('fecha', $fecha);
+				$request->user->setMessage (1, 'Fecha falsificada a: '.$fecha);
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Preferencias::cambiarFecha');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_SeleccionarFecha (null, array ('fecha' => $fecha));
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/fecha.html',
+		                                         array ('page_title' => 'Falsificar un fecha',
+		                                                'form' => $form,
+		                                                'fecha' => $fecha,),
+		                                         $request);
 	}
 }

@@ -290,7 +290,7 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator && $request->user->login != $seccion->maestro) {
+		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $seccion->maestro) {
 			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
@@ -363,9 +363,12 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$fecha = $request->session->getData ('fecha', date ('d/m/Y'));
+		$fecha = date_parse_from_format ('d/m/Y', $fecha);
+		$timestamp = mktime (0, 0, 0, $fecha['month'], $fecha['day'], $fecha['year']);
 		$pdf = new Pato_PDF_Seccion_Acta ('P', 'mm', 'Letter');
 		
-		$pdf->renderPreacta ($seccion, $gpe);
+		$pdf->renderPreacta ($seccion, $gpe, $timestamp);
 		
 		/* Revisar si para esta acta ya hay un folio usado previamente */
 		$usados = $request->session->getData ('folios_usados', array ());
@@ -374,12 +377,12 @@ class Pato_Views_Seccion {
 		$found = array_search ($buscar, $usados);
 		if ($found !== false) {
 			/* No tomar un nuevo folio, porque ya se imprimió antes el acta */
-			$pdf->renderActa ($seccion, $gpe, $found);
+			$pdf->renderActa ($seccion, $gpe, $found, $timestamp);
 		} else {
 			/* Usar e incrementar el folio */
 			
 			$folio = $request->session->getData ('numero_folio', 1);
-			$pdf->renderActa ($seccion, $gpe, $folio);
+			$pdf->renderActa ($seccion, $gpe, $folio, $timestamp);
 			
 			/* Guardar el folio para una futura segunda impresión */
 			$usados[$folio] = 'NRC '.$seccion->nrc;

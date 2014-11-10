@@ -93,7 +93,7 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if (!$request->user->administrator && $request->user->login != $alumno->codigo) {
+		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
@@ -147,7 +147,7 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if (!$request->user->administrator && $request->user->login != $alumno->codigo) {
+		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		

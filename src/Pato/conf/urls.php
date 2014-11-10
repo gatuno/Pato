@@ -639,6 +639,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/preferencias/fecha/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'cambiarFecha',
+);
+
+$ctl[] = array (
 	'regex' => '#^/utils/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Utils',

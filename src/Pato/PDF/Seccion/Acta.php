@@ -4,9 +4,11 @@ Gatuf::loadFunction ('Pato_Utils_numeroLetra');
 Gatuf::loadFunction ('Pato_Calendario_getDefault');
 
 class Pato_PDF_Seccion_Acta extends External_FPDF {
-	function renderPreacta ($seccion, $gpe) {
+	function renderPreacta ($seccion, $gpe, $timestamp) {
 		$this->SetFont('Times', '', 12);
-		$fecha = '22 de Agosto de 2014';
+		setlocale (LC_TIME, 'es_MX');
+		$fecha = strftime ('%e de %B de %Y', $timestamp);
+		//$fecha = '22 de Agosto de 2014';
 		
 		/* Renderizar el Pre Acta */
 		$this->AddPage();
@@ -57,13 +59,13 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->SetX (58);
 		$this->Cell (100, 0, $materia->cuatrimestre.'º', 0, 0, 'L');
 		
-		/* El grupo */
+		/* El grupo
 		$this->SetX (160);
 		$this->Cell (0, 0, 'Grupo:', 0, 0, 'L');
 		
 		$this->SetX (175);
 		$this->Cell (0, 0, substr ($seccion->seccion, strlen ($seccion->seccion) - 1), 0, 0, 'L');
-		
+		*/
 		/* El Profesor */
 		$this->SetY (52);
 		$this->SetX (18);
@@ -229,11 +231,12 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->Cell (60, 6, 'Director de Programa Educativo', 0, 0, 'C');
 	}
 	
-	function renderActa ($seccion, $gpe, $folio = 1) {
+	function renderActa ($seccion, $gpe, $folio = 1, $timestamp) {
 		$this->SetFont('Times', '', 12);
-		$fecha = '22 de Agosto de 2014';
-		
-		/* Renderizar el Pre Acta */
+		setlocale (LC_TIME, 'es_MX');
+		$fecha = strftime ('%e de %B de %Y', $timestamp);
+		//$fecha='';
+		/* Renderizar el Acta */
 		$this->AddPage();
 		$this->SetAutoPageBreak (false);
 		
@@ -285,7 +288,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		/* Condicionado a que esto se elimine */
 		$this->SetX (148);
-		$this->Cell (56, 8, 'Ciclo: 2013-2014', 1, 0, 'L');
+		$this->Cell (56, 8, 'Ciclo: '.$calendario->anio.'-'.($calendario->anio + 1), 1, 0, 'L');
 		
 		$this->SetY (68); $this->SetX (13);
 		$this->Cell (42, 8, 'Cuatrimestre: '.$materia->cuatrimestre.'º', 1);
