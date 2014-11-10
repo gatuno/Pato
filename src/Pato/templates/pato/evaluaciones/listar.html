@@ -1,0 +1,17 @@
+{extends 'pato/alumno/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body_alumno}
+<h2>Evaluación a Profesores</h2>
+<p>Aquí puede evaluar a los profesores</p>
+{if count($secciones) != 0}
+<table>
+	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</th><th>Evaluar</th></tr></thead>
+	<tbody>{foreach $secciones as $seccion}
+	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td>{$seccion.get_maestro}</td>
+	<td>{if $respuestas[$seccion.nrc]}<strong>Evaluado</strong>{else}{if $user.login == $alumno.codigo && $correcto}<form action="{url 'Pato_Views_Evaluacion_Profesor::evaluar', $seccion.nrc}" method="get"><input type="submit" value="Evaluar" /></form>{else}No evaluado{/if}{/if}</td></tr>
+	{/foreach}</tbody>
+</table>
+{else}
+	<p>No hay evaluaciones para este periodo.</p>
+{/if}
+{/block}

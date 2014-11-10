@@ -232,6 +232,18 @@ $ctl[] = array(
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'registroEliminar',
 		),
+		array (
+			'regex' => '#^(\w\d{7})/evaluacion/profesores/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Evaluacion_Profesor',
+			'method' => 'listar_evals',
+		),
+		array (
+			'regex' => '#^evaluar/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Evaluacion_Profesor',
+			'method' => 'evaluar',
+		),
 	)
 );
 

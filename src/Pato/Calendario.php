@@ -53,6 +53,7 @@ class Pato_Calendario extends Gatuf_Model {
 			                 'Pato_Horario',
 			                 'Pato_Porcentaje',
 			                 'Pato_Seccion',
+			                 'Pato_Evaluacion_Respuesta',
 			                 );
 			
 			$GLOBALS['CAL_ACTIVO'] = $this->clave;

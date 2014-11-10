@@ -1,0 +1,20 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Materia: {$seccion.get_materia} Sección: {$seccion.seccion}</p>
+<p>Profesor: {$seccion.get_maestro}</p>
+<p>Por favor conteste todas las respuestas con sinceridad</p>
+<form action="." method="post">
+	<table class="evaluacion">
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Evaluar profesor" /></td></tr>
+	</table>
+</form>
+{/block}
+{block extrahead}
+<style type="text/css">{literal}
+table.evaluacion tr td:first-child {
+	width: 70%;
+}
+{/literal}</style>
+{/block}

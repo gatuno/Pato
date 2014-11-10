@@ -15,5 +15,7 @@ $m['Pato_Boleta'] = array ('relate_to' => array ('Pato_Seccion', 'Pato_Alumno', 
 $m['Pato_Inscripcion'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_Carrera', 'Pato_Calendario', 'Pato_Estatus'));
 $m['Pato_Kardex'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_Materia', 'Pato_Calendario', 'Pato_GPE'));
 
+$m['Pato_Evaluacion_Respuesta'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_Seccion'));
+
 /* Conexión de señales aquí */
 return $m;
