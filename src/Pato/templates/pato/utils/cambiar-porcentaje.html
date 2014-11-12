@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+	<p>Aquí puede ajustar los porcentajes de una forma de evaluación. No agrega ni quita formas de evaluación, sólo ajusta su ponderación para la calificación final. <strong>Usar con precaución, cambia a todas las materias que tengan esta forma de evaluación</strong></p>
+	<form action="." method="POST">
+	<table>
+		<tr><td><strong>Aplica a:</strong></td><td>Todas las materias que tengan la siguiente forma de evaluación:</td></tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar porcentajes" /></td></tr>
+	</table>
+	</form>
+{/block}

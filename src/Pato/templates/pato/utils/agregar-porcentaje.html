@@ -1,0 +1,52 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+	<p>Aquí puede agregar una forma de evaluación a todas las materias que tengan una sección en este periodo. Si una materia ya tiene la forma de evaluación que está agregando, será omitida. Los porcentajes no se actualizan, para eso, utilice el cambio de porcentajes masivo. <strong>Usar con precaución, cambia a todas las materias</strong></p>
+	<form action="." method="POST">
+	<table>
+		<tr><td><strong>Aplica a:</strong></td><td>Todas las materias que les falte la siguiente forma de evaluación:</td></tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Agregar forma de evaluación" /></td></tr>
+	</table>
+	</form>
+{/block}
+{block javascript}{literal}
+<script type="text/javascript">
+	// <![CDATA[
+		function on_change_sel () {
+			var sel = document.getElementById ('id_sel');
+			var apertura = document.getElementById ('id_apertura');
+			var cierre = document.getElementById ('id_cierre');
+			
+			switch (sel.value) {
+				case '0':
+				case '1':
+					apertura.disabled = true;
+					cierre.disabled = true;
+					break;
+				case '2':
+					apertura.disabled = false;
+					cierre.disabled = true;
+					break;
+				case '3':
+					apertura.disabled = true;
+					cierre.disabled = false;
+					break;
+				case '4':
+					apertura.disabled = false;
+					cierre.disabled = false;
+					break;
+			}
+		}
+		
+		var sel = document.getElementById ('id_sel');
+		sel.onchange = on_change_sel;
+		on_change_sel ();
+	// ]]>
+</script>
+{/literal}{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="{media '/js/jquery-ui-timepicker-addon.js'}"></script>
+	<script type="text/javascript" src="{media '/js/ui-timepicker-es.js'}"></script>{/block}

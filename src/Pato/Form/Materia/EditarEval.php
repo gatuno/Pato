@@ -13,7 +13,7 @@ class Pato_Form_Materia_EditarEval extends Gatuf_Form {
 				'label' => 'Porcentaje',
 				'initial' => $this->porcentaje->porcentaje,
 				'help_text' => 'La ponderación que recibe esta forma de evaluación',
-				'min' => 1,
+				'min' => 0,
 		));
 		
 		$initial = 0;

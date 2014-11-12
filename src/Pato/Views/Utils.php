@@ -212,4 +212,100 @@ class Pato_Views_Utils {
                                                        'form' => $form),
                                                  $request);
 	}
+	
+	public $agregarPorcentaje_precond = array ('Gatuf_Precondition::adminRequired');
+	public function agregarPorcentaje ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Utils_AgregarPorcentaje ($request->POST);
+			
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				/* Recorrer todas las secciones */
+				$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
+				$mats = array ();
+				
+				foreach ($secciones as $s) {
+					$mats[$s->materia] = 1;
+				}
+				$sql = new Gatuf_SQL ('evaluacion=%s', $data['evaluacion']);
+				$where = $sql->gen ();
+				
+				$evaluacion = new Pato_Evaluacion ($data['evaluacion']);
+				
+				/* Recorrer todas las materias */
+				$materia = new Pato_Materia ();
+				$total = 0;
+				foreach ($mats as $m => $one) {
+					$materia->get ($m);
+					
+					$ps = $materia->get_porcentajes_list (array ('filter' => $where));
+					
+					if (count ($ps) == 0) {
+						/* Agregar un porcentaje a esta materia */
+						$p = new Pato_Porcentaje ();
+						$p->materia = $materia;
+						$p->evaluacion = $evaluacion;
+						
+						$p->porcentaje = $data['porcentaje'];
+						$p->abierto = $data['abierto'];
+						$p->apertura = $data['apertura'];
+						$p->cierre = $data['cierre'];
+						
+						$p->create ();
+						$total++;
+					}
+				}
+				
+				$request->user->setMessage (1, 'Se agregado la forma de evaluación '.$evaluacion->descripcion.' a todas las materias con secciones activas. ('.$total.' agregados)');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::agregarPorcentaje');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Utils_AgregarPorcentaje (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/agregar-porcentaje.html',
+		                                         array('page_title' => 'Agregar forma de evaluacion a todas las materias',
+                                                       'form' => $form),
+                                                 $request);
+	}
+	
+	public $cambiarPorcentaje_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cambiarPorcentaje ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Utils_CambiarPorcentaje ($request->POST);
+			
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				/* Recorrer todas las secciones */
+				$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
+				
+				$eval = new Pato_Evaluacion ($data['evaluacion']);
+				
+				$pors = $eval->get_pato_porcentaje_list ();
+				
+				foreach ($pors as $p) {
+					$p->porcentaje = $data['porcentaje'];
+					
+					$p->update ();
+				}
+				
+				$request->user->setMessage (1, 'Los porcentajes de la forma de evaluación '.$eval->descripcion.' han sido cambiados a '.$data['porcentaje'].'%');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::cambiarPorcentaje');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Utils_CambiarPorcentaje (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/cambiar-porcentaje.html',
+		                                         array('page_title' => 'Cambiar porcentaje de forma masiva a una forma de evaluación',
+                                                       'form' => $form),
+                                                 $request);
+	}
 }

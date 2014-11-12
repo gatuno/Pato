@@ -1,14 +1,13 @@
 <?php
 
-class Pato_Form_Materia_AgregarEval extends Gatuf_Form {
-	private $materia;
-	
+class Pato_Form_Utils_AgregarPorcentaje extends Gatuf_Form {
 	public function initFields($extra=array()) {
 		$choices = array ();
-		$this->materia = $extra['materia'];
-		
-		foreach ($this->materia->getNotEvals ($extra['gp']) as $eval) {
-			$choices [$eval->descripcion] = $eval->id;
+		foreach (Gatuf::factory ('Pato_GPE')->getList () as $gpe) {
+			$choices [$gpe->descripcion] = array ();
+			foreach ($gpe->get_pato_evaluacion_list () as $eval) {
+				$choices [$gpe->descripcion][$eval->descripcion] = $eval->id;
+			}
 		}
 		
 		$this->fields['evaluacion'] = new Gatuf_Form_Field_Varchar(
@@ -16,7 +15,7 @@ class Pato_Form_Materia_AgregarEval extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Forma de evaluacion',
 				'initial' => '',
-				'help_text' => 'La forma de evaluación que aplica sobre esta materia',
+				'help_text' => 'La forma de evaluación para cambiar fechas',
 				'widget_attrs' => array (
 					'choices' => $choices,
 				),
@@ -101,14 +100,9 @@ class Pato_Form_Materia_AgregarEval extends Gatuf_Form {
 			$this->cleaned_data['apertura'] = null;
 		}
 		
-		$porcentaje = new Pato_Porcentaje ();
-		$porcentaje->abierto = ($sel == 0) ? 0 : 1;
-		$porcentaje->materia = $this->materia;
-		$porcentaje->setFromFormData ($this->cleaned_data);
+		$data = array ('evaluacion' => $this->cleaned_data['evaluacion'], 'porcentaje' => $this->cleaned_data['porcentaje'], 'abierto' => ($sel == 0) ? 0 : 1, 'apertura' => $this->cleaned_data['apertura'], 'cierre' => $this->cleaned_data['cierre']);
 		
-		$porcentaje->create ();
-		
-		return $porcentaje;
+		return $data;
 	}
 }
 

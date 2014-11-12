@@ -693,6 +693,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/utils/agregar-eval/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'agregarPorcentaje',
+);
+
+$ctl[] = array (
+	'regex' => '#^/utils/actualizar-porcentaje/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'cambiarPorcentaje',
+);
+
+$ctl[] = array (
 	'regex' => '#^/calificaciones/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Calificaciones',
