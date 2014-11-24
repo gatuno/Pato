@@ -151,7 +151,7 @@ td .icon {
 	top: 0px;
 }
 
-.userinfo {
+.userdiv {
 	float: right;
 	padding-top: 8px;
 	margin-right: 8px;
@@ -159,11 +159,12 @@ td .icon {
 	padding-bottom: 8px;
 }
 
-.userinfo .login, .userinfo .logout {
+.userdiv .login, .userdiv .logout, .userdiv .user{
+	display: inline;
 	margin: 0px;
 }
 
-.login a, .logout a {
+.login a, .logout a, .user a {
 	text-decoration: none;
 	color: #ffffff;
 }
