@@ -174,6 +174,23 @@ class Pato_Views_Seccion {
 	public function agregarNrc ($request, $match) {
 		$extra = array ('user' => $request->user);
 		
+		if (!$request->user->administrator) {
+			/* Si es un coordinador, sólo puede crear secciones en el calendario siguiente */
+			$gconf = new Gatuf_GSetting ();
+			$gconf->setApp ('Patricia');
+			$sig = $gconf->getVal ('calendario_siguiente', null);
+			
+			if ($request->calendario->clave != $sig) {
+				$request->user->setMessage (3, 'No se pueden crear secciones en calendarios pasados');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+			
+			/* TODO: Revisar la otra configuración que cierra la creación de NRCS */
+		}
+		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Seccion_Agregar ($request->POST, $extra);
 			
@@ -207,6 +224,23 @@ class Pato_Views_Seccion {
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if (!$request->user->administrator) {
+			/* Si es un coordinador, sólo puede crear secciones en el calendario siguiente */
+			$gconf = new Gatuf_GSetting ();
+			$gconf->setApp ('Patricia');
+			$sig = $gconf->getVal ('calendario_siguiente', null);
+			
+			if ($request->calendario->clave != $sig) {
+				$request->user->setMessage (3, 'No se pueden crear secciones en calendarios pasados');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+			
+			/* TODO: Revisar la otra configuración que cierra la creación de NRCS */
 		}
 		
 		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
@@ -368,24 +402,23 @@ class Pato_Views_Seccion {
 		$timestamp = mktime (0, 0, 0, $fecha['month'], $fecha['day'], $fecha['year']);
 		$pdf = new Pato_PDF_Seccion_Acta ('P', 'mm', 'Letter');
 		
-		$pdf->renderPreacta ($seccion, $gpe, $timestamp);
+		//$pdf->renderPreacta ($seccion, $gpe, $timestamp);
 		
 		/* Revisar si para esta acta ya hay un folio usado previamente */
 		$usados = $request->session->getData ('folios_usados', array ());
 		
-		$buscar = 'NRC '.$seccion->nrc;
+		$buscar = 'NRC '.$seccion->nrc.' '.$request->calendario->clave;
 		$found = array_search ($buscar, $usados);
 		if ($found !== false) {
 			/* No tomar un nuevo folio, porque ya se imprimió antes el acta */
 			$pdf->renderActa ($seccion, $gpe, $found, $timestamp);
 		} else {
 			/* Usar e incrementar el folio */
-			
 			$folio = $request->session->getData ('numero_folio', 1);
 			$pdf->renderActa ($seccion, $gpe, $folio, $timestamp);
 			
 			/* Guardar el folio para una futura segunda impresión */
-			$usados[$folio] = 'NRC '.$seccion->nrc;
+			$usados[$folio] = 'NRC '.$seccion->nrc.' '.$request->calendario->clave;
 			$request->session->setData ('folios_usados', $usados);
 			
 			$folio++;

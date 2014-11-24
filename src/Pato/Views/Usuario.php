@@ -119,6 +119,16 @@ class Pato_Views_Usuario {
 		$extra = array();
 		$extra['usuario'] = $request->user;
 		
+		if (!empty($request->REQUEST['_redirect_after'])) {
+			$success_url = $request->REQUEST['_redirect_after'];
+		} else {
+			if($usuario->type == 'a'){
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($usuario->login));
+			} else {
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
+			}
+		}
+		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Usuario_Password ($request->POST, $extra);
 			
@@ -127,12 +137,7 @@ class Pato_Views_Usuario {
 				
 				$usuario->setMessage (1, 'Contraseña cambiada correctamente');
 				
-				if($usuario->type == 'a'){
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($usuario->login));
-				} else {
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
-				}
-				return new Gatuf_HTTP_Response_Redirect ($url);
+				return new Gatuf_HTTP_Response_Redirect ($success_url);
 			}
 		} else {
 			$form = new Pato_Form_Usuario_Password (null, $extra);
@@ -187,7 +192,7 @@ class Pato_Views_Usuario {
 		$email->addTextMessage ($tmpl->render ($context));
 		$email->sendMail ();
 		
-		$request->user->setMessage (1, sprintf ('Se ha enviado un correo a "%s" para resetear la contraseña. Expira en 3 horas', $user->email));
+		$request->user->setMessage (1, sprintf ('Se ha enviado un correo a "%s" para resetear la contraseña. Expira en 12 horas', $user->email));
 		return new Gatuf_HTTP_Response_Redirect ($url_af);
 	}
 }

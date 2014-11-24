@@ -1,0 +1,7 @@
+{extends 'pato/base.html'}
+{block body}
+<h2>Confirmar cambio de calendario</h2>
+<p>¿Está seguro de que desea cambiar el calendario actual por defecto a: <strong>{$calendario.descripcion} ({$calendario.clave})</strong>?
+<p>Esta opción borrará todas las sesiones activas en el sistema para asegurar que todos los clientes reciban los cambios en el calendario.</p>
+<form action="." method="POST"><input type="submit" value="Cambiar" /> | <a href="{'Pato_Views_Calendario::index'}">Cancelar</a></form>
+{/block}

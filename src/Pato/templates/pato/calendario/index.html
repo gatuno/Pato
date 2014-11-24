@@ -1,12 +1,22 @@
 {extends 'pato/base.html'}
 {block body}
 <p><a href="{url 'Pato_Views_Calendario::agregarCalendario'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nuevo calendario" />Nuevo calendario</a></p>
+{if $actual}
+<p>El calendario actual es: <strong>{$actual.descripcion} ({$actual.clave})</strong></p>
+{else}
+<p>No hay calendario por defecto, debería marcar uno.</p>
+{/if}
+{if $siguiente}
+<p>El calendario siguiente es: <strong>{$siguiente.descripcion} ({$siguiente.clave})</strong></p>
+{else}
+<p>No hay calendario marcado como siguiente</p>
+{/if}
 {if count ($calendarios) != 0}
 <p>Los siguientes calendarios están disponibles para este sistema:</p>
 <ul>{foreach $calendarios as $cal}
-	<li>{$cal.descripcion} ({$cal.clave}){if $cal.oculto} <b>Calendario oculto</b>{/if}</li>
+	<li>{$cal.descripcion} (<a href="{url 'Pato_Views_Calendario::ver', $cal.clave}">{$cal.clave}</a>){if $cal.oculto} <b>Calendario oculto</b>{/if}</li>
 {/foreach}</ul>
 {else}
-<p>No hay calendarios disponibles en este sistema. Debe crear un calendario para poder trabajar con PATO.</p>
+<p>No hay calendarios disponibles en este sistema. Debe crear un calendario para poder trabajar con Patricia.</p>
 {/if}
-{/block} 
+{/block}

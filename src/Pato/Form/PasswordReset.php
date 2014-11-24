@@ -61,8 +61,8 @@ class Pato_Form_PasswordReset extends Gatuf_Form {
 			throw new Gatuf_Form_Invalid ($error);
 		}
 		
-		if ((time() - $cres[2]) > 10800) {
-			throw new Gatuf_Form_Invalid ('Lo sentimos, el código de verificación ha expirado, por favor intentalo de nuevo. Por razones de seguridad, los códigos de verificación son sólo válidas por 3 horas');
+		if ((time() - $cres[2]) > 43200) {
+			throw new Gatuf_Form_Invalid ('Lo sentimos, el código de verificación ha expirado, por favor intentalo de nuevo. Por razones de seguridad, los códigos de verificación son sólo válidas por 12 horas');
 		}
 		return $this->cleaned_data['key'];
 	}

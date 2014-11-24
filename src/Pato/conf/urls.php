@@ -56,6 +56,27 @@ $ctl[] = array (
 	'method' => 'agregarCalendario',
 );
 
+$ctl[] = array (
+	'regex' => '#^/calendarios/(\w+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calendario',
+	'method' => 'ver',
+);
+
+$ctl[] = array (
+	'regex' => '#^/calendarios/(\w+)/actual/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calendario',
+	'method' => 'cambiarActual',
+);
+
+$ctl[] = array (
+	'regex' => '#^/calendarios/(\w+)/siguiente/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calendario',
+	'method' => 'cambiarSiguiente',
+);
+
 /* Recuperación de contraseñas */
 $ctl[] = array (
 	'regex' => '#^/password/$#',

@@ -24,7 +24,7 @@ class Pato_Middleware_Password {
 		if ($request->user->checkPassword ($request->user->login)) {
 			$request->user->setMessage (2, 'Tu contraseña es insegura, por motivos seguridad es obligatorio cambiarla');
 			
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange', array (), array ('_redirect_after' => $request->uri));
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
@@ -33,7 +33,7 @@ class Pato_Middleware_Password {
 		if ($request->user->checkPassword ('12345') || $request->user->checkPassword ('123') || $request->user->checkPassword ('1234') || $request->user->checkPassword ('123456') || $request->user->checkPassword ('1234567') || $request->user->checkPassword ('12345678') || $request->user->checkPassword ('123456789')) {
 			$request->user->setMessage (2, 'Tu contraseña es insegura, por motivos seguridad es obligatorio cambiarla');
 			
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange', array (), array ('_redirect_after' => $request->uri));
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}

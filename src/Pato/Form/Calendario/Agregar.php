@@ -2,25 +2,23 @@
 
 class Pato_Form_Calendario_Agregar extends Gatuf_Form {
 	public function initFields ($extra = array ()) {
+		$choices_c = array ();
+		for ($g = date ('Y') + 1; $g > 1990; $g--) {
+			$choices_c[$g] = array ();
+			foreach (array ('E' => 'Sep-Dic', 'D' => 'May-Ago', 'C' => 'Ene-Abr') as $key => $desc) {
+				$choices_c[$g][$desc] = $g.$key;
+			}
+		}
+		
 		$this->fields['clave'] = new Gatuf_Form_Field_Varchar (
 			array (
 				'required' => true,
 				'label' => 'Clave',
 				'initial' => '',
 				'max_length' => 6,
+				'widget' => 'Gatuf_Form_Widget_DobleInput',
 				'widget_attrs' => array (
-					'maxlength' => 6,
-				),
-		));
-		
-		$this->fields['descripcion'] = new Gatuf_Form_Field_Varchar (
-			array (
-				'required' => true,
-				'label' => 'Descripción del calendario',
-				'initial' => '',
-				'max_length' => 20,
-				'widget_attrs' => array (
-					'maxlength' => 20,
+					'choices' => $choices_c,
 				),
 		));
 	}
@@ -46,6 +44,20 @@ class Pato_Form_Calendario_Agregar extends Gatuf_Form {
 		$calendario = new Pato_Calendario ();
 		
 		$calendario->setFromFormData ($this->cleaned_data);
+		$anio = substr ($this->cleaned_data['clave'], 0, 4);
+		$clave = substr ($this->cleaned_data['clave'], 4);
+		
+		if ($clave == 'C' || $clave == 'D') {
+			/* Los "C" y "D" trabajan en el ciclo escolar anterior */
+			$calendario->anio = ((int) $anio) - 1;
+		} else if ($clave == 'E') {
+			/* Los "E" van en su propio año */
+			$calendario->anio = (int) $anio;
+		}
+		
+		$calendario->letra = $clave;
+		$descs = array ('E' => 'Sep-Dic', 'D' => 'May-Ago', 'C' => 'Ene-Abr');
+		$calendario->descripcion = $anio.' '.$descs[$clave];
 		
 		if ($commit) $calendario->create ();
 		

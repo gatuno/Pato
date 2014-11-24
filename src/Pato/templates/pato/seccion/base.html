@@ -3,9 +3,9 @@
 {block body}
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
-{if $user.administrator || $user.login == $seccion.maestro}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
-<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verFormatos', array ($seccion.nrc)}">Formatos</a></li>
 {matcoord 'puede_editar', $user, $seccion.get_materia()}
+{if $user.administrator || $user.login == $seccion.maestro || $puede_editar}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
+<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verFormatos', array ($seccion.nrc)}">Formatos</a></li>
 {if $puede_editar}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)}">Actualizar</a></li>
 {/if}
