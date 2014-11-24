@@ -672,6 +672,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/preferencias/folio/subir/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'subirFolios',
+);
+
+$ctl[] = array (
 	'regex' => '#^/preferencias/fecha/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Preferencias',
