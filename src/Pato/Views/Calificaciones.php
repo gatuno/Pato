@@ -145,4 +145,114 @@ class Pato_Views_Calificaciones {
 		                                               'form' => $form),
                                                  $request);
 	}
+	
+	public $aKardexSelectivo_precond = array ('Gatuf_Precondition::adminRequired');
+	public function aKardexSelectivo ($request, $match) {
+		$extra = array ('cal_activo' => $request->session->getData ('CAL_ACTIVO', ''));
+		
+		if ($request->method == 'POST') {
+			/* El formulario viene de regreso */
+			$form = new Pato_Form_Calificaciones_AKardexSelectivo ($request->POST, $extra);
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				$calendario = new Pato_Calendario ($data['cal']);
+				$gpe = new Pato_GPE ($data['gpe']);
+				
+				/* Hacer cambio de calendario */
+				$request->session->setData ('CAL_ACTIVO', $calendario->clave);
+				$request->user->setMessage (1, 'El calendario ha sido cambiado a '.$calendario->descripcion);
+				$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+				
+				/* Preparar el join SQL */
+				$eval_t = Gatuf::factory ('Pato_Evaluacion')->getSqlTable ();
+				$porc_model = new Pato_Porcentaje ();
+				$porc_t = $porc_model->getSqlTable ();
+				$porc_model->_a['views']['join_materia'] = array ('join' => 'LEFT JOIN '.$eval_t.' ON '.$eval_t.'.id=evaluacion');
+				
+				$totales = array ('generados' => 0, 'enkardex' => 0);
+				
+				$materia = new Pato_Materia ();
+				/* Recorrer cada sección de las materias seleccionadas */
+				foreach ($data['materias'] as $m_clave) {
+					$materia->get ($m_clave);
+					$secciones = $materia->get_pato_seccion_list ();
+					foreach ($secciones as $seccion) {
+						/* Conseguir todos los porcentajes de esta sección */
+						$sql = new Gatuf_SQL ('materia=%s AND grupo=%s', array ($seccion->materia, $gpe->id));
+					
+						$porcentajes = $porc_model->getList (array ('view' => 'join_materia', 'filter' => $sql->gen ()));
+					
+						if (count ($porcentajes) == 0) {
+							/* Si no tiene porcentajes, no podemos generar una calificación */
+							continue;
+						}
+					
+						/* Recorrer cada alumno */
+						foreach ($seccion->get_alumnos_list () as $alumno) {
+							/* Si el alumno ya tiene una calificación en kardex de este calendario y materia, omitir */
+							$sql = new Gatuf_SQL ('materia=%s AND calendario=%s AND gpe=%s', array ($seccion->materia, $calendario->clave, $gpe->id));
+						
+							$kardxs = $alumno->get_kardex_list (array ('count' => true, 'filter' => $sql->gen ()));
+							if ($kardxs != 0) {
+								/* Este alumno YA tiene registrada una calificación en kardex, omitir */
+								$totales['enkardex']++;
+								continue;
+							}
+						
+							/* Si el alumno ya tiene una calificación en kardex aprobatoria, omitir */
+							$sql = new Gatuf_SQL ('materia=%s AND aprobada=1', array ($seccion->materia));
+						
+							$kardxs = $alumno->get_kardex_list (array ('count' => true, 'filter' => $sql->gen ()));
+							if ($kardxs != 0) {
+								/* Este alumno YA tiene registrada una calificación en kardex, omitir */
+								$totales['enkardex']++;
+								continue;
+							}
+						
+							$suma = 0;
+							foreach ($porcentajes as $porcentaje) {
+								/* Tratar de conseguir la boleta */
+								$sql = new Gatuf_SQL ('nrc=%s AND evaluacion=%s', array ($seccion->nrc, $porcentaje->evaluacion));
+							
+								$boleta = $alumno->get_boleta_list (array ('filter' => $sql->gen ()));
+							
+								if (count ($boleta) != 0) {
+									$p = ($boleta[0]->calificacion * $porcentaje->porcentaje) / 100;
+									$suma += $p;
+								}
+							}
+						
+							/* Tengo el total de este alumno */
+							$kardex = new Pato_Kardex ();
+							$kardex->alumno = $alumno;
+							$kardex->materia = $materia;
+							$kardex->nrc = $seccion->nrc;
+							$kardex->calendario = $calendario;
+							$kardex->gpe = $gpe;
+							$kardex->calificacion = $suma;
+							$kardex->aprobada = ($suma >= 7);
+						
+							$kardex->create ();
+							$totales['generados']++;
+						}
+					}
+				}
+				
+				return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/akardex-reporte.html',
+						                                 array('page_title' => 'Convertir a Kardex - Completo',
+						                                       'calendario' => $calendario,
+						                                       'gpe' => $gpe,
+						                                       'total' => $totales),
+				                                         $request);
+			}
+		} else {
+			$form = new Pato_Form_Calificaciones_AKardexSelectivo (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/akardex.html',
+		                                         array('page_title' => 'Convertir a Kardex - Selectivo por materia',
+		                                               'form' => $form),
+                                                 $request);
+	}
 }
