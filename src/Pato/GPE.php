@@ -21,6 +21,13 @@ class Pato_GPE extends Gatuf_Model {
 			       'blank' => false,
 			       'size' => 30,
 			),
+			'secciones' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Varchar',
+			       'blank' => false,
+			       'size' => 20,
+			       'default' => '',
+			),
 		);
 	}
 	

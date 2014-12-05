@@ -37,8 +37,19 @@ class Pato_Views_Calificaciones {
 				
 				$totales = array ('generados' => 0, 'enkardex' => 0);
 				
+				$secs = str_split ($gpe->secciones);
+				$query = array ();
+				$values = array ();
+				foreach ($secs as $s) {
+					$query[] = 'seccion LIKE %s';
+					$values[] = $s.'%';
+				}
+				
+				$sql = new Gatuf_SQL (implode (' OR ', $query), $values);
+				
 				/* Recorrer cada sección de este calendario */
-				$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
+				$secciones = Gatuf::factory ('Pato_Seccion')->getList (array ('filter' => $sql->gen ()));
+				
 				foreach ($secciones as $seccion) {
 					/* Conseguir todos los porcentajes de esta sección */
 					$materia = $seccion->get_materia ();
@@ -172,11 +183,21 @@ class Pato_Views_Calificaciones {
 				
 				$totales = array ('generados' => 0, 'enkardex' => 0);
 				
+				$secs = str_split ($gpe->secciones);
+				$query = array ();
+				$values = array ();
+				foreach ($secs as $s) {
+					$query[] = 'seccion LIKE %s';
+					$values[] = $s.'%';
+				}
+				
+				$sql_sec = new Gatuf_SQL (implode (' OR ', $query), $values);
+				
 				$materia = new Pato_Materia ();
 				/* Recorrer cada sección de las materias seleccionadas */
 				foreach ($data['materias'] as $m_clave) {
 					$materia->get ($m_clave);
-					$secciones = $materia->get_pato_seccion_list ();
+					$secciones = $materia->get_pato_seccion_list (array ('filter' => $sql_sec->gen ()));
 					foreach ($secciones as $seccion) {
 						/* Conseguir todos los porcentajes de esta sección */
 						$sql = new Gatuf_SQL ('materia=%s AND grupo=%s', array ($seccion->materia, $gpe->id));
