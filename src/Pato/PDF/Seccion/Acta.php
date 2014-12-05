@@ -380,21 +380,21 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$y = $y + 4;
 		
 		$this->SetLineWidth (0.6);
-		$this->Rect (13, $y, 191, 17, 'FD');
+		$this->Rect (13, $y, 191, 9, 'FD');
 		
 		$this->SetLineWidth (0.2);
-		$this->SetY ($y + 3);
+		$this->SetY ($y);
 		$this->SetX (13);
 		$this->Cell (191, 7, 'Tlajomulco de Zuñiga, Jalisco a '.$fecha, 0, 0, 'C');
 		
 		$this->SetFont('Times', '', 8);
-		$this->SetY ($y + 10);
+		$this->SetY ($y + 4);
 		$this->SetX (13);
 		$this->Cell (191, 7, 'Este documento no es válido si presenta raspaduras o enmendaduras', 0, 0, 'C');
 		
 		$this->SetFont('Times', '', 12);
 		
-		$y += 21;
+		$y += 13;
 		
 		$this->Rect (13, $y, 64, 22);
 		$this->Rect (77, $y, 63, 22);

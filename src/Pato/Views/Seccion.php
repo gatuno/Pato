@@ -383,6 +383,109 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
+	public $cerrarAKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cerrarAKardex ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gpe = new Pato_GPE ();
+		
+		if (false === ($gpe->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verFormatos', $seccion->nrc);
+		
+		$found = false;
+		
+		$secs = str_split ($gpe->secciones);
+		foreach ($secs as $s) {
+			if (substr ($seccion->seccion, 0, 1) == $s) {
+				$found = true;
+			}
+		}
+		
+		if (!$found) {
+			$request->user->setMessage (3, 'La sección no corresponde al grupo de evaluación seleccionado. No se crearán calificaciones en Kardex');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		/* Preparar el join SQL */
+		$eval_t = Gatuf::factory ('Pato_Evaluacion')->getSqlTable ();
+		$porc_model = new Pato_Porcentaje ();
+		$porc_t = $porc_model->getSqlTable ();
+		$porc_model->_a['views']['join_materia'] = array ('join' => 'LEFT JOIN '.$eval_t.' ON '.$eval_t.'.id=evaluacion');
+		
+		/* Conseguir todos los porcentajes de esta sección */
+		$sql = new Gatuf_SQL ('materia=%s AND grupo=%s', array ($seccion->materia, $gpe->id));
+	
+		$porcentajes = $porc_model->getList (array ('view' => 'join_materia', 'filter' => $sql->gen ()));
+	
+		if (count ($porcentajes) == 0) {
+			/* Si no tiene porcentajes, no podemos generar una calificación */
+			$request->user->setMessage (2, 'La materia no tiene registradas formas de evaluación en la modalidad '.$gpe->descripcion.', no hay calificaciones que crear');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$totales = array ('generados' => 0, 'enkardex' => 0);
+		
+		/* Recorrer cada alumno */
+		foreach ($seccion->get_alumnos_list () as $alumno) {
+			/* Si el alumno ya tiene una calificación en kardex de este calendario y materia, omitir */
+			$sql = new Gatuf_SQL ('materia=%s AND calendario=%s AND gpe=%s', array ($seccion->materia, $request->calendario->clave, $gpe->id));
+		
+			$kardxs = $alumno->get_kardex_list (array ('count' => true, 'filter' => $sql->gen ()));
+			if ($kardxs != 0) {
+				/* Este alumno YA tiene registrada una calificación en kardex, omitir */
+				$totales['enkardex']++;
+				continue;
+			}
+		
+			/* Si el alumno ya tiene una calificación en kardex aprobatoria, omitir */
+			$sql = new Gatuf_SQL ('materia=%s AND aprobada=1', array ($seccion->materia));
+		
+			$kardxs = $alumno->get_kardex_list (array ('count' => true, 'filter' => $sql->gen ()));
+			if ($kardxs != 0) {
+				/* Este alumno YA tiene registrada una calificación en kardex, omitir */
+				$totales['enkardex']++;
+				continue;
+			}
+		
+			$suma = 0;
+			foreach ($porcentajes as $porcentaje) {
+				/* Tratar de conseguir la boleta */
+				$sql = new Gatuf_SQL ('nrc=%s AND evaluacion=%s', array ($seccion->nrc, $porcentaje->evaluacion));
+			
+				$boleta = $alumno->get_boleta_list (array ('filter' => $sql->gen ()));
+			
+				if (count ($boleta) != 0) {
+					$p = ($boleta[0]->calificacion * $porcentaje->porcentaje) / 100;
+					$suma += $p;
+				}
+			}
+		
+			/* Tengo el total de este alumno */
+			$kardex = new Pato_Kardex ();
+			$kardex->alumno = $alumno;
+			$kardex->materia = $seccion->get_materia();
+			$kardex->nrc = $seccion->nrc;
+			$kardex->calendario = $request->calendario;
+			$kardex->gpe = $gpe;
+			$kardex->calificacion = $suma;
+			$kardex->aprobada = ($suma >= 7);
+		
+			$kardex->create ();
+			$totales['generados']++;
+		}
+		
+		$request->user->setMessage (1, 'Fueron creadas '.$totales['generados'].' calificaciones en kardex. Se omitieron '.$totales['enkardex'].' registros por que ya existían.');
+		
+		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
 	public $actaCalificaciones_precond = array ('Gatuf_Precondition::adminRequired');
 	public function actaCalificaciones ($request, $match) {
 		$seccion = new Pato_Seccion ();

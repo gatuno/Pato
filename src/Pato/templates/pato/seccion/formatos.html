@@ -4,7 +4,9 @@
 <ul>
 	{if $user.administrator}
 	{foreach $gpe as $pe}<li><a href="{url 'Pato_Views_Seccion::actaCalificaciones', array ($seccion.nrc, $pe.id)}">Acta y Pre Acta de calificaciones de {$pe.descripcion}</a></li>{/foreach}
+	<li>Operaciones administrativas peligrosas. No mueva esto si no sabe lo que está a punto de hacer:
+	<ul>{foreach $gpe as $pe}<li><a href="{url 'Pato_Views_Seccion::cerrarAKardex', array ($seccion.nrc, $pe.id)}">Cerrar a Kardex para {$pe.descripcion}</a></li>{/foreach}</ul></li>
 	{/if}
-	{if $user.administrator || $user.login == $seccion.maestro}<li><a href="{url 'Pato_Views_Seccion::listaAsistencia', $seccion.nrc}">Lista de asistencias</a></li></li>{/if}
+	{if $user.administrator || $user.login == $seccion.maestro}<li><a href="{url 'Pato_Views_Seccion::listaAsistencia', $seccion.nrc}">Lista de asistencias</a></li>{/if}
 </ul>
 {/block}

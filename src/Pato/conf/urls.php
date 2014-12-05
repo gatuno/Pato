@@ -514,6 +514,12 @@ $ctl[] = array (
 			'model' => 'Pato_Views_Seccion',
 			'method' => 'evaluarAsistencias',
 		),
+		array (
+			'regex' => '#^(\d+)/cerrarAKardex/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'cerrarAKardex',
+		),
 	)
 );
 

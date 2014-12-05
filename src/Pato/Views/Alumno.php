@@ -517,6 +517,7 @@ class Pato_Views_Alumno {
 		
 		$calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		$request->session->setData ('CAL_ACTIVO', $calendario->clave);
 		
 		$list = $alumno->get_agenda_list ();
 		if (count ($list) == 0) {
