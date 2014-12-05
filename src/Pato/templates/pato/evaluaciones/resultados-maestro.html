@@ -1,0 +1,38 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Profesor: {$maestro.apellido} {$maestro.nombre}</p>
+<p>Recibe las evaluaciones de alumnos de la carrera: {$carrera.descripcion}</p>
+<table class="resultados">
+	<thead><tr><th>Pregunta</th>{foreach $secciones as $s}<th><abbr title="{$s.get_materia().descripcion}">{$s.materia}</abbr><br />{$s.seccion}</th>{/foreach}</tr></thead>
+	<tbody>
+		{assign $g = 1}{while ($g <= 27)}
+		<tr><td>{$textos[$g - 1]}</td>{foreach $secciones as $s}<td>{$total[$s.nrc][$g]|float:2}</td>{/foreach}</tr>
+		{assign $g = $g + 1}
+		{/while}
+	</tbody>
+</table>
+<h2>Comentarios</h2>
+{foreach $secciones as $s}
+{if count($comentarios[$s.nrc]) != 0}
+	<p>El profesor recibió algunos comentarios en la materia <strong>{$s.get_materia().descripcion} {$s.seccion}</strong></p>
+	{foreach $comentarios[$s.nrc] as $c}
+		<p>{$c}</p>
+	{/foreach}
+	<hr />
+{/if}
+{/foreach}
+{/block}
+{block extrahead}
+<style type="text/css">{literal}
+table.resultados tr th:first-child {
+	width: 70%;
+}
+table.resultados {
+	border-collapse: collapse;
+}
+table.resultados th, table.resultados td {
+	border: 1px solid black;
+}
+{/literal}</style>
+{/block}

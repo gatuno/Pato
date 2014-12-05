@@ -1,0 +1,15 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>He aquí los resultados:</p>
+{foreach $carreras as $c}
+	<h2>Carrera {$c->descripcion}</h2>
+	<p>Hay un total de {$maestros[$c->clave]|count} respuestas.</p>
+	{if count($maestros[$c->clave])}
+	<p>Los siguientes profesores fueron evaluados:</p>
+	<table><thead><tr><th colspan="2">Profesor</th></tr></thead>
+	<tbody>{foreach $maestros[$c->clave] as $m}
+	<tr><td>{$m->apellido} {$m->nombre}</td><td><a href="{url 'Pato_Views_Evaluacion_Profesor::resultadoMaestro', array ($m->codigo, $c->clave)}">Ver detalles</a></td></tr>
+	{/foreach}</tbody></table>{/if}
+{/foreach}
+{/block}

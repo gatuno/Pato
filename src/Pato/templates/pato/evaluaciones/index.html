@@ -1,0 +1,6 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Poner aquí varias cosas como los reportes y estadísticas en vivo</p>
+{if $user.isCoord()}<p><a href="{url 'Pato_Views_Evaluacion_Profesor::resultados'}">Ver resultados</a></p>{/if}
+{/block}

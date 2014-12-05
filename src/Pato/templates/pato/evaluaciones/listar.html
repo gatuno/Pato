@@ -1,8 +1,8 @@
-{extends 'pato/alumno/base.html'}
+{extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
-{block body_alumno}
-<h2>Evaluación a Profesores</h2>
+{block body}
 <p>Aquí puede evaluar a los profesores</p>
+<p><strong>Atención</strong>: Si los datos aquí listados no son las materias y profesores que estás cursando, <strong>notifica de inmediato</strong> al aplicador de la encuesta.</p>
 {if count($secciones) != 0}
 <table>
 	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</th><th>Evaluar</th></tr></thead>

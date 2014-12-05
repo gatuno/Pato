@@ -845,6 +845,27 @@ $ctl[] = array (
 	'method' => 'licenciaEjecutar',
 );
 
+$ctl[] = array (
+	'regex' => '#^/evaluacion/profesores/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Evaluacion_Profesor',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/evaluacion/profesores/resultados/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Evaluacion_Profesor',
+	'method' => 'resultados',
+);
+
+$ctl[] = array (
+	'regex' => '#^/evaluacion/profesores/resultados/(\d+)/([A-Za-z]{2,5})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Evaluacion_Profesor',
+	'method' => 'resultadoMaestro',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

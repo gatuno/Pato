@@ -119,6 +119,10 @@ td .icon {
 	background-color: #FDDC3B;
 }
 
+.nav .especial a:hover {
+	background-color: #23B600;
+}
+
 /* Submenús */
 .nav ul {
 	display: none;
