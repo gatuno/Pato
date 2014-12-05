@@ -2,8 +2,8 @@
 {block body}
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verAlumno', array ($alumno.codigo)}">Perfil</a></li>
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verInscripciones', array ($alumno.codigo)}">Historial académico</a></li>
 {if $user.administrator || $user.login == $alumno.codigo || $user.isCoord()}
+<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verGrupos', array ($alumno.codigo)}">Grupos y calificaciones</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verHorario', array ($alumno.codigo)}">Horario</a></li>
 {/if}

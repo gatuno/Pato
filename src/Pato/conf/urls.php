@@ -200,12 +200,6 @@ $ctl[] = array(
 			'method' => 'actualizarAlumno',
 		),
 		array (
-			'regex' => '#^(\w\d{7})/inscripciones/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
-			'method' => 'verInscripciones',
-		),
-		array (
 			'regex' => '#^(\w\d{7})/formatos/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
@@ -264,6 +258,18 @@ $ctl[] = array(
 			'base' => $base,
 			'model' => 'Pato_Views_Evaluacion_Profesor',
 			'method' => 'evaluar',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/kardex/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'kardex',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/kardex/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'kardexCarrera',
 		),
 	)
 );

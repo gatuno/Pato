@@ -1,0 +1,14 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<p>Mostrar los detalles de la cuenta</p>
+{regroup $kardexs, 'calendario', 'por_calendario'}
+{foreach $por_calendario as $cal}
+<h2>Calendario: {$cal.list[0].get_calendario}</h2>
+<table>
+	<thead><tr><th>Clave</th><th>Materia</th><th>Calificación</th><th>Tipo</th></tr></thead>
+	<tbody>{foreach $cal.list as $kardex}
+		<tr><td>{$kardex.materia}</td><td>{$kardex.get_materia}</td><td>{$kardex.calificacion}</td><td>{$kardex.get_gpe}</td></tr>
+	{/foreach}</tbody>
+</table>
+{/foreach}
+{/block}

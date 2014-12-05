@@ -69,22 +69,6 @@ class Pato_Views_Alumno {
                                                  $request);
 	}
 	
-	public function verInscripciones ($request, $match) {
-		$alumno = new Pato_Alumno ();
-		
-		if (false === ($alumno->get ($match[1] ) ) ) {
-			throw new Gatuf_HTTP_Error404();
-		}
-		
-		$inscripciones = $alumno->get_inscripciones_list (array ('order' => 'ingreso DESC'));
-		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-inscripciones.html',
-		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
-		                                               'alumno' => $alumno,
-		                                               'inscripciones' => $inscripciones),
-                                                 $request);
-	}
-	
 	public $verGrupos_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verGrupos ($request, $match) {
 		$alumno = new Pato_Alumno ();
@@ -274,6 +258,90 @@ class Pato_Views_Alumno {
 		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
 		
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+	}
+	
+	public $kardex_precond = array ('Gatuf_Precondition::loginRequired');
+	public function kardex ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
+			return new Gatuf_HTTP_Response_Forbidden($request);
+		}
+		
+		/* Presentar el kardex organizado por carreras */
+		$inscripciones = $alumno->get_inscripciones_list (array ('order' => 'egreso ASC'));
+		
+		if (count ($inscripciones) == 1) {
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardexCarrera', array ($alumno->codigo, $inscripciones[0]->id));
+			
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/kardex-lista.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'inscripciones' => $inscripciones),
+		                                         $request);
+	}
+	
+	public $kardexCarrera_precond = array ('Gatuf_Precondition::loginRequired');
+	public function kardexCarrera ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
+			return new Gatuf_HTTP_Response_Forbidden($request);
+		}
+		
+		$inscripcion = new Pato_Inscripcion ();
+		
+		if (false === ($inscripcion->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($inscripcion->alumno != $alumno->codigo) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Recoger las materias en kardex pertenecientes a esta carrera */
+		$carrera = $inscripcion->get_carrera ();
+		$materia = new Pato_Materia ();
+		$hay = array(strtolower($carrera->_a['model']), 
+						 strtolower($materia->_a['model']));
+		// Calcular la base de datos que contiene la relación M-N
+		if (isset ($GLOBALS['_GATUF_models_related'][$hay[0]][$hay[1]])) {
+			// La relación la tiene el $hay[1]
+			$dbname = $materia->_con->dbname;
+			$dbpfx = $materia->_con->pfx;
+		} else {
+			$dbname = $carrera->_con->dbname;
+			$dbpfx = $carrera->_con->pfx;
+		}
+		sort($hay);
+		$table = $dbpfx.$hay[0].'_'.$hay[1].'_assoc';
+		
+		$kardex = new Pato_Kardex ();
+		$kardex->_a['views'] = array ('join_carrera' => array ());
+		$kardex->_a['views']['join_carrera']['join'] = ' LEFT JOIN '.$dbname.'.'.$table.' ON '
+				.$kardex->_con->qn(strtolower($materia->_a['model']).'_'.$materia->primary_key).' = materia';
+		
+		$sql = new Gatuf_SQL($kardex->_con->qn(strtolower($carrera->_a['model']).'_'.$carrera->primary_key).'=%s AND alumno=%s', array ($carrera->clave, $alumno->codigo));
+		
+		$kardexs = $kardex->getList (array ('filter' => $sql->gen (), 'view' => 'join_carrera', 'order' => 'calendario ASC'));
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/kardex.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'inscripcion' => $inscripcion,
+		                                                'kardexs' => $kardexs),
+		                                         $request);
 	}
 	
 	public $agenda_precond = array ('Gatuf_Precondition::loginRequired');
