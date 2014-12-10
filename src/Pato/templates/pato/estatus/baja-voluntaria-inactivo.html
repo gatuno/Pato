@@ -1,0 +1,6 @@
+{extends 'pato/base.html'}
+{block body}
+<p>No se puede aplicar baja voluntaria sobre este alumno porque se encuentra inactivo. Puede <a href="{url 'Pato_Views_Estatus::licenciaSeleccionar'}">probar con otro alumno</a> o <a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">revisar su historial académico</a></p>
+<p>Código: {$alumno.codigo}</p>
+<p>Alumno: {$alumno.nombre} {$alumno.apellido}</p>
+{/block}

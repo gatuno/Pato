@@ -1,6 +1,10 @@
 {extends 'pato/alumno/base.html'}
 {block body_alumno}
-<p>Mostrar los detalles de la cuenta</p>
+<p>Alumno: {$alumno.nombre} {$alumno.apellido}</p>
+<p>Carrera: {$inscripcion.get_carrera}</p>
+<p>Estatus: {$inscripcion.get_estatus}</p>
+<p>Calendario de ingreso: {$inscripcion.get_ingreso}</p>
+{if $inscripcion.egreso}<p>Calendario de egreso: {$inscripcion.get_egreso}</p>{/if}
 {regroup $kardexs, 'calendario', 'por_calendario'}
 {foreach $por_calendario as $cal}
 <h2>Calendario: {$cal.list[0].get_calendario}</h2>

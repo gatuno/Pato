@@ -866,6 +866,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/estatus/baja-voluntaria/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaVoluntariaSeleccionar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/baja-voluntaria/(\w\d{7})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaVoluntariaEjecutar',
+);
+
+$ctl[] = array (
 	'regex' => '#^/evaluacion/profesores/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Evaluacion_Profesor',

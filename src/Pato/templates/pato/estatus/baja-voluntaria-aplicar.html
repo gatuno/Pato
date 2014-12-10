@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Al siguiente alumno se le aplicará baja voluntaria. Por favor revise los datos antes de ejecutarla:</p>
+<p>Código: {$alumno.codigo}</p>
+<p>Alumno: {$alumno.nombre} {$alumno.apellido}</p>
+<p>Carrera: {$carrera}</p>
+<p>Calendario de ingreso: {$inscripcion.get_ingreso}</p>
+<p>Se marcará como calendario de salida: {$calendario_actual}</p>
+<form action="." method="post">
+	<input type="submit" value="Ejecutar baja voluntaria" />
+</form>
+{/block}
