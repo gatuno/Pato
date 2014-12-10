@@ -4,36 +4,9 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Reportes_Oferta {
-	public $matriculados_precond = array ('Gatuf_Precondition::adminRequired');
-	public function matriculados ($request, $match) {
-		if ($request->method == 'POST') {
-			$form = new Pato_Form_Calendario_Seleccionar ($request->POST);
-			
-			if ($form->isValid ()) {
-				$calendario = $form->save ();
-				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Reportes_Oferta::matriculadosCalendario', $calendario->clave);
-				return new Gatuf_HTTP_Response_Redirect ($url);
-			}
-		} else {
-			$form = new Pato_Form_Calendario_Seleccionar (null);
-		}
-		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/reportes/oferta/matriculados.html',
-		                                         array('page_title' => 'Reporte matriculados',
-		                                               'form' => $form),
-                                                 $request);
-	}
-	
 	public $matriculadosCalendario_precond = array ('Gatuf_Precondition::adminRequired');
 	public function matriculadosCalendario ($request, $match) {
-		$calendario = new Pato_Calendario ();
-		
-		if ($calendario->get ($match[1]) === false) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		$calendario = $request->calendario;
 		
 		$total = 0;
 		$matriculados = 0;
@@ -64,13 +37,7 @@ class Pato_Views_Reportes_Oferta {
 	
 	public $matriculadosCalendarioODS_precond = array ('Gatuf_Precondition::adminRequired');
 	public function matriculadosCalendarioODS ($request, $match) {
-		$calendario = new Pato_Calendario ();
-		
-		if ($calendario->get ($match[1]) === false) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		$calendario = $request->calendario;
 		
 		$ods = new Gatuf_ODS ();
 		
@@ -112,19 +79,112 @@ class Pato_Views_Reportes_Oferta {
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados-'.$calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 	
-	public $maestrosActivos_precond = array ('Gatuf_Precondition::adminRequired');
-	public function maestrosActivos ($request, $match) {
+	public $matriculadosMateriaIndex_precond = array ('Gatuf_Precondition::adminRequired');
+	public function matriculadosMateriaIndex ($request, $match) {
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_Calendario_Seleccionar ($request->POST);
+			$form = new Pato_Form_Materia_Seleccionar ($request->POST);
 			
 			if ($form->isValid ()) {
-				$calendario = $form->save ();
+				$materia = $form->save ();
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Reportes_Oferta::maestrosActivosCalendario', $calendario->clave);
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Reportes_Oferta::matriculadosMateria', $materia->clave);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Pato_Form_Calendario_Seleccionar (null);
+			$form = new Pato_Form_Materia_Seleccionar (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/reportes/oferta/matriculados-sel-materia.html',
+		                                         array('page_title' => 'Reporte matriculados por materia',
+		                                               'form' => $form),
+                                                 $request);
+	}
+	
+	public $matriculadosMateria_precond = array ('Gatuf_Precondition::adminRequired');
+	public function matriculadosMateria ($request, $match) {
+		$materia = new Pato_Materia ();
+		
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$secciones = $materia->get_pato_seccion_list ();
+		$total = array ();
+		$suma = 0;
+		
+		foreach ($secciones as $s) {
+			$alumnos = $s->get_alumnos_list (array ('count' => true));
+			
+			$total[$s->nrc] = $alumnos;
+			$suma += $alumnos;
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/reportes/oferta/reporte-matriculados-materia.html',
+		                                         array('page_title' => 'Reporte matriculados para '.$request->calendario->descripcion.' en '.$materia->descripcion,
+		                                               'materia' => $materia,
+		                                               'total' => $total,
+		                                               'suma' => $suma,
+		                                               'secciones' => $secciones),
+                                                 $request);
+	}
+	
+	public $matriculadosMateriaODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public function matriculadosMateriaODS ($request, $match) {
+		$materia = new Pato_Materia ();
+		
+		if (false === ($materia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$ods = new Gatuf_ODS ();
+		
+		$ods->addNewSheet ($materia->descripcion);
+		$ods->addStringCell ($materia->descripcion, 1, 1, 'NRC');
+		$ods->addStringCell ($materia->descripcion, 1, 2, 'Clave');
+		$ods->addStringCell ($materia->descripcion, 1, 3, 'Materia');
+		$ods->addStringCell ($materia->descripcion, 1, 4, 'Sección');
+		$ods->addStringCell ($materia->descripcion, 1, 5, 'Profesor');
+		$ods->addStringCell ($materia->descripcion, 1, 6, 'Código');
+		$ods->addStringCell ($materia->descripcion, 1, 7, 'Alumno');
+		
+		$g = 2;
+		
+		$secciones = $materia->get_pato_seccion_list ();
+		$total = array ();
+		$suma = 0;
+		
+		foreach ($secciones as $s) {
+			$alumnos = $s->get_alumnos_list ();
+			
+			foreach ($alumnos as $a) {
+				$ods->addStringCell ($materia->descripcion, $g, 1, $s->nrc);
+				$ods->addStringCell ($materia->descripcion, $g, 2, $materia->clave);
+				$ods->addStringCell ($materia->descripcion, $g, 3, $materia->descripcion);
+				$ods->addStringCell ($materia->descripcion, $g, 4, $s->seccion);
+				$ods->addStringCell ($materia->descripcion, $g, 5, (string) $s->get_maestro ());
+				$ods->addStringCell ($materia->descripcion, $g, 6, $a->codigo);
+				$ods->addStringCell ($materia->descripcion, $g, 7, $a->apellido.' '.$a->nombre);
+				$g++;
+			}
+		}
+		
+		$ods->construir_paquete ();
+		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados_'.$materia->clave.'_'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
+	}
+	
+	public $maestrosActivos_precond = array ('Gatuf_Precondition::adminRequired');
+	public function maestrosActivos ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_SeleccionarGPE ($request->POST);
+			
+			if ($form->isValid ()) {
+				$gpe = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Reportes_Oferta::maestrosActivosCalendario', $gpe->id);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_SeleccionarGPE (null);
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/reportes/oferta/maestros-activos.html',
@@ -135,13 +195,12 @@ class Pato_Views_Reportes_Oferta {
 	
 	public $maestrosActivosCalendario_precond = array ('Gatuf_Precondition::adminRequired');
 	public function maestrosActivosCalendario ($request, $match) {
-		$calendario = new Pato_Calendario ();
+		$calendario = $request->calendario;
+		$gpe = new Pato_GPE ();
 		
-		if ($calendario->get ($match[1]) === false) {
+		if (false === ($gpe->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
-		
-		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
 		
 		$ods = new Gatuf_ODS ();
 		
@@ -154,8 +213,18 @@ class Pato_Views_Reportes_Oferta {
 		$ods->addStringCell ('Maestros', 1, 6, 'Materias');
 		$g = 2;
 		
+		$secs = str_split ($gpe->secciones);
+		$query = array ();
+		$values = array ();
+		foreach ($secs as $s) {
+			$query[] = 'seccion LIKE %s';
+			$values[] = $s.'%';
+		}
+		
+		$sql = new Gatuf_SQL ('('.implode (' OR ', $query).')', $values);
+		
 		foreach (Gatuf::factory ('Pato_Maestro')->getList () as $maestro) {
-			$secciones = $maestro->get_primario_list ();
+			$secciones = $maestro->get_primario_list (array ('filter' => $sql->gen ()));
 			
 			if ($secciones->count () == 0) continue;
 			
@@ -182,6 +251,6 @@ class Pato_Views_Reportes_Oferta {
 		}
 		
 		$ods->construir_paquete ();
-		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Maestros-activos-'.$calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
+		return new Gatuf_HTTP_Response_File ($ods->nombre, 'maestros-activos_'.$calendario->clave.'_'.$gpe->descripcion.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 }

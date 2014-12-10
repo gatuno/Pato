@@ -1,0 +1,13 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Total de alumnos que toman la materia {$materia.descripcion} ({$materia.clave}): {$suma}</p>
+<p>Descargar como <a href="{url 'Pato_Views_Reportes_Oferta::matriculadosMateriaODS', $materia.clave}">archivo ODS</a></p>
+<p>Resumen general:</p>
+<table>
+	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</th><th>No. de alumnos</th></tr></thead>
+	<tbody>{foreach $secciones as $s}
+		<tr><td>{$s.nrc}</td><td>{$materia.descripcion}</td><td>{$s.seccion}</td><td>{$s.get_maestro}</td><td>{$total[$s.nrc]}</td></tr>
+	{/foreach}</tbody>
+</table>
+{/block}

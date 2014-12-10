@@ -782,24 +782,38 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/reportes/oferta/matriculados/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculados',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/matriculados/(\w+)/$#',
+	'regex' => '#^/reportes/oferta/matriculados/calendario/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes_Oferta',
 	'method' => 'matriculadosCalendario',
 );
 
 $ctl[] = array (
-	'regex' => '#^/reportes/oferta/matriculados/(\w+)/ODS/$#',
+	'regex' => '#^/reportes/oferta/matriculados/calendario/ODS/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes_Oferta',
 	'method' => 'matriculadosCalendarioODS',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/materia/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculadosMateriaIndex',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/materia/([\w-]+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculadosMateria',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/oferta/materia/([\w-]+)/ODS/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculadosMateriaODS',
 );
 
 $ctl[] = array (
@@ -810,7 +824,7 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/reportes/oferta/maestros-activos/(\w+)/$#',
+	'regex' => '#^/reportes/oferta/maestros-activos/(\d+)/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes_Oferta',
 	'method' => 'maestrosActivosCalendario',

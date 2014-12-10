@@ -1,7 +1,8 @@
 {extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
 <p>Total de alumnos activos en este calendario: {$total}</p>
 <p>Total de alumnos que tiene <strong>alguna materia</strong> matriculada: {$matriculados}</p>
 <p>Faltan <strong>{$total - $matriculados}</strong> alumnos.</p>
-<p>Descargue la oferta como <a href="{url 'Pato_Views_Reportes_Oferta::matriculadosCalendarioODS', $calendario->clave}">archivo ODS</a></p>
+<p>Descargue la oferta como <a href="{url 'Pato_Views_Reportes_Oferta::matriculadosCalendarioODS'}">archivo ODS</a></p>
 {/block}
