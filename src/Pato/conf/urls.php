@@ -214,37 +214,37 @@ $ctl[] = array(
 		array (
 			'regex' => '#^(\w\d{7})/agenda/$#',
 			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
+			'model' => 'Pato_Views_Agenda',
 			'method' => 'agenda',
 		),
 		array (
 			'regex' => '#^(\w\d{7})/agenda/nueva/$#',
 			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
+			'model' => 'Pato_Views_Agenda',
 			'method' => 'crearAgenda',
 		),
 		array (
 			'regex' => '#^(\w\d{7})/agenda/cambiar/$#',
 			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
+			'model' => 'Pato_Views_Agenda',
 			'method' => 'cambiarAgenda',
 		),
 		array (
 			'regex' => '#^(\w\d{7})/agenda/eliminar/$#',
 			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
+			'model' => 'Pato_Views_Agenda',
 			'method' => 'eliminarAgenda',
 		),
 		array (
 			'regex' => '#^(\w\d{7})/agenda/registro/$#',
 			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
+			'model' => 'Pato_Views_Agenda',
 			'method' => 'registro',
 		),
 		array (
 			'regex' => '#^(\w\d{7})/agenda/eliminar/(\d+)/$#',
 			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
+			'model' => 'Pato_Views_Agenda',
 			'method' => 'registroEliminar',
 		),
 		array (

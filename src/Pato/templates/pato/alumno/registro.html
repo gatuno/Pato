@@ -14,7 +14,7 @@
 <table>
 	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Eliminar</th></tr></thead>
 	<tbody>{foreach $secciones as $seccion}
-	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td><a href="{url 'Pato_Views_Alumno::registroEliminar', array ($alumno.codigo, $seccion.nrc)}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Eliminar" /></a></td></tr>
+	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td><a href="{url 'Pato_Views_Agenda::registroEliminar', array ($alumno.codigo, $seccion.nrc)}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Eliminar" /></a></td></tr>
 	{/foreach}</tbody>
 </table>
 {else}

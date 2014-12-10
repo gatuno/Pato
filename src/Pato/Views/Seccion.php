@@ -765,6 +765,8 @@ class Pato_Views_Seccion {
 			if ($form->isValid ()) {
 				$alumno = $form->save ();
 				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
+				
 				/* TODO: Realizar validaciones antes de matricular al Alumno */
 				$ins = $alumno->get_current_inscripcion();
 				$est = $ins->get_estatus ();
@@ -772,14 +774,40 @@ class Pato_Views_Seccion {
 				if (!$est->activo) {
 					$request->user->setMessage (3, 'No se puede matricular al alumno '.((string) $alumno).' porque está inactivo');
 					
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
 					return new Gatuf_HTTP_Response_Redirect ($url);
 				}
 				
 				if ($est->clave == 'LI') {
 					$request->user->setMessage (3, 'No se puede matricular al alumno '.((string) $alumno).' porque está de Licencia');
 					
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
+					return new Gatuf_HTTP_Response_Redirect ($url);
+				}
+				
+				$materia = $seccion->get_materia();
+					
+				/* Si el alumno tiene pasada la materia, no la puede recursar */
+				$sql_k = new Gatuf_SQL ('(materia=%s AND aprobada=1)', $seccion->materia);
+				$kardexs = $alumno->get_kardex_list (array ('filter' => $sql_k->gen (), 'count' => true));
+				
+				if ($kardexs > 0) {
+					$request->user->setMessage (2, 'El alumno ya acreditó la materia '.$materia->descripcion);
+					
+					return new Gatuf_HTTP_Response_Redirect ($url);
+				}
+				
+				/* Revisar que la materia pertenezca a su carrera actual */
+				$carrera_actual = $ins->get_carrera ();
+				$cars = $materia->get_carreras_list ();
+				$pertenece = false;
+				foreach ($cars as $car) {
+					if ($carrera_actual->clave == $car->clave) {
+						$pertenece = true;
+						break;
+					}
+				}
+				
+				if (!$pertenece) {
+					$request->user->setMessage (3, 'La materia '.$materia->descripcion.' no pertenece a la carrera actual del alumno');
 					return new Gatuf_HTTP_Response_Redirect ($url);
 				}
 				
@@ -789,14 +817,12 @@ class Pato_Views_Seccion {
 					if ($seccion->materia == $g->materia) {
 						$request->user->setMessage (3, 'El alumno '.((string) $alumno).' ya está matriculado en otra sección ('.$g->seccion.') de esta misma materia');
 					
-						$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
 						return new Gatuf_HTTP_Response_Redirect ($url);
 					}
 				}
 				
 				$alumno->setAssoc ($seccion);
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {

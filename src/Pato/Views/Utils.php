@@ -143,6 +143,38 @@ class Pato_Views_Utils {
 					
 					if ($found) continue;
 					
+					$materia = $seccion->get_materia();
+					
+					/* Si el alumno tiene pasada la materia, no la puede recursar */
+					$sql_k = new Gatuf_SQL ('(materia=%s AND aprobada=1)', $seccion->materia);
+					$kardexs = $alumno->get_kardex_list (array ('filter' => $sql_k->gen (), 'count' => true));
+				
+					if ($kardexs > 0) {
+						$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' ya acreditó la materia '.$materia->descripcion);
+					
+						continue;
+					}
+				
+					/* Revisar que la materia pertenezca a su carrera actual */
+					$ins = $alumno->get_current_inscripcion ();
+					if ($ins == null) {
+						$request->user-
+					}
+					$carrera_actual = $ins->get_carrera ();
+					$cars = $materia->get_carreras_list ();
+					$pertenece = false;
+					foreach ($cars as $car) {
+						if ($carrera_actual->clave == $car->clave) {
+							$pertenece = true;
+							break;
+						}
+					}
+				
+					if (!$pertenece) {
+						$request->user->setMessage (3, 'La materia '.$materia->descripcion.' no pertenece a la carrera actual del alumno '.$alumno->codigo);
+						continue;
+					}
+					
 					if ($horario_check) {
 						$choque = false;
 						foreach ($horas as $h_al) {
