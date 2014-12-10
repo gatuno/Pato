@@ -225,16 +225,8 @@ class Pato_Views_Agenda {
 			if ($form->isValid ()) {
 				$nrcs = $form->save ();
 				
-				/* Sacar todos los horarios del alumno */
-				$horarios = array ();
-				$secciones_al = $alumno->get_grupos_list ();
+				Gatuf::loadFunction ('Pato_Procedimiento_matricular');
 				
-				foreach ($secciones_al as $seccion) {
-					foreach ($seccion->get_pato_horario_list () as $h_sec) {
-						$horarios[] = $h_sec;
-					}
-				}
-		
 				$seccion = new Pato_Seccion ();
 		
 				foreach ($nrcs as $nrc_nuevo) {
@@ -244,78 +236,10 @@ class Pato_Views_Agenda {
 						continue;
 					}
 					
-					/* Revisar cupos aquí */
-					$count = $seccion->get_alumnos_list (array ('count' => true));
-					if ($count >= $seccion->cupo) {
-						$request->user->setMessage (2, 'El NRC '.$seccion->nrc.' tiene cupo lleno');
-						continue;
-					}
+					$resp = Pato_Procedimiento_matricular ($seccion, $alumno, true, true);
 					
-					$materia = $seccion->get_materia();
-					
-					/* Si el alumno tiene pasada la materia, no la puede recursar */
-					$sql_k = new Gatuf_SQL ('(materia=%s AND aprobada=1)', $seccion->materia);
-					$kardexs = $alumno->get_kardex_list (array ('filter' => $sql_k->gen (), 'count' => true));
-					
-					if ($kardexs > 0) {
-						$request->user->setMessage (2, 'Ya acreditaste la materia '.$materia->descripcion.'. El NRC '.$seccion->nrc.' se ignora');
-						continue;
-					}
-					
-					/* Revisar que la materia pertenezca a su carrera actual */
-					$carrera_actual = $ins->get_carrera ();
-					$cars = $materia->get_carreras_list ();
-					$pertenece = false;
-					foreach ($cars as $car) {
-						if ($carrera_actual->clave == $car->clave) {
-							$pertenece = true;
-							break;
-						}
-					}
-					
-					if (!$pertenece) {
-						$request->user->setMessage (3, 'No puedes matricular el NRC '.$seccion->nrc.' porque la materia '.$materia->descripcion.' no pertenece a tu carrera actual');
-						continue;
-					}
-					
-					$secciones_al = $alumno->get_grupos_list ();
-					/* Revisar que no haya matriculado otro curso de la misma materia */
-					$choque = false;
-					foreach ($secciones_al as $sec_al) {
-						if ($sec_al->nrc == $seccion->nrc) {
-							$request->user->setMessage (2, 'El NRC '.$seccion->nrc.' ya está matriculado');
-							$choque = true;
-							continue;
-						}
-						
-						if ($sec_al->materia == $seccion->materia) {
-							$request->user->setMessage (2, 'El NRC '.$seccion->nrc.' no se puede agregar porque ya tienes registrado otro NRC de esa misma materia');
-							$choque = true;
-							continue;
-						}
-					}
-					
-					if ($choque) continue;
-					
-					$horas = $seccion->get_pato_horario_list ();
-					
-					/* Chocar todos los horarios contra los horarios del alumno */
-					$choque = false;
-					foreach ($horarios as $h_al) {
-						foreach ($horas as $h_sec) {
-							if (Pato_Horario::chocan ($h_al, $h_sec)) $choque = true;
-						}
-					}
-					
-					if ($choque) {
-						$request->user->setMessage (2, 'El NRC '.$seccion->nrc.' tiene conflictos de horario');
-						continue;
-					}
-					
-					$alumno->setAssoc ($seccion);
-					/* Agregar las horas al alumno */
-					foreach ($horas as $h_sec) {
-						$horarios[] = $h_sec;
+					if ($resp !== true) {
+						$request->user->setMessage (2, 'El NRC '.$seccion->nrc.' no se pudo matricular por la siguiente razón: '.$resp);
 					}
 				}
 			}

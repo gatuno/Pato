@@ -100,6 +100,7 @@ class Pato_Views_Utils {
 					$request->user->setMessage (1, 'El alumno '.$alumno->codigo.' fué desmatriculado del nrc '.$seccion->nrc);
 				}
 				
+				Gatuf::loadFunction ('Pato_Procedimiento_matricular');
 				/* Realizar las altas */
 				foreach ($cambios['altas'] as $cambio) {
 					if ($seccion->get ($cambio[0]) === false) {
@@ -112,85 +113,13 @@ class Pato_Views_Utils {
 						continue;
 					}
 					
-					$sql = new Gatuf_SQL ('pato_alumno_codigo=%s', $alumno->codigo);
-					
-					$alumnos = $seccion->get_alumnos_list (array ('filter' => $sql->gen ()));
-					
-					if (count ($alumnos) != 0) {
-						$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' ya está registrado en el nrc '.$seccion->nrc.', ignorando');
-						continue;
-					}
-					
-					$secciones = $alumno->get_grupos_list ();
-					$found = false;
-					
-					/* Para acumular las horas que lleva ese alumno */
-					$horas = array ();
-					
-					/* Recorrer todas las secciones que ya tiene matriculado este alumno */
-					foreach ($secciones as $s) {
-						if ($s->materia == $seccion->materia) {
-							$request->user->setMessage (3, 'El alumno '.$alumno->codigo.' ya tiene matriculada una materia '.$seccion->materia.', por lo tanto, el NRC '.$seccion->nrc.' no se pudo dar de alta');
-							$found = true;
-							break;
-						}
-						if ($horario_check) {
-							foreach ($s->get_pato_horario_list () as $h_al) {
-								$horas[] = $h_al;
-							}
-						}
-					}
-					
-					if ($found) continue;
-					
-					$materia = $seccion->get_materia();
-					
-					/* Si el alumno tiene pasada la materia, no la puede recursar */
-					$sql_k = new Gatuf_SQL ('(materia=%s AND aprobada=1)', $seccion->materia);
-					$kardexs = $alumno->get_kardex_list (array ('filter' => $sql_k->gen (), 'count' => true));
+					$resp = Pato_Procedimiento_matricular ($seccion, $alumno, $horario_check, false);
 				
-					if ($kardexs > 0) {
-						$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' ya acreditó la materia '.$materia->descripcion);
-					
-						continue;
+					if ($resp !== true) {
+						$request->user->setMessage (2, 'El alumno ('.$alumno->codigo.') no se pudo matricular en el NRC '.$seccion->nrc.' por la siguiente razón: '.$resp);
+					} else {
+						$request->user->setMessage (1, 'Alumno '.$alumno->codigo.' matriculado en el NRC '.$seccion->nrc);
 					}
-				
-					/* Revisar que la materia pertenezca a su carrera actual */
-					$ins = $alumno->get_current_inscripcion ();
-					if ($ins == null) {
-						$request->user-
-					}
-					$carrera_actual = $ins->get_carrera ();
-					$cars = $materia->get_carreras_list ();
-					$pertenece = false;
-					foreach ($cars as $car) {
-						if ($carrera_actual->clave == $car->clave) {
-							$pertenece = true;
-							break;
-						}
-					}
-				
-					if (!$pertenece) {
-						$request->user->setMessage (3, 'La materia '.$materia->descripcion.' no pertenece a la carrera actual del alumno '.$alumno->codigo);
-						continue;
-					}
-					
-					if ($horario_check) {
-						$choque = false;
-						foreach ($horas as $h_al) {
-							foreach ($seccion->get_pato_horario_list () as $h_sec) {
-								if (Pato_Horario::chocan ($h_al, $h_sec)) $choque = true;
-							}
-						}
-						
-						if ($choque) {
-							$request->user->setMessage (2, 'El alumno '.$alumno->codigo.' tiene conflictos de horario al matricular el NRC '.$seccion->nrc);
-							continue;
-						}
-					}
-					
-					$alumno->setAssoc ($seccion);
-					$request->user->setMessage (1, 'Alumno '.$alumno->codigo.' matriculado en el NRC '.$seccion->nrc);
 				}
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::altasBajasMasivas');
