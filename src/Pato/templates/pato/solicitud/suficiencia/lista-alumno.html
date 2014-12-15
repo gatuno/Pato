@@ -1,0 +1,18 @@
+{extends 'pato/base.html'}
+{block body}
+<h2>Mis solicitudes de suficiencias</h2>
+{if $abierto}<a href="{url 'Pato_Views_Solicitud_Suficiencias::nueva'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nueva solicitud" />Nueva solicitud de suficiencias</a> para el calendario {$siguiente_calendario}</p>{else}<p>El periodo para solicitar suficiencias está cerrado</p>{/if}
+<p>Solicitudes abiertas para {$siguiente_calendario}</p>
+{if count($solicitudes) == 0}
+	<p>Ninguna</p>
+{else}
+	<table>
+		<thead><tr><th>Materia</th><th>Estado</th>{if $abierto}<th>Eliminar</th>{/if}</tr></thead>
+		<tbody>{foreach $solicitudes as $s}
+			<tr><td>{$s.get_materia}</td>
+			<td>{if $s.estatus == 0}Pendiente{elseif $s.estatus == 1}Aprobada{elseif $s.estatus == 2}No aprobada{/if}</td>
+			{if $abierto}<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::eliminar', $s.id}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Retirar solicitud" /></a></td>{/if}</tr>
+		{/foreach}</tbody>
+	</table>
+{/if}
+{/block}

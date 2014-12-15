@@ -901,6 +901,34 @@ $ctl[] = array (
 );
 
 $ctl[] = array(
+	'regex' => '#^/suficiencias/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'index',
+);
+
+$ctl[] = array(
+	'regex' => '#^/suficiencias/ver/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'solicitudes',
+);
+
+$ctl[] = array(
+	'regex' => '#^/suficiencias/nueva/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'nueva',
+);
+
+$ctl[] = array(
+	'regex' => '#^/suficiencias/eliminar/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'eliminar',
+);
+
+$ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Test',
