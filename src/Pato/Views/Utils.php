@@ -137,7 +137,6 @@ class Pato_Views_Utils {
 	
 	public $cambiarFechaEval_precond = array ('Gatuf_Precondition::adminRequired');
 	public function cambiarFechaEval ($request, $match) {
-		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Utils_ActualizarEval ($request->POST);
 			

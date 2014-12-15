@@ -37,8 +37,8 @@ class Pato_Porcentaje extends Gatuf_Model {
 			'abierto' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Boolean',
-			       'blank' => true,
-			       'default' => 1,
+			       'blank' => false,
+			       'default' => true,
 			),
 			'apertura' =>
 			array (

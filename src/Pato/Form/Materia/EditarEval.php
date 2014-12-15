@@ -36,7 +36,7 @@ class Pato_Form_Materia_EditarEval extends Gatuf_Form {
 				'initial' => $initial,
 				'help_text' => 'Cuando se deberían poder subir calificaciones',
 				'widget_attrs' => array (
-					'choices' => array ('Cerrado' => 0, 'Abierto, siempre' => 1, 'Abierto desde el día' => 2, 'Cerrado hasta el día' => 3, 'Por fechas' => 4)
+					'choices' => array ('Cerrado' => 0, 'Abierto, siempre' => 1, 'Abierto desde el día' => 2, 'Abierto hasta el día' => 3, 'Por fechas' => 4)
 				),
 				'widget' => 'Gatuf_Form_Widget_SelectInput',
 		));
@@ -98,7 +98,7 @@ class Pato_Form_Materia_EditarEval extends Gatuf_Form {
 			$this->cleaned_data['apertura'] = null;
 		}
 		
-		$this->porcentaje->abierto = ($sel == 0) ? 0 : 1;
+		$this->porcentaje->abierto = ($sel == 0) ? false : true;
 		$this->porcentaje->setFromFormData ($this->cleaned_data);
 		
 		$this->porcentaje->update ();

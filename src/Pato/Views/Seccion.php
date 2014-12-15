@@ -578,15 +578,24 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if ($request->user->login != $seccion->maestro && !$request->user->administrator) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		/* Si hay suplente, el suplente puede subir calificaciones */
-		if ($seccion->suplente && $request->user->login != $seccion->suplente) {
-			$request->user->setMessage (3, 'Usted no puede subir calificaciones. Hay un suplente asignado a esta sección');
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
-			return new Gatuf_HTTP_Response_Redirect ($url);
+		/* Si la forma de evaluación es subida por el profesor, sólo permitirle a él (o a su suplente) subir calificaciones */
+		if ($eval->maestro) {
+			if ($seccion->suplente) {
+				if ($request->user->login != $seccion->suplente) {
+					$request->user->setMessage (3, 'Usted no puede subir calificaciones. Hay un suplente asignado a esta sección');
+					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+					return new Gatuf_HTTP_Response_Redirect ($url);
+				}
+			} else {
+				if ($request->user->login != $seccion->maestro) {
+					throw new Gatuf_HTTP_Error404 ();
+				}
+			}
+		} else {
+			/* En caso contrario, sólo un administrador u otros pueden subir */
+			if (!$request->user->administrator) {
+				throw new Gatuf_HTTP_Error404();
+			}
 		}
 		
 		/* Revisar que el porcentaje exista para esta materia */
@@ -598,15 +607,51 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator && $ps->abierto == 0) {
+		if (!$ps->abierto) {
 			$request->user->setMessage (3, 'La subida de calificaciones para '.$eval->descripcion.' está cerrada.');
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
-		/* TODO: Revisar las horas aquí */
+		$hora = gmdate ('Y/m/d H:i');
+		$unix_time = strtotime ($hora);
 		
-		$extra = array ('porcentaje' => $ps, 'seccion' => $seccion);
+		if ($ps->apertura !== null) {
+			/* Revisar sólo que la fecha actual pase de la fecha de apertura */
+			$unix_inicio = strtotime ($ps->apertura);
+			
+			if ($unix_time < $unix_inicio) {
+				$request->user->setMessage (2, 'La subida de calificaciones para '.$eval->descripcion.' aún no está abierta.');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		}
+		
+		if ($ps->cierre !== null) {
+			$unix_fin = strtotime ($ps->cierre);
+			
+			if ($unix_time > $unix_fin) {
+				$request->user->setMessage (2, 'La subida de calificaciones para '.$eval->descripcion.' ya cerró.');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		}
+		
+		/* Antes, contar si los alumnos ya tienen una calificación en kardex de esta sección,
+		 * para evitar que suban si ya cerraron el acta */
+		$sql = new Gatuf_SQL ('gpe=%s AND nrc=%s AND materia=%s AND calendario=%s', array ($eval->grupo, $seccion->nrc, $request->calendario->clave, $seccion->materia));
+		
+		$kardex = Gatuf::factory ('Pato_Kardex')->getList (array ('filter' => $sql->gen(), 'count' => true));
+		$alumnos = $seccion->get_alumnos_list (array ('count' => true));
+		
+		if ($kardex == $alumnos) {
+			/* Todos los alumnos ya tienen calificación en Kardex */
+			$request->user->setMessage (2, 'Este grupo ya tiene todas las calificaciones roladas en kardex, por lo que no puede modificar las boletas. Solicite un cambio de calificación de Kardex');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$extra = array ('porcentaje' => $ps, 'seccion' => $seccion, 'calendario' => $request->calendario);
 		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Seccion_Evaluar ($request->POST, $extra);

@@ -39,7 +39,7 @@ class Pato_Form_Materia_AgregarEval extends Gatuf_Form {
 				'initial' => 0,
 				'help_text' => 'Cuando se deberían poder subir calificaciones',
 				'widget_attrs' => array (
-					'choices' => array ('Cerrado' => 0, 'Abierto, siempre' => 1, 'Abierto desde el día' => 2, 'Cerrado hasta el día' => 3, 'Por fechas' => 4)
+					'choices' => array ('Cerrado' => 0, 'Abierto, siempre' => 1, 'Abierto desde el día' => 2, 'Abierto hasta el día' => 3, 'Por fechas' => 4)
 				),
 				'widget' => 'Gatuf_Form_Widget_SelectInput',
 		));
@@ -102,7 +102,7 @@ class Pato_Form_Materia_AgregarEval extends Gatuf_Form {
 		}
 		
 		$porcentaje = new Pato_Porcentaje ();
-		$porcentaje->abierto = ($sel == 0) ? 0 : 1;
+		$porcentaje->abierto = ($sel == 0) ? false : true;
 		$porcentaje->materia = $this->materia;
 		$porcentaje->setFromFormData ($this->cleaned_data);
 		
