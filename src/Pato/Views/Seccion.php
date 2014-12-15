@@ -639,7 +639,7 @@ class Pato_Views_Seccion {
 		
 		/* Antes, contar si los alumnos ya tienen una calificación en kardex de esta sección,
 		 * para evitar que suban si ya cerraron el acta */
-		$sql = new Gatuf_SQL ('gpe=%s AND nrc=%s AND materia=%s AND calendario=%s', array ($eval->grupo, $seccion->nrc, $request->calendario->clave, $seccion->materia));
+		$sql = new Gatuf_SQL ('gpe=%s AND nrc=%s AND materia=%s AND calendario=%s', array ($eval->grupo, $seccion->nrc, $seccion->materia, $request->calendario->clave));
 		
 		$kardex = Gatuf::factory ('Pato_Kardex')->getList (array ('filter' => $sql->gen(), 'count' => true));
 		$alumnos = $seccion->get_alumnos_list (array ('count' => true));

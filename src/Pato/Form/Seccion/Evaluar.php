@@ -1,7 +1,7 @@
 <?php
 
 class Pato_Form_Seccion_Evaluar extends Gatuf_Form {
-	private $porcentaje, $seccion;
+	private $porcentaje, $seccion, $calendario;
 	public function initFields($extra=array()) {
 		$this->porcentaje = $extra['porcentaje'];
 		$this->seccion = $extra['seccion'];
@@ -46,6 +46,11 @@ class Pato_Form_Seccion_Evaluar extends Gatuf_Form {
 		$eval = $this->porcentaje->get_evaluacion ();
 		
 		foreach ($alumnos as $alumno) {
+			/* Antes, revisar si el alumno ya tiene una calificación en Kardex, omitir */
+			$sql = new Gatuf_SQL ('(gpe=%s AND nrc=%s AND materia=%s AND calendario=%s)', array ($eval->grupo, $this->seccion->nrc, $this->seccion->materia, $this->calendario->clave));
+			$c = $alumno->get_kardex_list (array ('filter' => $sql->gen (), 'count' => true));
+			if ($c != 0) continue;
+			
 			$sql = new Gatuf_SQL ('nrc=%s AND alumno=%s AND evaluacion=%s', array ($this->seccion->nrc, $alumno->codigo, $eval->id));
 			
 			$boleta = Gatuf::factory ('Pato_Boleta')->getOne ($sql->gen ());
