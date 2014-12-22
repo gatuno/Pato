@@ -928,6 +928,12 @@ $ctl[] = array(
 	'method' => 'eliminar',
 );
 
+$ctl[] = array (
+	'regex' => '#^/admin/#',
+	'base' => $base,
+	'sub' => include '../../Admin/conf/urls.php',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

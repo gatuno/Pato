@@ -28,6 +28,7 @@ $cfg['pear_path'] = '/usr/share/php';
 # Ruta de los templates
 $cfg['template_folders'] = array(
    dirname(__FILE__).'/../templates',
+   dirname(__FILE__).'/../../Admin/templates',
 );
 
 # ---------------------------------------------------------------------------- #
@@ -116,7 +117,7 @@ $cfg['gatuf_custom_user'] = 'Pato_User';
 /*$cfg['template_tags'] = array ('coordperm' => 'Calif_Template_CoordPerm',
 	'jefeperm' => 'Calif_Template_JefePerm');*/
 
-$cfg['installed_apps'] = array('Gatuf', 'Pato');
+$cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin');
 
 $cfg['template_tags'] = array ('matcoord' => 'Pato_Template_Tag_MateriaCoord');
 

@@ -123,6 +123,18 @@ td .icon {
 	background-color: #23B600;
 }
 
+.nav .admin a:hover {
+	background-color: #868686;
+}
+
+.nav .informatica a:hover {
+	background-color: #ef7432;
+}
+
+.nav .sgenerales a:hover {
+	background-color: #ad7fa8;
+}
+
 /* Submenús */
 .nav ul {
 	display: none;
