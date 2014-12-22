@@ -248,9 +248,14 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$gpe = new Pato_GPE ();
+		if (false === ($gpe->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
 		$pdf = new Pato_PDF_Alumno_Boleta ('P', 'mm', 'Letter');
 		
-		$pdf->renderBoleta ($alumno);
+		$pdf->renderBoleta ($alumno, $gpe, $request->calendario);
 		
 		$pdf->Close ();
 		

@@ -31,6 +31,17 @@ class Pato_Views_Horario {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		$als = $seccion->get_alumnos_list (array ('count' => true));
+		
+		if ($als > 0) {
+			if (!$request->user->administrator) {
+				$request->user->setMessage (3, 'No puede modificar los horarios de esta sección porque ya hay alumnos inscritos.');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+	                        return new Gatuf_HTTP_Response_Redirect ($url);
+			} else {
+				$request->user->setMessage (2, 'Modificar el horario de una sección cuando ya tiene alumnos inscritos puede ser fatal y desastrozo. Podría provocar colisiones en los horarios de los alumnos. Preste mucha atención al hacer las modificaciones, Patricia no puede revisar todos los horarios de los alumnos.');
+			}
+		}
 		$extra = array('seccion' => $seccion);
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Horario_Agregar ($request->POST, $extra);
@@ -96,7 +107,17 @@ class Pato_Views_Horario {
 		if ($hora->nrc != $seccion->nrc) {
 			throw new Gatuf_HTTP_Error404();
 		}
-		
+		$als = $seccion->get_alumnos_list (array ('count' => true));
+
+                if ($als > 0) {
+                        if (!$request->user->administrator) {
+                                $request->user->setMessage (3, 'No puede modificar los horarios de esta sección porque ya hay alumnos inscritos.');
+                                $url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+                                return new Gatuf_HTTP_Response_Redirect ($url);
+                        } else {
+                                $request->user->setMessage (2, 'Modificar el horario de una sección cuando ya tiene alumnos inscritos puede ser fatal y desastrozo. Podría provocar colisiones en los horarios de los alumnos. Preste mucha atención al hacer las modificaciones, Patricia no puede revisar todos los horarios de los alumnos.');
+                        }
+                }
 		if ($request->method == 'POST') {
 			/* Adelante, eliminar esta hora */
 			$hora->delete ();
@@ -160,7 +181,17 @@ class Pato_Views_Horario {
 		if ($hora->nrc != $seccion->nrc) {
 			throw new Gatuf_HTTP_Error404();
 		}
-		
+		$als = $seccion->get_alumnos_list (array ('count' => true));
+
+                if ($als > 0) {
+                        if (!$request->user->administrator) {
+                                $request->user->setMessage (3, 'No puede modificar los horarios de esta sección porque ya hay alumnos inscritos.');
+                                $url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
+                                return new Gatuf_HTTP_Response_Redirect ($url);
+                        } else {
+                                $request->user->setMessage (2, 'Modificar el horario de una sección cuando ya tiene alumnos inscritos puede ser fatal y desastrozo. Podría provocar colisiones en los horarios de los alumnos. Preste mucha atención al hacer las modificaciones, Patricia no puede revisar todos los horarios de los alumnos.');
+                        }
+                }
 		$extra = array('seccion' => $seccion, 'horario' => $hora);
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Horario_Actualizar ($request->POST, $extra);

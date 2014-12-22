@@ -206,7 +206,7 @@ $ctl[] = array(
 			'method' => 'verFormatos',
 		),
 		array (
-			'regex' => '#^(\w\d{7})/formato/boleta/$#',
+			'regex' => '#^(\w\d{7})/formato/boleta/(\d+)/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'boleta',

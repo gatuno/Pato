@@ -4,7 +4,7 @@ Gatuf::loadFunction ('Pato_Utils_numeroLetra');
 Gatuf::loadFunction ('Pato_Calendario_getDefault');
 
 class Pato_PDF_Seccion_Acta extends External_FPDF {
-	function renderPreacta ($seccion, $gpe, $timfunction renderActa ($seccion, $gpe, $folio = 1, $timestamp) {
+	function renderActa ($seccion, $gpe, $folio = 1, $timestamp) {
 		$this->SetFont('Times', '', 12);
 		setlocale (LC_TIME, 'es_MX');
 		$fecha = strftime ('%e de %B de %Y', $timestamp);

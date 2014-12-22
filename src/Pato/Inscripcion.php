@@ -27,6 +27,12 @@ class Pato_Inscripcion extends Gatuf_Model {
 			       'blank' => false,
 			       'model' => 'Pato_Carrera',
 			),
+			'turno' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Char',
+			       'blank' => false,
+			       'default' => 'M',
+			),
 			'ingreso' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Foreignkey',

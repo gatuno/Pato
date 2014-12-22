@@ -1,9 +1,9 @@
 <?php
 
 Gatuf::loadFunction ('Pato_Utils_numeroLetra');
-Gatuf::loadFunction ('Pato_Calendario_getDefault');
 
 class Pato_PDF_Alumno_Boleta extends External_FPDF {
+	private $calendario, $gpe;
 	private function renderAt ($alumno, $y) {
 		$this->Image (dirname(__FILE__).'/../data/logo-1.jpg', 14, $y + 10, 20, 23);
 		
@@ -21,7 +21,7 @@ class Pato_PDF_Alumno_Boleta extends External_FPDF {
 		$this->SetY ($y + 41);
 		$this->SetX (14);
 		
-		$ins = $alumno->get_current_inscripcion ();
+		$ins = $alumno->get_inscripcion_for_cal ($this->calendario);
 		if ($ins == null) {
 			$this->Cell (132, 5, 'Programa educativo: ', 0, 0, 'L');
 		} else {
@@ -32,11 +32,10 @@ class Pato_PDF_Alumno_Boleta extends External_FPDF {
 		$this->SetX (146);
 		$this->Cell (50, 5, 'Cuatrimestre: ', 0, 0, 'L');
 		
-		$calendario = new Pato_Calendario (Pato_Calendario_getDefault ());
 		$this->SetY ($y + 46);
 		$this->SetX (14);
 		
-		$this->Cell (172, 5, 'Ciclo escolar: '.$calendario->descripcion, 0, 0, 'L');
+		$this->Cell (172, 5, 'Ciclo escolar: '.$this->calendario->descripcion, 0, 0, 'L');
 		
 		$this->SetY ($y + 56);
 		$this->SetX (14);
@@ -52,24 +51,23 @@ class Pato_PDF_Alumno_Boleta extends External_FPDF {
 		
 		$gy = $y + 62;
 		$suma = $sumadas = 0;
-		foreach ($secciones as $seccion) {
-			$materia = $seccion->get_materia ();
-			
-			$sql = new Gatuf_SQL ('nrc=%s AND alumno=%s AND evaluacion=1', array ($seccion->nrc, $alumno->codigo));
-			$boleta = Gatuf::factory ('Pato_Boleta')->getOne ($sql->gen ());
+		$sql = new Gatuf_SQL ('calendario=%s AND gpe=%s', array ($this->calendario->clave, $this->gpe->id));
+		$kardexs = $alumno->get_kardex_list (array ('filter' => $sql->gen ()));
+		foreach ($kardexs as $kardex) {
+			$materia = $kardex->get_materia ();
 			
 			$this->SetY ($gy);
 			$this->SetX (14);
 			$this->Cell (132, 4, $materia->descripcion, 1, 0, 'L');
 			
 			$this->SetX (146);
-			if ($boleta->calificacion <= 0) {
-				if ($boleta->calificacion == 0) {
+			if ($kardex->calificacion <= 0) {
+				if ($kardex->calificacion == 0) {
 					$this->Cell (50, 4, 'NA', 1, 0, 'C');
 				}
 			} else {
-				$this->Cell (50, 4, $boleta->calificacion, 1, 0, 'C');
-				$suma += $boleta->calificacion;
+				$this->Cell (50, 4, $kardex->calificacion, 1, 0, 'C');
+				$suma += $kardex->calificacion;
 				$sumadas++;
 			}
 			
@@ -115,7 +113,9 @@ class Pato_PDF_Alumno_Boleta extends External_FPDF {
 		$this->Cell (50, 6, 'Fecha: 6 de marzo de 2013', 0, 0, 'R');
 	}
 	
-	function renderBoleta ($alumno) {
+	function renderBoleta ($alumno, $gpe, $calendario) {
+		$this->gpe = $gpe;
+		$this->calendario = $calendario;
 		$this->SetFont('Times', '', 12);
 		$this->AddPage();
 		$this->SetAutoPageBreak (false);
