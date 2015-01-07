@@ -3,6 +3,6 @@
 <p>Laboratorios en el área de Servicios Informáticos</p>
 <p><a href="{url 'Admin_Views_SI_Laboratorio::agregar'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nuevo laboratorio" />Nuevo laboratorio</a></p>
 <ul>{foreach $laboratorios as $lab}
-	<li><a href="{url 'Admin_Views_SI_Laboratorio::ver'}">{$lab->nombre}</a></li>
+	<li><a href="{url 'Admin_Views_SI_Laboratorio::ver', $lab.id}">{$lab.nombre}</a></li>
 {/foreach}</ul>
 {/block}

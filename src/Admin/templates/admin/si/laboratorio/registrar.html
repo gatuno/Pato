@@ -1,0 +1,53 @@
+{extends 'admin/base.html'}
+{block body}
+<p>Registro de uso del laboratorio {$laboratorio.nombre}</p>
+<form action="." method="post" id="registrar_form">
+	<table>
+		{$form.render_table}
+		<tr><td colspan="2"><button type="button" onclick="on_click_entrada()">Entrada</button>
+		<button type="button" onclick="on_click_salida()">Salida</button></td></tr>
+	</table>
+</form>
+<p>Últimos 5 registros de los últimos 5 minutos:</p>
+{if count($registros) != 0}<table>
+	<thead><tr><th>Alumno</th><th>Tipo</th><th>Hora</th></tr></thead>
+	<tbody>{foreach $registros as $r}
+	<tr><td>{$r.get_alumno}</td><td>{if $r.tipo == 'e'}Entrada{else}Salida{/if}</td><td>{$r.hora|dateago}</td></tr>
+	{/foreach}</tbody>
+</table>{else}
+	<p>Ninguno registrado</p>
+{/if}
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<style type="text/css">{literal}
+		.ui-autocomplete {
+			max-height: 150px;
+			overflow-y: auto;
+			/* prevent horizontal scrollbar */
+			overflow-x: hidden;
+		}
+	</style>{/literal}{/block}
+{block javascript}{literal}<script type="text/javascript">
+document.getElementById('id_alumno').focus();
+
+function on_click_entrada () {
+	var form = document.getElementById ('registrar_form');
+	
+	{/literal}var action_entrada = "{url 'Admin_Views_SI_Laboratorio::registrarEntrada', $laboratorio.id}";{literal}
+	form.action = action_entrada;
+	
+	form.submit();
+}
+
+function on_click_salida () {
+	var form = document.getElementById ('registrar_form');
+	
+	{/literal}var action_salida = "{url 'Admin_Views_SI_Laboratorio::registrarSalida', $laboratorio.id}";{literal}
+	form.action = action_salida;
+	
+	form.submit();
+}
+
+</script>{/literal}{/block}

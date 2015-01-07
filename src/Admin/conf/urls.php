@@ -46,4 +46,25 @@ $ctl_a[] = array (
 	'method' => 'ver',
 );
 
+$ctl_a[] = array (
+	'regex' => '#^/si/laboratorio/(\d+)/registro/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_SI_Laboratorio',
+	'method' => 'registrar',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/si/laboratorio/(\d+)/registro/entrada/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_SI_Laboratorio',
+	'method' => 'registrarEntrada',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/si/laboratorio/(\d+)/registro/salida/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_SI_Laboratorio',
+	'method' => 'registrarSalida',
+);
+
 return $ctl_a;
