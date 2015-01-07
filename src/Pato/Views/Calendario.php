@@ -85,9 +85,43 @@ class Pato_Views_Calendario {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		$activo = $gconf->getVal ('calendario_activo', null);
+		$sig = $gconf->getVal ('calendario_siguiente', null);
+		
+		$es_activo = false;
+		if ($activo != null) {
+			$actual = new Pato_Calendario ($activo);
+			if ($actual->clave == $calendario->clave) $es_activo = true;
+		}
+		
+		$es_siguiente = false;
+		if ($sig != null) {
+			$siguiente = new Pato_Calendario ($sig);
+			if ($siguiente->clave == $calendario->clave) $es_siguiente = true;
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Calendario_Preferencias ($request->POST, array ('cal' => $calendario));
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$request->user->setMessage (1, 'Preferencias del calendario guardadas');
+				
+				$form = new Pato_Form_Calendario_Preferencias (null, array ('cal' => $calendario));
+			}
+		} else {
+			$form = new Pato_Form_Calendario_Preferencias (null, array ('cal' => $calendario));
+		}
+		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/calendario/ver.html',
 		                                         array ('page_title' => 'Calendario '.$calendario->descripcion,
-		                                                'calendario' => $calendario),
+		                                                'calendario' => $calendario,
+		                                                'es_activo' => $es_activo,
+		                                                'es_siguiente' => $es_siguiente,
+		                                                'form' => $form),
 		                                         $request);
 	}
 	
