@@ -1,0 +1,23 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Aquí puede aprobar las solicitudes de la carrera {$carrera}. Seleccione el estado de la suficiencia. Si elige 'Aprobado', debe seleccionar el profesor que aplicará el examen</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>
+{if $form.get_top_errors}<p>{$form.render_top_errors|unsafe}</p>{/if}{/if}
+<form action="." method="post">
+	{foreach $solicitudes as $sol}
+		<p>Solicitud no: <strong>{$sol.id}</strong></p>
+		<table width="95%">
+		<tr><td>Alumno: <strong>{$sol.get_alumno}</strong><br />
+		Materia: <strong>{$sol.get_materia}</strong></td>
+		{assign $e = 'estado_'~$sol.id}
+		<td width="30%"><div class="errors">{if $form.f.__get($e).errors}{$form.f.__get($e).fieldErrors}{/if}</div>
+		{$form.f.__get($e).label}:<br />{$form.f.__get($e)|safe}</td>
+		{assign $m = 'maestro_'~$sol.id}
+		<td width="20%"><div class="errors">{if $form.f.__get($m).errors}{$form.f.__get($m).fieldErrors}{/if}</div>
+		{$form.f.__get($m).label}:<br />{$form.f.__get($m)|safe}</td>
+		</tr></table>
+		<hr />
+	{/foreach}
+	<input type="submit" value="Guardar todas las solicitudes" />
+</form>
+{/block}

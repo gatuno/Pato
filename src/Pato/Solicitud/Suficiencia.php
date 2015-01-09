@@ -27,6 +27,15 @@ class Pato_Solicitud_Suficiencia extends Gatuf_Model {
 			       'model' => 'Pato_Materia',
 			       'blank' => false,
 			),
+			'maestro' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Foreignkey',
+			       'model' => 'Pato_Maestro',
+			       'blank' => false,
+			       'model' => 'Pato_Maestro',
+			       'is_null' => true,
+			       'default' => null,
+			),
 			'estatus' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Integer',

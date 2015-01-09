@@ -1,0 +1,13 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Lista de solicitudes en la carrera {$carrera} para el calendario {$siguiente_calendario}</p>
+<p>Empezar a <a href="{url 'Pato_Views_Solicitud_Suficiencias::aprobarCarrera', $carrera.clave}">aprobar o rechazar solicitudes</a></p>
+<table border="1">
+	<thead>
+		<tr><th>No.</th><th>Alumno</th><th>Materia</th><th>Estado</th><th>Profesor asignado</th></tr>
+	</thead>
+	<tbody>{foreach $solicitudes as $sol}
+		<tr><td>{$sol.id}</td><td>{$sol.get_alumno}</td><td>{$sol.get_materia}</td><td>{if $sol.estatus == 0}Pendiente{elseif $sol.estatus == 1}Aprobada{elseif $sol.estatus == 2}Rechazada{else}Desconocido{/if}</td><td>{if $sol.maestro != null}{$sol.get_maestro}{/if}</td></tr>
+	{/foreach}</tbody>
+</table>
+{/block}

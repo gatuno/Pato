@@ -943,10 +943,24 @@ $ctl[] = array(
 );
 
 $ctl[] = array (
+	'regex' => '#^/suficiencias/revisar/([A-Za-z]{2,5})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'revisarCarrera',
+);
+
+$ctl[] = array (
+	'regex' => '#^/suficiencias/revisar/([A-Za-z]{2,5})/aprobar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'aprobarCarrera',
+);
+
+/*$ctl[] = array (
 	'regex' => '#^/admin/#',
 	'base' => $base,
 	'sub' => include '../../Admin/conf/urls.php',
-);
+);*/
 
 $ctl[] = array(
 	'regex' => '#^/test/$#',

@@ -5,8 +5,10 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Solicitud_Suficiencias {
 	public function index ($request, $match) {
+		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/index.html',
-		                                         array ('page_title' => 'Suficiencias'),
+		                                         array ('page_title' => 'Suficiencias',
+		                                                'carreras' => $carreras),
 		                                         $request);
 	}
 	
@@ -141,6 +143,13 @@ class Pato_Views_Solicitud_Suficiencias {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		if ($suficiencia->estado != 0) {
+			$request->user->setMessage (3, 'Sólo puedes eliminar una suficiencia en estado Pendiente');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::solicitudes');
+			
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
 		$materia = $suficiencia->get_materia ();
 		$suficiencia->delete ();
 		
@@ -148,5 +157,105 @@ class Pato_Views_Solicitud_Suficiencias {
 		
 		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::solicitudes');
 		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
+	public $revisarCarrera_precond = array ('Pato_Precondition::coordinadorRequired');
+	public function revisarCarrera ($request, $match) {
+		$carrera = new Pato_Carrera ();
+		
+		if ($carrera->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		/* Cambiar al calendario siguiente */
+		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
+		
+		/* Empezar por listar todas las solicitudes */
+		$todas = Gatuf::factory ('Pato_Solicitud_Suficiencia')->getList ();
+		
+		$sol_car = array ();
+		/* Filtrar las que no son de esta carrera */
+		foreach ($todas as $solicitud) {
+			$alumno = $solicitud->get_alumno ();
+			
+			$ins = $alumno->get_current_inscripcion ();
+			
+			if ($ins->carrera == $carrera->clave) {
+				$sol_car[] = $solicitud;
+			}
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/revisar.html',
+		                                         array ('page_title' => 'Lista de solicitudes de suficiencia',
+		                                                'carrera' => $carrera,
+		                                                'solicitudes' => $sol_car,
+		                                                'siguiente_calendario' => $sig_calendario),
+		                                         $request);
+	}
+	
+	public $aprobarCarrera_precond = array ('Pato_Precondition::coordinadorRequired');
+	public function aprobarCarrera ($request, $match) {
+		$carrera = new Pato_Carrera ();
+		
+		if ($carrera->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		/* Cambiar al calendario siguiente */
+		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
+		
+		/* Empezar por listar todas las solicitudes */
+		$todas = Gatuf::factory ('Pato_Solicitud_Suficiencia')->getList ();
+		
+		$solicitudes = array ();
+		/* Filtrar las que no son de esta carrera */
+		foreach ($todas as $solicitud) {
+			$alumno = $solicitud->get_alumno ();
+			
+			$ins = $alumno->get_current_inscripcion ();
+			
+			if ($ins->carrera == $carrera->clave) {
+				$solicitudes[] = $solicitud;
+			}
+		}
+		
+		$extra['solicitudes'] = $solicitudes;
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Solicitud_Suficiencia_Aprobar ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::revisarCarrera', $carrera->clave);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Solicitud_Suficiencia_Aprobar (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/aprobar.html',
+		                                         array ('page_title' => 'Aprobar solicitudes de suficiencia',
+		                                                'carrera' => $carrera,
+		                                                'solicitudes' => $solicitudes,
+		                                                'siguiente_calendario' => $sig_calendario,
+		                                                'form' => $form),
+		                                         $request);
 	}
 }
