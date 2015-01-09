@@ -1,0 +1,21 @@
+{extends 'pato/base.html'}
+{block body}
+<p>El procedimiento de cambio de carrera implica que se le dará de baja al alumno con el estatus 'Cambio de carrera' y se le dará de alta en la nueva carrera.</p>
+<p><strong>Mucho cuidado</strong> Solo aplica para alumnos que alcanzaron a cursar 1 cuatrimestre/semestre con la vieja carrera, porque el alumno va a quedar marcado que estuvo en la otra carrera.</p>
+<p>Si el alumno es de primer ingreso y se tiene que hacer un cambio de carrera, por favor <strong>NO USE</strong> esta utilería. Hable con su administrador más <del>lunático</del> <ins>cercano</ins></p>
+<form method="post" action=".">
+	<table>
+		<tr>
+			<th><strong>Alumno:</strong></th>
+			<td>{$alumno}</td>
+		</tr>
+		<tr>
+			<th><strong>Actual Inscripcion:</strong></th>
+			<td>Carrera: {$inscripcion.get_carrera}, ingreso: {$inscripcion.get_ingreso}</td>
+		</tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td>
+		<td><input type="submit" value="Aplicar cambio de carrera" /></td></tr>
+	</table>
+</form>
+{/block}

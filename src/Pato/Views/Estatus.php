@@ -222,4 +222,90 @@ class Pato_Views_Estatus {
 		                                               'carrera' => $car),
 		                                         $request);
 	}
+	
+	public $cambioCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cambioCarrera ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
+			
+			if ($form->isValid ()) {
+				$alumno = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarreraAlumno', $alumno->codigo);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_SeleccionarAlumno (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/cambio-carrera-seleccionar.html',
+		                                         array('page_title' => 'Cambiar carrera',
+                                                       'form' => $form),
+                                                 $request);
+	}
+	
+	public $cambioCarreraAlumno_precond = array ('Gatuf_Precondition::adminRequired');
+	public function cambioCarreraAlumno ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if ($alumno->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$ins = $alumno->get_current_inscripcion ();
+		
+		if ($ins === null) {
+			/* No está activo, no podemos moverlo de carrera */
+			$request->user->setMessage (3, 'El alumno seleccionado no tiene ninguna carrera activa');
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Estatus_CambioCarrera ($request->POST);
+			
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				$egreso = new Pato_Calendario ($data['egreso']);
+				$estatus = new Pato_Estatus ('CC'); /* Cambio de carrera */
+				
+				$ins->egreso = $egreso;
+				$ins->estatus = $estatus;
+				
+				$ins->update ();
+				
+				$nueva = new Pato_Carrera ($data['carrera']);
+				
+				$gconf = new Gatuf_GSetting ();
+				$gconf->setApp ('Patricia');
+				$ingreso = new Pato_Calendario ($gconf->getVal ('calendario_activo', null));
+				$estatus = new Pato_Estatus ('AC'); /* Activo */
+				
+				$inscripcion = new Pato_Inscripcion ();
+				$inscripcion->alumno = $alumno;
+				$inscripcion->ingreso = $ingreso;
+				$inscripcion->carrera = $nueva;
+				$inscripcion->turno = $data['turno'];
+				$inscripcion->estatus = $estatus;
+				
+				$inscripcion->create ();
+				
+				$request->user->setMessage (1, 'El alumno ha sido movido satisfactoriamente a la nueva carrera');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Estatus_CambioCarrera (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/cambio-carrera.html',
+		                                         array('page_title' => 'Cambiar carrera',
+                                                       'form' => $form,
+                                                       'alumno' => $alumno,
+                                                       'inscripcion' => $ins),
+                                                 $request);
+	}
 }

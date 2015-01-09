@@ -880,6 +880,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/estatus/cambio-carrera/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'cambioCarrera',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/cambio-carrera/(\w\d{7})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'cambioCarreraAlumno',
+);
+
+$ctl[] = array (
 	'regex' => '#^/evaluacion/profesores/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Evaluacion_Profesor',
