@@ -942,6 +942,13 @@ $ctl[] = array(
 	'method' => 'eliminar',
 );
 
+$ctl[] = array(
+	'regex' => '#^/suficiencias/actualizar/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'actualizar',
+);
+
 $ctl[] = array (
 	'regex' => '#^/suficiencias/revisar/([A-Za-z]{2,5})/$#',
 	'base' => $base,

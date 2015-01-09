@@ -33,6 +33,25 @@ class Pato_Form_Solicitud_Suficiencia_Agregar extends Gatuf_Form {
 				'widget' => 'Gatuf_Form_Widget_SelectInput',
 		));
 		
+		$todoslosmaestros = Gatuf::factory ('Pato_Maestro')->getList (
+		                    array ('order' => array ('Apellido ASC', 'Nombre ASC')));
+		$choices_m = array();
+		foreach ($todoslosmaestros as $m) {
+			$choices_m[$m->apellido . ' ' . $m->nombre] = $m->codigo;
+		}
+		
+		$this->fields['maestro'] = new Gatuf_Form_Field_Varchar (
+			array (
+				'required' => true,
+				'label' => 'Profesor',
+				'initial' => '',
+				'help_text' => 'Sujeto a aprobación por el director de carrera',
+				'widget_attrs' => array (
+					'choices' => $choices_m,
+				),
+				'widget' => 'Gatuf_Form_Widget_SelectInput',
+		));
+		
 		$this->fields['terms'] = new Gatuf_Form_Field_Boolean (
 			array (
 				'required' => true,

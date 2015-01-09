@@ -7,11 +7,13 @@
 	<p>Ninguna</p>
 {else}
 	<table>
-		<thead><tr><th>Materia</th><th>Estado</th>{if $abierto}<th>Eliminar</th>{/if}</tr></thead>
+		<thead><tr><th>Materia</th><th>Estado</th><th>Profesor asignado/sugerido</th>{if $abierto}<th>Actualizar</th><th>Eliminar</th>{/if}</tr></thead>
 		<tbody>{foreach $solicitudes as $s}
 			<tr><td>{$s.get_materia}</td>
 			<td>{if $s.estatus == 0}Pendiente{elseif $s.estatus == 1}Aprobada{elseif $s.estatus == 2}No aprobada{/if}</td>
-			{if $abierto}<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::eliminar', $s.id}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Retirar solicitud" /></a></td>{/if}</tr>
+			<td>{if $s.maestro === null}<strong>Ninguno</strong>{else}{$s.get_maestro}{/if}</td>
+			{if $abierto}<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::actualizar', $s.id}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Actualizar solicitud" /></a></td>
+			<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::eliminar', $s.id}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Retirar solicitud" /></a></td>{/if}</tr>
 		{/foreach}</tbody>
 	</table>
 {/if}

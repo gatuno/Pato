@@ -109,6 +109,79 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
+	public $actualizar_precond = array ('Gatuf_Precondition::loginRequired');
+	public function actualizar ($request, $match) {
+		if ($request->user->type != 'a') {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$alumno = $request->user->extra;
+		
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		/* Cambiar al calendario siguiente */
+		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
+		
+		$abierto = $gconf->getVal ('suficiencias_abierta_'.$sig_calendario->clave, false);
+		
+		$suficiencia = new Pato_Solicitud_Suficiencia ();
+		
+		if (false === ($suficiencia->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($suficiencia->alumno != $alumno->codigo) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$abierto) {
+			$request->user->setMessage (3, 'El periodo para solicitar suficiencias está cerrado');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::solicitudes');
+			
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($suficiencia->estatus != 0) {
+			$request->user->setMessage (3, 'Sólo puedes actualizar una suficiencia en estado Pendiente');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::solicitudes');
+			
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$extra = array ('suficiencia' => $suficiencia);
+		
+		if ($request->method == 'POST') {
+			/* El formulario viene de regreso */
+			$form = new Pato_Form_Solicitud_Suficiencia_Actualizar ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$suficiencia = $form->save ();
+				
+				$request->user->setMessage (1, 'Solicitud de suficiencia actualizada');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::solicitudes');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Solicitud_Suficiencia_Actualizar (null, $extra);
+		}
+		
+		$context = new Gatuf_Template_Context(array());
+		$tmpl = new Gatuf_Template('pato/solicitud/suficiencia/terminos.html');
+		$terms = Gatuf_Template::markSafe($tmpl->render($context));
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/actualizar.html',
+		                                         array ('page_title' => 'Actualizar solicitud de suficiencia',
+		                                                'alumno' => $alumno,
+		                                                'suficiencia' => $suficiencia,
+		                                                'siguiente_calendario' => $sig_calendario,
+		                                                'form' => $form,
+		                                                'terms' => $terms),
+		                                         $request);
+	}
+	
 	public $eliminar_precond = array ('Gatuf_Precondition::loginRequired');
 	public function eliminar ($request, $match) {
 		if ($request->user->type != 'a') {
@@ -143,7 +216,7 @@ class Pato_Views_Solicitud_Suficiencias {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
-		if ($suficiencia->estado != 0) {
+		if ($suficiencia->estatus != 0) {
 			$request->user->setMessage (3, 'Sólo puedes eliminar una suficiencia en estado Pendiente');
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::solicitudes');
 			

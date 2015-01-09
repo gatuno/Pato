@@ -6,13 +6,7 @@
 	<table>
 		<tr><th><strong>Alumno:</strong></th><td>{$alumno.apellido} {$alumno.nombre}</td></tr>
 		<tr><th><strong>Calendario:</strong></th><td>{$siguiente_calendario}</td></tr>
-		<tr>
-			<th><strong>{$form.f.materia.labelTag}:</strong></th>
-			<td>{if $form.f.materia.errors}{$form.f.materia.fieldErrors}{/if}
-			{$form.f.materia|safe}<br />
-			<span class="helptext">{$form.f.materia.help_text}</span>
-			</td>
-		</tr>
+		<tr><th><strong>Materia:</strong></th><td>{$suficiencia.get_materia}</td></tr>
 		<tr>
 			<th><strong>{$form.f.maestro.labelTag}:</strong></th>
 			<td>{if $form.f.maestro.errors}{$form.f.maestro.fieldErrors}{/if}
@@ -26,18 +20,16 @@
 	</table>
 </form>
 {/block}
-{block javascript}<script type="text/javascript">
-document.getElementById('id_materia').focus();
-{literal}
+{block javascript}{literal}<script type="text/javascript">
 $(document).ready(function() {
     // Hide the key password by default.
     $("#theterms").hide();
     $("#showterms").click(function(){
         $("#theterms").show();
     });
-});{/literal}
+});
 </script>
-{/block}
+{/literal}{/block}
 {block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>{/block}
