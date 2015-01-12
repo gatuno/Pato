@@ -4,17 +4,13 @@ Gatuf::loadFunction ('Pato_Utils_numeroLetra');
 Gatuf::loadFunction ('Pato_Calendario_getDefault');
 
 class Pato_PDF_Seccion_Acta extends External_FPDF {
-	function renderActa ($seccion, $gpe, $folio = 1, $timestamp) {
-		$this->SetFont('Times', '', 12);
-		setlocale (LC_TIME, 'es_MX');
-		$fecha = strftime ('%e de %B de %Y', $timestamp);
-		//$fecha='';
-		/* Renderizar el Acta */
+	private function addHeader ($seccion, $gpe, $folio, $fecha) {
 		$this->AddPage();
 		$this->SetAutoPageBreak (false);
 		
 		$this->Image (dirname(__FILE__).'/../data/logo-1.jpg', 18, 8, 26, 30);
 		
+		$this->SetFont('Times', '', 12);
 		$this->SetY (16);
 		$this->SetX (53);
 		$this->CellSmallCaps (151, 6, 'Acta  Final  de  Calificaciones', 0, 0, 'C');
@@ -43,7 +39,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		$calendario = new Pato_Calendario ($GLOBALS['CAL_ACTIVO']);
 		/* Arreglado */
-		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
+		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC', 'nb' => 1));
 		if (count ($alumnos) == 0) {
 			$car_desc = '';
 		} else {
@@ -89,6 +85,15 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		$this->SetX (148);
 		$this->Cell (56, 7, 'Calificación Letra', 1, 0, 'C', true);
+	}
+	
+	function renderActa ($seccion, $gpe, $folio = 1, $timestamp) {
+		setlocale (LC_TIME, 'es_MX');
+		$fecha = strftime ('%e de %B de %Y', $timestamp);
+		//$fecha='';
+		/* Renderizar el Acta */
+		$this->addHeader ($seccion, $gpe, $folio, $fecha);
+		$alumnos = $seccion->get_alumnos_list (array ('order' => 'apellido ASC, nombre ASC'));
 		
 		$this->SetFont('Times', '', 12);
 		/* Imprimir los alumnos */
@@ -148,6 +153,25 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			
 			$g++;
 			$y = $y + $altura;
+			
+			if ($g % 46 == 0) {
+				/* Cerrar el pie */
+				$this->SetY (265);
+				$this->SetX (20);
+				
+				$this->Cell (0, 8, 'F-SE-04-05');
+				
+				$this->SetX (100);
+				$this->Cell (0, 8, 'Revisión: 00');
+				
+				$this->SetX (150);
+				$this->Cell (0, 8, 'Fecha: 6 de marzo de 2013');
+				
+				$this->addHeader ($seccion, $gpe, $folio, $fecha);
+				$y = 76;
+				
+				$this->SetFont('Times', '', 12);
+			}
 		}
 		
 		$y = $y + 4;
