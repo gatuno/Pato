@@ -271,6 +271,18 @@ $ctl[] = array(
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'kardexCarrera',
 		),
+		array (
+			'regex' => '#^(\w\d{7})/perfil/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'verPerfil',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/perfil/update/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'editarPerfil',
+		),
 	)
 );
 
@@ -963,11 +975,11 @@ $ctl[] = array (
 	'method' => 'aprobarCarrera',
 );
 
-/*$ctl[] = array (
-	'regex' => '#^/admin/#',
+$ctl[] = array (
+	'regex' => '#^/admin#',
 	'base' => $base,
-	'sub' => include '../../Admin/conf/urls.php',
-);*/
+	'sub' => include 'Admin/conf/urls.php',
+);
 
 $ctl[] = array(
 	'regex' => '#^/test/$#',

@@ -1,0 +1,55 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<table class="form">
+	<tr>
+	<th style="text-align: right">
+		{if $user.login == $alumno.codigo}<a href="http://gravatar.com/emails/" title="Cambie su imagen en gravatar.com">
+		{else}<a href="http://www.gravatar.com/avatar/{$alumno.user.email|md5}.jpg?s=400">{/if}
+		<img src="http://www.gravatar.com/avatar/{$alumno.user.email|md5}.jpg?s=128" alt=" " /></a>
+	</th>
+		<td>{$alumno.apellido} {$alumno.nombre}</td>
+	</tr>
+	<tr>
+		<th>Código:</th>
+		<td>{$alumno.codigo}</td>
+	</tr>
+	<tr>
+		<th>Fecha nacimiento:</th>
+		<td>{$perfil.nacimiento|dateSimple:'%e de %B de %Y'}</td>
+	</tr>
+	<tr>
+		<th>Tipo de seguro:</th>
+		<td>{if $perfil.seguro == 0}Ninguno{elseif $perfil.seguro == 1}IMSS{elseif $perfil.seguro == 2}ISSSTE{elseif $perfil.seguro == 3}Seguro Popular{elseif $perfil.seguro == 4}Pemex{elseif $perfil.seguro == 5}Gastos médicos mayores{/if}{if $perfil.seguro != 0 && $perfil.numero_seguro != ''} ({$perfil.numero_seguro}){/if}</td>
+	</tr>
+	<tr>
+		<th>Tipo sanguíneo:</th>
+		<td>{if $perfil.sanguineo_rh}{$perfil.sanguineo_rh}{else}Desconocido{/if}</td>
+	</tr>
+	<tr>
+		<th>Alergias:<th>
+		<td>{$perfil.alergias}</td>
+	</tr>
+	<tr>
+		<th>Medicación:<th>
+		<td>{$perfil.medicacion}</td>
+	</tr>
+	<tr>
+		<th>Patologías conocidas:<th>
+		<td>{$perfil.patologias}</td>
+	</tr>
+	<tr>
+		<th>Contacto en caso de emergencia:</th>
+		<td>{$perfil.emergencia_nombre}{if $perfil.emergencia_local != ''}, teléfono local: {$perfil.emergencia_local}{/if}{if $perfil.emergencia_celular}, teléfono celular: {$perfil.emergencia_celular}{/if}</td>
+	</tr>
+	{if $alumno.sexo == 'F'}
+	<tr>
+		<th>Gestación:</th>
+		<td>Partos: {$perfil.gestacion_partos}, Cesareas: {$perfil.gestacion_cesareas}, Abortos: {$perfil.gestacion_abortos}</td>
+	</tr>
+	{/if}
+	<tr>
+		<th>Métodos anticonceptivos:</th>
+		<td>{if $perfil.anticonceptivos == 0}Ninguno{else}{if $perfil.anticonceptivos & 1}Orales, {/if}{if $perfil.anticonceptivos & 2}Parches, {/if}{if $perfil.anticonceptivos & 4}Preservativos, {/if}{if $perfil.anticonceptivos & 8}Inyecciones, {/if}{if $perfil.anticonceptivos & 256}Otros{/if}{/if}</td>
+	</tr>
+</table>
+{/block}

@@ -348,4 +348,78 @@ class Pato_Views_Alumno {
 		                                                'kardexs' => $kardexs),
 		                                         $request);
 	}
+	
+	public $verPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'ver_perfil_alumno'));
+	public function verPerfil ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$alumno->getUser ();
+		setlocale (LC_TIME, 'es_MX');
+		/* Recuperar el perfil del alumno */
+		$perfiles = $alumno->get_pato_perfilalumno_list();
+		
+		if (count ($perfiles) == 0) {
+			/* Aún no tiene un perfil, crearlo */
+			$perfil = new Pato_PerfilAlumno ();
+			
+			$perfil->alumno = $alumno;
+			$perfil->create ();
+		} else {
+			$perfil = $perfiles[0];
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/perfil.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'perfil' => $perfil),
+		                                         $request);
+	}
+	
+	public $editarPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'editar_perfil_alumno'));
+	public function editarPerfil ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Recuperar el perfil del alumno */
+		$perfiles = $alumno->get_pato_perfilalumno_list();
+		
+		if (count ($perfiles) == 0) {
+			/* Aún no tiene un perfil, crearlo */
+			$perfil = new Pato_PerfilAlumno ();
+			
+			$perfil->alumno = $alumno;
+			$perfil->create ();
+		} else {
+			$perfil = $perfiles[0];
+		}
+		
+		$extra = array ('perfil' => $perfil);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Alumno_ActualizarPerfil ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', $alumno->codigo);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Alumno_ActualizarPerfil (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/editar-perfil.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'form' => $form),
+		                                         $request);
+	}
 }
