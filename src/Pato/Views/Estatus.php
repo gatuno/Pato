@@ -13,7 +13,6 @@ class Pato_Views_Estatus {
 	
 	public $licenciaSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
 	public function licenciaSeleccionar ($request, $match) {
-		return new Gatuf_HTTP_Response ('Esta parte está en revisión. Se arreglará luego');
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
 			
@@ -37,7 +36,6 @@ class Pato_Views_Estatus {
 	
 	public $licenciaEjecutar_precond = array ('Gatuf_Precondition::adminRequired');
 	public function licenciaEjecutar ($request, $match) {
-		return new Gatuf_HTTP_Response ('Esta parte está en revisión. Se arreglará luego');
 		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1] ) ) ) {
@@ -89,15 +87,29 @@ class Pato_Views_Estatus {
 				$seccion->delAssoc ($alumno);
 			}
 			
-			/* TODO: Registrar los cambios de estatus */
-			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de licencia');
+			$gsettings = new Gatuf_GSetting ();
+			$gsettings->setApp ('Patricia');
+		
+			$cal = $gsettings->getVal ('calendario_activo', null);
+		
+			$calendario_actual = new Pato_Calendario ($cal);
+			
+			/* Registrar los cambios de estatus */
+			$log = new Pato_Log_Estatus ();
+			$log->alumno = $alumno;
+			$log->viejo = $ins->get_estatus ();
+			$log->usuario = $request->user;
+			$log->calendario = $calendario_actual;
 			
 			$estatus = new Pato_Estatus ('LI');
-			$ins->estatus = $estatus;
+			$log->nuevo = $ins->estatus = $estatus;
 			$ins->update ();
 			
+			$log->create ();
+			
+			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de licencia');
 			/* Redirigir al estatus del alumno */
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verInscripciones', $alumno->codigo);
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
@@ -196,14 +208,21 @@ class Pato_Views_Estatus {
 				$seccion->delAssoc ($alumno);
 			}
 			
-			/* TODO: Registrar los cambios de estatus */
-			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de baja voluntaria.');
+			/* Registrar los cambios de estatus */
+			$log = new Pato_Log_Estatus ();
+			$log->alumno = $alumno;
+			$log->viejo = $ins->get_estatus ();
+			$log->usuario = $request->user;
+			$log->calendario = $calendario_actual;
 			
 			$estatus = new Pato_Estatus ('BV');
-			$ins->estatus = $estatus;
+			$log->nuevo = $ins->estatus = $estatus;
 			
 			$ins->egreso = $calendario_actual;
 			$ins->update ();
+			
+			$log->create ();
+			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de baja voluntaria.');
 			
 			/* Redirigir al estatus del alumno */
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
@@ -269,12 +288,20 @@ class Pato_Views_Estatus {
 				$data = $form->save ();
 				
 				$egreso = new Pato_Calendario ($data['egreso']);
+				/* Registrar los cambios de estatus */
+				$log = new Pato_Log_Estatus ();
+				$log->alumno = $alumno;
+				$log->viejo = $ins->get_estatus ();
+				$log->usuario = $request->user;
+				$log->calendario = $egreso;
 				$estatus = new Pato_Estatus ('CC'); /* Cambio de carrera */
 				
 				$ins->egreso = $egreso;
-				$ins->estatus = $estatus;
+				$log->nuevo = $ins->estatus = $estatus;
 				
 				$ins->update ();
+				
+				$log->create ();
 				
 				$nueva = new Pato_Carrera ($data['carrera']);
 				
