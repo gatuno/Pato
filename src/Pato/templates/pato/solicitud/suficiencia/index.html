@@ -7,4 +7,5 @@
 	{if $user.hasPerm ('Patricia.coordinador.'~$c.clave)}<li>Revisar para <a href="{url 'Pato_Views_Solicitud_Suficiencias::revisarCarrera', $c.clave}">{$c}</a></li>{/if}
 {/foreach}</ul>
 {/if}
+{if $user.administrator}<p><a href="{url 'Pato_Views_Solicitud_Suficiencias::crearNRCs'}">Crear NRCs de las solicitudes aprobadas</a></p>{/if}
 {/block}

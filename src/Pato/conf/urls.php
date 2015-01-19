@@ -975,6 +975,13 @@ $ctl[] = array (
 	'method' => 'aprobarCarrera',
 );
 
+$ctl[] = array(
+	'regex' => '#^/suficiencias/crearNRCs/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Solicitud_Suficiencias',
+	'method' => 'crearNRCs',
+);
+
 $ctl[] = array (
 	'regex' => '#^/admin#',
 	'base' => $base,

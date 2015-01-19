@@ -1,0 +1,11 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Lista de solicitudes aprobadas para el calendario {$siguiente_calendario}. Sus NRCs recién creados:</p>
+<p>Secciones creados: <strong>{$creados|count}</strong></p>
+<table>
+	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</th></tr></thead>
+	<tbody>{foreach $creados as $seccion}
+		<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td>{$seccion.get_maestro}</td></tr>
+	{/foreach}</tbody>
+</table>
+{/block}

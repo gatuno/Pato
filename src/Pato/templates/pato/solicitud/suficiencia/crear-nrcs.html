@@ -1,0 +1,14 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Lista de solicitudes aprobadas para el calendario {$siguiente_calendario}. El resumen aquí presentado lista cuántos grupos serán creados. El sistema mantendrá la cantidad de alumnos al máximo por materia y profesor. Ignora carreras.</p>
+<p>Total de secciones a crear: <strong>{$solicitudes|count}</strong></p>
+<table>
+	<thead><tr><th>Materia</th><th>Profesor</th><th>Cantidad de alumnos</th></tr></thead>
+	<tbody>{foreach $solicitudes as $sol}
+		<tr><td>{$sol.get_materia}</td><td>{$sol.get_maestro}</td><td>{$sol.alumnos}</td></tr>
+	{/foreach}</tbody>
+</table>
+<form action="." method="post">
+	<p>Estoy de acuerdo, <input type="submit" value="Crear NRCs" /></p>
+</form>
+{/block}

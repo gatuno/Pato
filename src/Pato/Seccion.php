@@ -148,8 +148,13 @@ class Pato_Seccion extends Gatuf_Model {
 		return $rs[0]['max_nrc'];
 	}
 	
-	function maxSeccion ($materia) {
-		$req = sprintf ('SELECT MAX(seccion) AS max_seccion FROM %s WHERE materia=%s', $this->getSqlTable (), Gatuf_DB_IdentityToDb ($materia, $this->_con));
+	function maxSeccion ($materia, $tipo = '') {
+		if ($tipo != '') {
+			$tipo .= '%';
+			$req = sprintf ('SELECT MAX(seccion) AS max_seccion FROM %s WHERE materia=%s AND seccion LIKE %s', $this->getSqlTable (), Gatuf_DB_IdentityToDb ($materia, $this->_con), Gatuf_DB_IdentityToDb ($tipo, $this->_con));
+		} else {
+			$req = sprintf ('SELECT MAX(seccion) AS max_seccion FROM %s WHERE materia=%s', $this->getSqlTable (), Gatuf_DB_IdentityToDb ($materia, $this->_con));
+		}
 		
 		if (false === ($rs = $this->_con->select($req))) {
 			throw new Exception($this->_con->getError());

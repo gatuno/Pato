@@ -331,4 +331,79 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                                'form' => $form),
 		                                         $request);
 	}
+	
+	public $crearNRCs_precond = array ('Gatuf_Precondition::adminRequired');
+	public function crearNRCs ($request, $match) {
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		/* Cambiar al calendario siguiente */
+		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
+		
+		$suficiencia = new Pato_Solicitud_Suficiencia ();
+		$suficiencia->_a['views']['simple'] = array ('group' => 'materia,maestro', 'props' => array ('alumnos'));
+		$aprobadas = $suficiencia->getList (array ('select' => 'materia, maestro, COUNT(*) AS alumnos', 'filter' => 'estatus=1', 'view' => 'simple'));
+		
+		if ($request->method == 'POST') {
+			/* Confirmación de regreso */
+			
+			$creados = array ();
+			
+			/* Primero crear el nrc */
+			foreach ($aprobadas as $sol) {
+				/* Revisar si el NRC ya existe */
+				$sql = new Gatuf_SQL ('materia=%s AND seccion LIKE %s AND maestro=%s', array ($sol->materia, 'S%', $sol->maestro));
+				
+				$seccion = new Pato_Seccion ();
+				$posibles = $seccion->getList (array ('filter' => $sql->gen ()));
+				if (count ($posibles) > 0) {
+					$creados[$sol->materia.'_'.$sol->maestro] = $posibles[0];
+					continue;
+				}
+				
+				$max_s = $seccion->maxSeccion ($sol->materia, 'S'); /* Suficiencias */
+				
+				if ($max_s === null) {
+					$n_seccion = 'S01';
+				} else {
+					$num = (int) substr ($max_s, 1);
+					$num++;
+					$n_seccion = 'S'.str_pad ($num, 2, '0', STR_PAD_LEFT);
+				}
+				
+				$seccion->materia = $sol->get_materia ();
+				$seccion->seccion = $n_seccion;
+				$seccion->maestro = $sol->get_maestro ();
+				$seccion->create ();
+				
+				$creados[$sol->materia.'_'.$sol->maestro] = $seccion;
+			}
+			
+			/* Ahora matricular los alumnos */
+			$sols = Gatuf::factory ('Pato_Solicitud_Suficiencia')->getList (array ('filter' => 'estatus = 1'));
+			
+			Gatuf::loadFunction ('Pato_Procedimiento_matricular');
+			foreach ($sols as $sol) {
+				$seccion = $creados[$sol->materia.'_'.$sol->maestro];
+				$res = Pato_Procedimiento_matricular ($seccion, $sol->get_alumno(), false, false);
+				
+				if ($res !== true) {
+					$request->user->setMessage (2, 'Falló al matricular el alumno ('.((string) $sol->get_alumno()).' a la suficiencia '.$seccion->nrc.' ('.$seccion->materia.') . Razon: '.$res);
+				}
+			}
+			
+			return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/reporte-creados.html',
+		                                         array ('page_title' => 'Reporte de NRCs de suficiencias',
+		                                                'creados' => $creados,
+		                                                'siguiente_calendario' => $sig_calendario),
+		                                         $request);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/crear-nrcs.html',
+		                                         array ('page_title' => 'Crear NRCs de suficiencias',
+		                                                'solicitudes' => $aprobadas,
+		                                                'siguiente_calendario' => $sig_calendario),
+		                                         $request);
+	}
 }
