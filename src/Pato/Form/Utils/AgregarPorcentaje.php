@@ -2,13 +2,26 @@
 
 class Pato_Form_Utils_AgregarPorcentaje extends Gatuf_Form {
 	public function initFields($extra=array()) {
+		$choices_g = array ();
 		$choices = array ();
 		foreach (Gatuf::factory ('Pato_GPE')->getList () as $gpe) {
-			$choices [$gpe->descripcion] = array ();
+			$choices[$gpe->descripcion] = array ();
+			$choices_g[$gpe->descripcion.' ('.$gpe->secciones.')'] = $gpe->id;
 			foreach ($gpe->get_pato_evaluacion_list () as $eval) {
 				$choices [$gpe->descripcion][$eval->descripcion] = $eval->id;
 			}
 		}
+		$this->fields['gpe'] = new Gatuf_Form_Field_Integer (
+			array (
+				'required' => true,
+				'label' => 'Aplicar a las materias de las secciones tipo',
+				'initial' => '',
+				'help_text' => '',
+				'widget_attrs' => array (
+					'choices' => $choices_g,
+				),
+				'widget' => 'Gatuf_Form_Widget_SelectInput',
+		));
 		
 		$this->fields['evaluacion'] = new Gatuf_Form_Field_Varchar(
 			array(
@@ -100,7 +113,7 @@ class Pato_Form_Utils_AgregarPorcentaje extends Gatuf_Form {
 			$this->cleaned_data['apertura'] = null;
 		}
 		
-		$data = array ('evaluacion' => $this->cleaned_data['evaluacion'], 'porcentaje' => $this->cleaned_data['porcentaje'], 'abierto' => ($sel == 0) ? false : true, 'apertura' => $this->cleaned_data['apertura'], 'cierre' => $this->cleaned_data['cierre']);
+		$data = array ('evaluacion' => $this->cleaned_data['evaluacion'], 'porcentaje' => $this->cleaned_data['porcentaje'], 'abierto' => ($sel == 0) ? false : true, 'apertura' => $this->cleaned_data['apertura'], 'cierre' => $this->cleaned_data['cierre'], 'gpe' => $this->cleaned_data['gpe']);
 		
 		return $data;
 	}

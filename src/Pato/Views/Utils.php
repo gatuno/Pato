@@ -181,8 +181,20 @@ class Pato_Views_Utils {
 			if ($form->isValid ()) {
 				$data = $form->save ();
 				
-				/* Recorrer todas las secciones */
-				$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
+				$gpe = new Pato_GPE ();
+				$gpe->get($data['gpe']);
+				
+				$secs = str_split ($gpe->secciones);
+				$query = array ();
+				$values = array ();
+				foreach ($secs as $s) {
+					$query[] = 'seccion LIKE %s';
+					$values[] = $s.'%';
+				}
+				
+				$sql = new Gatuf_SQL ('('.implode (' OR ', $query).')', $values);
+				/* Recorrer todas las secciones de la forma del grupo de evaluacion seleccionada */
+				$secciones = Gatuf::factory ('Pato_Seccion')->getList (array ('filter' => $sql->gen()));
 				$mats = array ();
 				
 				foreach ($secciones as $s) {
@@ -217,7 +229,7 @@ class Pato_Views_Utils {
 					}
 				}
 				
-				$request->user->setMessage (1, 'Se agregado la forma de evaluación '.$evaluacion->descripcion.' a todas las materias con secciones activas. ('.$total.' agregados)');
+				$request->user->setMessage (1, 'Se ha agregado la forma de evaluación '.$evaluacion->descripcion.' a todas las materias con secciones activas. ('.$total.' agregados)');
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::agregarPorcentaje');
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
