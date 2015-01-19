@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Los siguientes alumnos fueron marcados con baja académica:</p>
+<table border="1">
+	<thead><tr><th>Alumno</th><th>Carrera</th><th>Estatus</th><th>Materia</th></tr></thead>
+	<tbody>{foreach $reporte as $r}
+		<tr>
+			<td>{$r.alumno}</td><td>{$r.inscripcion.get_carrera()}</td><td>{$r.inscripcion.get_estatus()}</td><td>{$r.materia}</td>
+		</tr>
+	{/foreach}</tbody>
+</table>
+{/block}

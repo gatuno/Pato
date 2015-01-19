@@ -1,0 +1,16 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Los siguientes alumnos han sido detectados con dos materias reprobadas:</p>
+<table border="1">
+	<thead><tr><th rowspan="2">Alumno</th><th rowspan="2">Carrera</th><th rowspan="2">Estatus</th><th rowspan="2">Materia</th><th colspan="2">Reprobada</th></tr>
+	<tr><th>Calendario</th><th>Calificación</th></tr></thead>
+	<tbody>{foreach $reporte as $r}
+		<tr>{assign $row = count($r.muestra)}
+			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.inscripcion.get_estatus()}</td><td rowspan="{$row}">{$r.materia}</td>
+			{assign $g = 0}{foreach $r.muestra as $kardex}{if $g != 0}<tr>{else}{assign $g = $g + 1}{/if}<td>{$kardex.get_calendario()}</td><td><strong>{$kardex.calificacion|float:2}</strong></td></tr>{/foreach}
+	{/foreach}</tbody>
+</table>
+<form action="." method="post">
+<p>Estoy de acuerdo, <input type="submit" value="Dar de baja a estos alumnos" /></p>
+</form>
+{/block}

@@ -920,6 +920,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/estatus/baja-academica/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaAcademica',
+);
+
+$ctl[] = array (
 	'regex' => '#^/evaluacion/profesores/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Evaluacion_Profesor',
