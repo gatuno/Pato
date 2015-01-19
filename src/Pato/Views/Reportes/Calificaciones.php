@@ -74,4 +74,62 @@ class Pato_Views_Reportes_Calificaciones {
 		                                               'incompletos' => $incompletos),
                                                  $request);
 	}
+	
+	public $indiceReprobacion_precond = array ('Gatuf_Precondition::adminRequired');
+	public function indiceReprobacion ($request, $match) {
+		$sql = new Gatuf_SQL ('calendario=%s AND aprobada=0', $request->calendario->clave);
+		$kardex = new Pato_Kardex ();
+		$kardex->_a['views']['simple'] = array ('group' => 'alumno');
+		$kardex->_a['views']['doble'] = array ('group' => 'alumno', 'having' => 'COUNT(*) > 1');
+		
+		$reprobadas = $kardex->getList (array ('select' => 'alumno, COUNT(*)', 'filter' => $sql->gen (), 'view' => 'simple'));
+		
+		$total_reprobadores = count ($reprobadas);
+		
+		$dobles_reprobadores = $kardex->getList (array ('select' => 'alumno, COUNT(*)', 'filter' => $sql->gen (), 'view' => 'doble'));
+		
+		$total_dobles = count ($dobles_reprobadores);
+		
+		$sql = new Gatuf_SQL ('calendario=%s', $request->calendario->clave);
+		$total_set = $kardex->getList (array ('select' => 'alumno, COUNT(*)', 'filter' => $sql->gen (), 'view' => 'simple'));
+		
+		$total = count ($total_set);
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/reportes/calificaciones/reprobadores-reporte.html',
+		                                         array('page_title' => 'Reporte de reprobadores',
+		                                               'calendario' => $request->calendario,
+		                                               'total' => $total,
+		                                               'total_reprobadores' => $total_reprobadores,
+		                                               'total_dobles' => $total_dobles),
+                                                 $request);
+	}
+	
+	public $indiceReprobacionODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public function indiceReprobacionODS ($request, $match) {
+		$kardex = new Pato_Kardex ();
+		$kardex->_a['views']['simple'] = array ('group' => 'materia', 'props' => array ('m_reprobada'));
+		
+		$sql = new Gatuf_SQL ('calendario=%s AND aprobada=0', $request->calendario->clave);
+		$m_repro = $kardex->getList (array ('select' => 'materia, COUNT(*) AS m_reprobada', 'filter' => $sql->gen (), 'view' => 'simple'));
+		
+		$ods = new Gatuf_ODS ();
+		$ods->addNewSheet ('Reprobados por materia');
+		$ods->addStringCell ('Reprobados por materia', 1, 1, 'Clave');
+		$ods->addStringCell ('Reprobados por materia', 1, 2, 'Materia');
+		$ods->addStringCell ('Reprobados por materia', 1, 3, 'Cantidad de alumnos reprobados');
+		
+		$g = 2;
+		
+		foreach ($m_repro as $kardex) {
+			$materia = $kardex->get_materia ();
+			
+			$ods->addStringCell ('Reprobados por materia', $g, 1, $materia->clave);
+			$ods->addStringCell ('Reprobados por materia', $g, 2, $materia->descripcion);
+			$ods->addStringCell ('Reprobados por materia', $g, 3, $kardex->m_reprobada);
+			$g++;
+		}
+		
+		$ods->construir_paquete ();
+		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Indice_reprobacion-'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
+	}
 }

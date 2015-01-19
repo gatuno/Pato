@@ -857,6 +857,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/reportes/calificaciones/reprobacion/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Calificaciones',
+	'method' => 'indiceReprobacion',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/calificaciones/reprobacion/ODS/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Calificaciones',
+	'method' => 'indiceReprobacionODS',
+);
+
+$ctl[] = array (
 	'regex' => '#^/estatus/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Estatus',

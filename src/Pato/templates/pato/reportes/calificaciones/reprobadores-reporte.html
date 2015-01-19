@@ -1,0 +1,11 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Sus probes <del>niños</del> <ins>alumnos</ins>, ¿quién cuidará de ellos si reprueban?</p>
+<p>En el calendario {$calendario} éste es el índice de reprobación:</p>
+{if $total != 0}{assign $por = ($total_reprobadores * 100) / $total}{else}{assign $por = 0}{/if}
+<p>Alumnos que reprobaron alguna materia: <strong>{$total_reprobadores}</strong>, {$por|float:2}% (Basado en el total de alumnos que tomaron una materia: {$total})</p>
+{if $total != 0}{assign $por = ($total_dobles * 100) / $total}{else}{assign $por = 0}{/if}
+<p>Alumnos que reprobaron más de una materia: <strong>{$total_dobles}</strong>, {$por|float:2}% (Basado en el total de alumnos que tomaron una materia: {$total})</p>
+<p>Descargue la información por materias como <a href="{url 'Pato_Views_Reportes_Calificaciones::indiceReprobacionODS'}">Hoja de cálculo ODS</a></p>
+{/block}
