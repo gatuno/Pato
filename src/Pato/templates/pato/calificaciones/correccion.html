@@ -1,0 +1,31 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Listos para la corrección, seleccione el nuevo valor</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		<tr>
+			<th><strong>Alumno:</strong></th>
+			<td>{$kardex.get_alumno}</td>
+		</tr>
+		<tr>
+			<th><strong>Materia:</strong></th>
+			<td>{$kardex.get_materia}</td>
+		</tr>
+		<tr>
+			<th><strong>Calendario:</strong></th>
+			<td>{$kardex.get_calendario}</td>
+		</tr>
+		<tr>
+			<th><strong>Modalidad:</strong></th>
+			<td>{$kardex.get_gpe}</td>
+		</tr>
+		<tr>
+			<th><strong>Vieja calificación:</strong></th>
+			<td>{$kardex.calificacion}</td>
+		</tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Corregir" /></td></tr>
+	</table>
+</form>
+{/block}

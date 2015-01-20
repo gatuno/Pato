@@ -276,4 +276,87 @@ class Pato_Views_Calificaciones {
 		                                               'form' => $form),
                                                  $request);
 	}
+	
+	public $correccionBuscar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function correccionBuscar ($request, $match) {
+		$sql = new Gatuf_SQL ();
+		
+		$form = new Pato_Form_Calificaciones_Buscar ($request->GET);
+		
+		if ($form->isValid ()) {
+			$data = $form->save ();
+		} else {
+			$data = array ('materia' => 'NULL', 'alumno' => '');
+		}
+		
+		/* Si hay materia, aplicar filtro */
+		if ($data['materia'] != 'NULL') {
+			$sql->Q ('materia=%s', $data['materia']);
+		}
+		
+		if ($data['alumno'] != '') {
+			$sql->Q ('alumno=%s', $data['alumno']);
+		}
+		
+		$where = $sql->gen ();
+		
+		if ($where == '') {
+			$resultados = array ();
+			$form = new Pato_Form_Calificaciones_Buscar (null);
+		} else {
+			$resultados = Gatuf::factory ('Pato_Kardex')->getList (array ('filter' => $where));
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/correccion-buscar.html',
+		                                         array('page_title' => 'Corrección a Kardex',
+		                                               'form' => $form,
+		                                               'where' => $where,
+		                                               'resultados' => $resultados),
+                                                 $request);
+	}
+	
+	public $correccionKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public function correccionKardex ($request, $match) {
+		$kardex = new Pato_Kardex ();
+		
+		if ($kardex->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('kardex' => $kardex);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Calificaciones_Correccion ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				/* Crear un log para esta corrección */
+				$log = new Pato_Log_Kardex ();
+				$log->usuario = $request->user;
+				$log->kardex = $kardex;
+				$log->vieja = $kardex->calificacion;
+				$kardex->calificacion = $data['calificacion'];
+				$kardex->aprobada = ($kardex->calificacion >= 7);
+				$log->nueva = $kardex->calificacion;
+				
+				$log->create ();
+				
+				$kardex->update ();
+				
+				$request->user->setMessage (1, 'Calificación corregida en Kardex');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calificaciones::correccionBuscar');
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Calificaciones_Correccion (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/correccion.html',
+		                                         array('page_title' => 'Corrección a Kardex',
+		                                               'form' => $form,
+		                                               'kardex' => $kardex),
+                                                 $request);
+	}
 }

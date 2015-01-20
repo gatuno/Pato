@@ -787,6 +787,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/calificaciones/correccion/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calificaciones',
+	'method' => 'correccionBuscar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/calificaciones/correccion/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calificaciones',
+	'method' => 'correccionKardex',
+);
+
+$ctl[] = array (
 	'regex' => '#^/reportes/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes',

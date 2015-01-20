@@ -1,0 +1,41 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Busque una calificación, y luego seleccionela para hacer la corrección</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="get" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Buscar" /></td></tr>
+	</table>
+</form>
+<h2>Resultados de la búsqueda</h2>
+{if $where != ''}
+	{if count ($resultados) > 150}
+	<p>Demasiados resultados, ajuste su búsqueda</p>
+	{elseif count ($resultados) > 0}
+	<table>
+		<thead><tr><th>Editar</th><th>Alumno</th><th>Materia</th><th>Calendario</th><th>Modalidad</th><th>Calificación</th></tr></thead>
+		<tbody>{foreach $resultados as $k}
+			<tr><td><a href="{url 'Pato_Views_Calificaciones::correccionKardex', $k.id}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Editar" /></a></td>
+				<td>{$k.get_alumno}</td><td>{$k.get_materia}</td><td>{$k.get_calendario}</td><td>{$k.get_gpe}</td><td>{$k.calificacion}</td>
+			</tr>
+		{/foreach}</tbody>
+	</table>
+	{else}
+	<p>No hubo resultados.</p>
+	{/if}
+{else}
+	<p>Haga una consulta para ver los resultados</p>
+{/if}
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<style>{literal}
+		.ui-autocomplete {
+			max-height: 150px;
+			overflow-y: auto;
+			/* prevent horizontal scrollbar */
+			overflow-x: hidden;
+		}
+	</style>{/literal}{/block}
