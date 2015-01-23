@@ -13,7 +13,7 @@
 	<table>
 		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th><th>Asistencia</th>{if $user.administrator}<th>Desmatricular</th>{/if}</tr></thead>
 		<tbody>{assign $g = 1}
-			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
+			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verPerfil', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
 			{if $asistencias[$alumno.codigo]}
 				<td>{$asistencias[$alumno.codigo].asistencia}%</td>
 			{else}
@@ -38,7 +38,7 @@
 	<table>
 		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th>{foreach $gpe.list as $eval}<th>{$eval.descripcion}</th>{/foreach}</tr></thead>
 		<tbody>{assign $g = 1}
-			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verAlumno', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
+			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verPerfil', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
 			{foreach $gpe.list as $eval}
 			{if isset ($boleta[$alumno.codigo][$eval.id])}
 				{if $boleta[$alumno.codigo][$eval.id] < 0}{assign $x = $boleta[$alumno.codigo][$eval.id] * -1}

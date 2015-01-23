@@ -40,7 +40,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid()) {
 				$alumno = $form->save ();
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($alumno->codigo));
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
@@ -54,7 +54,7 @@ class Pato_Views_Alumno {
 	}
 	
 	
-	public function verAlumno ($request, $match) {
+	/*public function verAlumno ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1]))) {
@@ -67,7 +67,7 @@ class Pato_Views_Alumno {
 		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
 		                                               'alumno' => $alumno),
                                                  $request);
-	}
+	}*/
 	
 	public $verGrupos_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verGrupos ($request, $match) {
@@ -189,7 +189,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid()) {
 				$alumno = $form->save ();
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($alumno->codigo));
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
@@ -349,7 +349,6 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
-	public $verPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'ver_perfil_alumno'));
 	public function verPerfil ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -379,7 +378,7 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
-	public $editarPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'editar_perfil_alumno'));
+	public $editarPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.editar_perfil_alumno'));
 	public function editarPerfil ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		

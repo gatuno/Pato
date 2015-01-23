@@ -117,13 +117,13 @@ class Pato_Views_Usuario {
 	public $passwordChange_precond = array ('Gatuf_Precondition::loginRequired');
 	public function passwordChange ($request, $match) {
 		$extra = array();
-		$extra['usuario'] = $request->user;
+		$usuario = $extra['usuario'] = $request->user;
 		
 		if (!empty($request->REQUEST['_redirect_after'])) {
 			$success_url = $request->REQUEST['_redirect_after'];
 		} else {
 			if($usuario->type == 'a'){
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($usuario->login));
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->login));
 			} else {
 				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
 			}
@@ -165,7 +165,7 @@ class Pato_Views_Usuario {
 		}
 		
 		if ($user->type == 'a'){
-			$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($user->login));
+			$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($user->login));
 		} else {
 			$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($user->login));
 		}

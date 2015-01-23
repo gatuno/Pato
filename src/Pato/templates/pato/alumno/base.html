@@ -1,7 +1,7 @@
 {extends 'pato/base.html'}
 {block body}
 <ul style="list-style-type: none;">
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verAlumno', array ($alumno.codigo)}">Perfil</a></li>
+<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verPerfil', array ($alumno.codigo)}">Perfil</a></li>
 {if $user.administrator || $user.login == $alumno.codigo || $user.isCoord()}
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verGrupos', array ($alumno.codigo)}">Grupos y calificaciones</a></li>

@@ -66,7 +66,7 @@ class Pato_Alumno extends Gatuf_Model {
 	}
 	
 	public function displaylinkedcodigo ($extra=null) {
-		return '<a href="'.Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verAlumno', array ($this->codigo)).'">'.$this->codigo.'</a>';
+		return '<a href="'.Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($this->codigo)).'">'.$this->codigo.'</a>';
 	}
 	
 	public function get_current_inscripcion () {

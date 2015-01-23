@@ -179,7 +179,7 @@ $ctl[] = array(
 			'regex' => '#^(\w\d{7})/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
-			'method' => 'verAlumno',
+			'method' => 'verPerfil',
 		),
 		array(
 			'regex' => '#^(\w\d{7})/grupos/$#',
@@ -270,12 +270,6 @@ $ctl[] = array(
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'kardexCarrera',
-		),
-		array (
-			'regex' => '#^(\w\d{7})/perfil/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Alumno',
-			'method' => 'verPerfil',
 		),
 		array (
 			'regex' => '#^(\w\d{7})/perfil/update/$#',
