@@ -1,5 +1,6 @@
 {extends 'pato/seccion/base.html'}
 {block body_seccion}
+<p>Sección del profesor <a href="{url 'Pato_Views_Maestro::verMaestro', array ($seccion.maestro)}">{$seccion.get_maestro}</a></p>
 <h2>Alumnos</h2>
 {if $user.administrator}
 <p>Puede <a href="{url 'Pato_Views_Seccion::matricular', array ($seccion.nrc)}">matricular un alumno</a> a esta sección</p>
@@ -7,7 +8,7 @@
 {if count($alumnos) == 0}
 	<p>No hay alumnos matriculados</p>
 {else}
-	{if ($user.type == 'm' && ($seccion.maestro == $user.login || $seccion.suplente == $user.login)) || $user.administrator}
+	{if $es_el_dueno}
 		<p>Puede <a href="{url 'Pato_Views_Seccion::evaluarAsistencias', $seccion.nrc}">evaluar asistencias</a> de este grupo.</p>
 	{/if}
 	<table>
@@ -25,41 +26,45 @@
 	</table>
 {/if}
 <hr />
-<h2>Calificaciones</h2>
-{if count($alumnos) != 0}
-	{regroup $evals, 'grupo', 'por_grupo'}
-	{foreach $por_grupo as $gpe}
-	<h3>Forma de evaluación: {$gpe.list[0].get_grupo}</h3>
-	{if ($user.type == 'm' && ($seccion.maestro == $user.login || $seccion.suplente == $user.login)) || $user.administrator}
-		{foreach $gpe.list as $eval}
-		{if $eval.maestro || $user.administrator}<p>Puede evaluar este grupo en <a href="{url 'Pato_Views_Seccion::evaluar', array ($seccion.nrc, $eval.id)}">{$eval.descripcion}</a></p>{/if}
-		{/foreach}
-	{/if}
-	<table>
-		<thead><tr><th>No.</th><th>Código</th><th>Alumno</th>{foreach $gpe.list as $eval}<th>{$eval.descripcion}</th>{/foreach}</tr></thead>
-		<tbody>{assign $g = 1}
-			{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verPerfil', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
+{aperm 'ver_boleta', $user, 'Patricia.boleta_alumno'}
+{if $es_el_dueno || $ver_boleta}
+	<h2>Calificaciones</h2>
+	{if count($alumnos) != 0}
+		{regroup $evals, 'grupo', 'por_grupo'}
+		{foreach $por_grupo as $gpe}
+		<h3>Forma de evaluación: {$gpe.list[0].get_grupo}</h3>
+		{if $es_el_dueno || $user.administrator}
 			{foreach $gpe.list as $eval}
-			{if isset ($boleta[$alumno.codigo][$eval.id])}
-				{if $boleta[$alumno.codigo][$eval.id] < 0}{assign $x = $boleta[$alumno.codigo][$eval.id] * -1}
-					<td>{$especial[$x]}</td>
-				{elseif $boleta[$alumno.codigo][$eval.id] == 0}
-					<td>NA</td>
-				{else}
-					<td>{$boleta[$alumno.codigo][$eval.id]}</td>
-				{/if}
-			{else}
-				<td>-</td>
-			{/if}
+			{if $es_el_dueno && $eval.maestro}<p>Puede evaluar este grupo en <a href="{url 'Pato_Views_Seccion::evaluar', array ($seccion.nrc, $eval.id)}">{$eval.descripcion}</a></p>{/if}
+			{if $user.administrator && !$eval.maestro}<p>Subir calificaciones para <a href="{url 'Pato_Views_Seccion::evaluar', array ($seccion.nrc, $eval.id)}">{$eval.descripcion}</a></p>{/if}
 			{/foreach}
-			</tr>{/foreach}
-		</tbody>
-	</table>
-	{/foreach}
-	{if count ($evals) == 0}
-		<p>No hay formas de evaluación registradas para esta materia, por lo tanto, no hay calificaciones.</p>
+		{/if}
+		<table>
+			<thead><tr><th>No.</th><th>Código</th><th>Alumno</th>{foreach $gpe.list as $eval}<th>{$eval.descripcion}</th>{/foreach}</tr></thead>
+			<tbody>{assign $g = 1}
+				{foreach $alumnos as $alumno}<tr><td>{$g++}</td><td><a href="{url 'Pato_Views_Alumno::verPerfil', $alumno.codigo}">{$alumno.codigo}</a></td><td>{$alumno.apellido} {$alumno.nombre}</td>
+				{foreach $gpe.list as $eval}
+				{if isset ($boleta[$alumno.codigo][$eval.id])}
+					{if $boleta[$alumno.codigo][$eval.id] < 0}{assign $x = $boleta[$alumno.codigo][$eval.id] * -1}
+						<td>{$especial[$x]}</td>
+					{elseif $boleta[$alumno.codigo][$eval.id] == 0}
+						<td>NA</td>
+					{else}
+						<td>{$boleta[$alumno.codigo][$eval.id]}</td>
+					{/if}
+				{else}
+					<td>-</td>
+				{/if}
+				{/foreach}
+				</tr>{/foreach}
+			</tbody>
+		</table>
+		{/foreach}
+		{if count ($evals) == 0}
+			<p>No hay formas de evaluación registradas para esta materia, por lo tanto, no hay calificaciones.</p>
+		{/if}
+	{else}
+		<p>La sección no tiene alumnos matriculados</p>
 	{/if}
-{else}
-	<p>La sección no tiene alumnos matriculados</p>
 {/if}
 {/block}

@@ -5,28 +5,6 @@ class Pato_Form_Materia_Actualizar extends Gatuf_Form {
 	
 	public function initFields($extra=array()) {
 		$this->materia = $extra['materia'];
-		$user = $extra['user'];
-
-		/*$departamentos = Gatuf::factory('Calif_Departamento')->getList ();
-		
-		$choices = array ();
-		foreach ($departamentos as $departamento) {
-			if ($user->hasPerm ('SIIAU.jefe.'.$departamento->clave)){
-				$choices[$departamento->descripcion] = $departamento->clave;
-			}
-		}
-		
-		$this->fields['departamento'] = new Gatuf_Form_Field_Varchar (
-			array(
-				'required' => true,
-				'label' => 'Departamento',
-				'initial' => $this->materia->departamento,
-				'help_text' => 'El departamento al que pertenece la materia',
-				'widget_attrs' => array (
-					'choices' => $choices,
-				),
-				'widget' => 'Gatuf_Form_Widget_SelectInput'
-		));*/
 		
 		$this->fields['descripcion'] = new Gatuf_Form_Field_Varchar(
 			array(

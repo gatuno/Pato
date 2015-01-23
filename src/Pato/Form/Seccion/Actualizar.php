@@ -88,6 +88,14 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 		return $this->cleaned_data['suplente'];
 	}
 	
+	public function clean () {
+		if ($this->cleaned_data['suplente'] != null && $this->cleaned_data['suplente'] == $this->cleaned_data['maestro']) {
+			throw new Gatuf_Form_Invalid ('El profesor asignado y el suplente deben ser diferentes');
+		}
+		
+		return $this->cleaned_data;
+	}
+	
 	public function save ($commit=true) {
 		if (!$this->isValid()) {
 			throw new Exception('Cannot save the model from an invalid form.');

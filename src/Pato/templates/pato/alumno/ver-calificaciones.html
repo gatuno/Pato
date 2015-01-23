@@ -1,7 +1,7 @@
 {extends 'pato/alumno/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body_alumno}
-<h2>Calificaciones del Alumno</h2>
+<h2>Calificaciones temporales en boleta</h2>
 {if count ($secciones) != 0}{foreach $secciones as $seccion}
 	<h3>{$seccion.get_materia} - <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.seccion}</a></h3>
 	<!--<p>Nrc: <a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">{$seccion.nrc}</a></p>-->

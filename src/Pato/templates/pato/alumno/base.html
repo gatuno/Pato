@@ -2,17 +2,12 @@
 {block body}
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verPerfil', array ($alumno.codigo)}">Perfil</a></li>
-{if $user.administrator || $user.login == $alumno.codigo || $user.isCoord()}
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verGrupos', array ($alumno.codigo)}">Grupos y calificaciones</a></li>
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verHorario', array ($alumno.codigo)}">Horario</a></li>
-{/if}
-{if $user.administrator || $user.login == $alumno.codigo}
-<li style="display: inline;"><a href="{url 'Pato_Views_Agenda::agenda', array ($alumno.codigo)}">Agenda</a></li>
-{/if}
-{if $user.login == $alumno.codigo}
-<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar contraseña</a></li>
-{/if}
+{aperm 'ver_kardex', $user, 'Patricia.kardex_alumno'}{aperm 'ver_boleta', $user, 'Patricia.boleta_alumno'}{aperm 'ver_horario', $user, 'Patricia.horario_alumno'}
+{if $ver_kardex || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>{/if}
+{if $ver_boleta || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verCalificaciones', array ($alumno.codigo)}">Calificaciones</a></li>{/if}
+{if $ver_horario || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verHorario', array ($alumno.codigo)}">Horario</a></li>{/if}
+{if $user.administrator || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Agenda::agenda', array ($alumno.codigo)}">Agenda</a></li>{/if}
+{if $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar contraseña</a></li>{/if}
 {if $user.administrator}<!-- Actualizar con el permiso correspondiente -->
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verFormatos', array ($alumno.codigo)}">Formatos</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::actualizarAlumno', array ($alumno.codigo)}">Actualizar</a></li>

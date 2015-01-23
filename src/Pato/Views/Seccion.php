@@ -6,60 +6,12 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 class Pato_Views_Seccion {
 	public function index ($request, $match) {
 		$seccion = new Pato_Seccion ();
-		$filtro = array();
 
 		/* Enlaces extras */
 		$pag = new Gatuf_Paginator ($seccion);
 		$pag->model_view = 'paginador';
 		$pag->action = array ('Pato_Views_Seccion::index');
-		$sql = new Gatuf_SQL ();
 		
-		/* Aplicando filtrado por carrera y/o departamento
-		if ($request->method == 'POST') {
-			$form = new Calif_Form_Seccion_Filtrar ($request->POST, array ('logged' => !$request->user->isAnonymous ()));
-			if ($form->isValid ()) {
-				$filtrado = $form->save ();	
-				$data = substr($filtrado, 2);
-				if ($filtrado[0] == 'c') {
-					$this->porCarrera ($request, array (0 => '', 1 => $data));
-				} else if ($filtrado[0] == 'a') {
-					$this->porAsignadas ($request, array ());
-				} else if ($filtrado[0] == 'n') {
-					$this->porNoAsignadas ($request, array ());
-				} else if ($filtrado[0] == 's') {
-					$this->porSuplente ($request, array ());
-				}
-			}
-		} else {
-			$form = new Calif_Form_Seccion_Filtrar (null, array ('logged' => !$request->user->isAnonymous ()));
-		}*/
-		
-		/* Verificar filtro por Carrera
-		$car = $request->session->getData('filtro_seccion_asignada_carrera', null);
-		$noasig = $request->session->getData('filtro_seccion_asignada_no', false);
-		$asig = $request->session->getData('filtro_seccion_asignada', false);
-		$suplente = $request->session->getData('filtro_seccion_suplente', false);
-		if ($asig === true) {
-			$filtro['a'] = 'Secciones asignadas';
-			
-			$sql->Q ('asignacion IS NOT NULL');
-		} else if ($noasig === true) {
-			$filtro['n'] = 'Secciones no solicitadas';
-			
-			$sql->Q ('asignacion IS NULL');
-		} else if (!is_null ($car)) {
-			$carrera = new Calif_Carrera ($car);
-			$filtro['c'] = 'Secciones asignadas a la carrera "'.$carrera->descripcion.'"';
-			
-			$sql->Q ('asignacion=%s', $car);
-		}
-		
-		if ($suplente === true) {
-			$filtro['s'] = 'Con suplente asignado';
-			$sql->Q ('suplente IS NOT NULL');
-		} */
-		
-		//$pag->forced_where = $sql;
 		$pag->summary = 'Lista de secciones';
 		$list_display = array (
 			array ('nrc', 'Gatuf_Paginator_FKLink', 'NRC'),
@@ -80,66 +32,8 @@ class Pato_Views_Seccion {
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/index.html',
 		                                          array ('paginador' => $pag,
-		                                                 /*'filtro'=>$filtro,
-		                                                 'form' => $form,*/
 		                                                 'page_title' => 'Secciones'),
 		                                          $request);
-	}
-
-	public function porCarrera ($request, $match) {
-		$carrera = new Calif_Carrera ();
-		
-		if (false === ($carrera->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$request->session->setData('filtro_seccion_asignada_carrera',$match[1]);
-		$request->session->setData('filtro_seccion_asignada_no', false);
-		$request->session->setData('filtro_seccion_asignada', false);
-		
-		$url = Gatuf_HTTP_URL_urlForView('Calif_Views_Seccion::index');
-		return new Gatuf_HTTP_Response_Redirect ($url);
-	}
-
-	public function porNoAsignadas ($request, $match) {
-		$request->session->setData('filtro_seccion_asignada_carrera',null);
-		$request->session->setData('filtro_seccion_asignada_no', true);
-		$request->session->setData('filtro_seccion_asignada', false);
-		
-		$url = Gatuf_HTTP_URL_urlForView('Calif_Views_Seccion::index');
-		return new Gatuf_HTTP_Response_Redirect ($url);
-	}
-	
-	public function porAsignadas ($request, $match) {
-		$request->session->setData('filtro_seccion_asignada_carrera',null);
-		$request->session->setData('filtro_seccion_asignada_no', false);
-		$request->session->setData('filtro_seccion_asignada', true);
-		
-		$url = Gatuf_HTTP_URL_urlForView('Calif_Views_Seccion::index');
-		return new Gatuf_HTTP_Response_Redirect ($url);
-	}
-	
-	public function porSuplente ($request, $match) {
-		$request->session->setData ('filtro_seccion_suplente', true);
-		
-		$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::index');
-		return new Gatuf_HTTP_Response_Redirect ($url);
-	}
-	
-	public function eliminarFiltro($request, $match){
-		if ($match[1] == 'a') {
-			$request->session->setData('filtro_seccion_asignada', false);
-		} else if($match[1] == 'c'){
-			$request->session->setData('filtro_seccion_asignada_carrera',null);
-		} else if ($match[1] == 'n') {
-			$request->session->setData('filtro_seccion_asignada_no', false);
-		} else if ($match[1] == 's') {
-			$request->session->setData ('filtro_seccion_suplente', false);
-		}
-		
-		$url = Gatuf_HTTP_URL_urlForView('Calif_Views_Seccion::index');
-		
-		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 
 	public function verNrc ($request, $match) {
@@ -150,7 +44,6 @@ class Pato_Views_Seccion {
 		}
 		
 		$materia = $seccion->get_materia ();
-		$maestro = $seccion->get_maestro ();
 		if ($seccion->suplente != null) {
 			$suplente = $seccion->get_suplente ();
 		} else {
@@ -158,12 +51,11 @@ class Pato_Views_Seccion {
 		}
 		
 		$horarios = $seccion->get_pato_horario_list ();
-		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $materia->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/ver-seccion.html',
-		                                          array ('page_title' => 'NRC '.$seccion->nrc,
+		                                          array ('page_title' => $titulo,
 		                                                 'seccion' => $seccion,
 		                                                 'materia' => $materia,
-		                                                 'maestro' => $maestro,
 		                                                 'suplente' => $suplente,
 		                                                 'horarios' => $horarios,
 		                                                 ),
@@ -275,8 +167,9 @@ class Pato_Views_Seccion {
 			$form = new Pato_Form_Seccion_Actualizar (null, $extra);
 		}
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/edit-seccion.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'form' => $form),
 		                                         $request);
@@ -291,32 +184,21 @@ class Pato_Views_Seccion {
 		}
 		
 		if ($request->method == 'POST') {
-			/* Eliminar todos los alumnos de este grupo */
-			$related = $seccion->get_alumnos_list();
-			foreach ($related as $rel) {
-				$seccion->delAssoc($rel);
-			}
-			
-			/* Eliminar todas los horarios dde esta sección */
-			$horas = $seccion->get_pato_horario_list ();
-			
-			foreach ($horas as $hora) {
-				$hora->delete ();
-			}
-			
+			/* Las calificaciones en boleta, asistencias, alumnos y horarios se eliminan solas por integridad referencial */
 			$seccion->delete ();
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/eliminar-seccion.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion),
 		                                         $request);
 	}
 	
-	public $verAlumnos_precond = array ('Pato_Precondition::maestroRequired');
+	public $verAlumnos_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verAlumnos ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -324,7 +206,8 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $seccion->maestro) {
+		$es_el_dueno = ($request->user->type == 'm' && ($seccion->maestro == $request->user->login || $seccion->suplente == $request->user->login));
+		if (!$request->user->hasPerm ('Patricia.horario_alumno') && !$es_el_dueno) {
 			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
@@ -356,10 +239,12 @@ class Pato_Views_Seccion {
 			}
 		}
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/ver-alumnos.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'alumnos' => $alumnos,
 		                                                'seccion' => $seccion,
+		                                                'es_el_dueno' => $es_el_dueno,
 		                                                'boleta' => $boleta,
 		                                                'especial' => $especiales,
 		                                                'evals' => $evaluaciones,
@@ -376,8 +261,9 @@ class Pato_Views_Seccion {
 		
 		$gpe = Gatuf::factory ('Pato_GPE')->getList ();
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/formatos.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'gpe' => $gpe,
 		                                                'seccion' => $seccion),
 		                                         $request);
@@ -666,8 +552,9 @@ class Pato_Views_Seccion {
 			$form = new Pato_Form_Seccion_Evaluar (null, $extra);
 		}
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/evaluar.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'porcentaje' => $ps,
 		                                                'form' => $form),
@@ -686,16 +573,16 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		/* TODO: Eliminar el permiso de que si es administrador */
-		if ($request->user->login != $seccion->maestro && !$request->user->administrator) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		/* Si hay suplente, el suplente puede subir asistencias */
-		if ($seccion->suplente && $request->user->login != $seccion->suplente) {
-			$request->user->setMessage (3, 'Usted no puede subir asistencias. Hay un suplente asignado a esta sección');
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
-			return new Gatuf_HTTP_Response_Redirect ($url);
+		if ($seccion->suplente) {
+			if ($request->user->login != $seccion->suplente) {
+				$request->user->setMessage (3, 'Usted no puede subir asistencias. Hay un suplente asignado a esta sección');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			if ($request->user->login != $seccion->maestro) {
+				throw new Gatuf_HTTP_Error404 ();
+			}
 		}
 		
 		$extra = array ('seccion' => $seccion);
@@ -713,90 +600,13 @@ class Pato_Views_Seccion {
 			$form = new Pato_Form_Seccion_Asistencia (null, $extra);
 		}
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/asistencias.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'form' => $form),
 		                                         $request);
 	}
-	
-	/*public $reclamarNrc_precond = array ('Calif_Precondition::coordinadorRequired');
-	public function reclamarNrc ($request, $match) {
-		$seccion = new Calif_Seccion ();
-		
-		if (false === ($seccion->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::verNrc', $seccion->nrc);
-		
-		$carrera_a_reclamar = new Calif_Carrera ();
-		
-		if (false === ($carrera_a_reclamar->get ($match[2]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}*/
-		
-		/* Verificar que la materia pertenezca a la carrera
-		$materia = new Calif_Materia ($seccion->materia);
-		
-		$carreras = $materia->get_carreras_list ();
-		
-		$permiso = false;
-		
-		foreach ($carreras as $c) {
-			if ($carrera_a_reclamar->clave == $c->clave) $permiso = true;
-		}
-		
-		if ($permiso == false) {
-			$request->user->setMessage (2, sprintf ('No puede reclamar esta sección. La materia "%s" no pertenece a la carrera %s', $materia->descripcion, $carrera_a_reclamar->descripcion));
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		} */
-		
-		/* Verificar que el maestro sea coordinador de la carrera que quiere reclamar
-		if (!$request->user->hasPerm ('SIIAU.coordinador.'.$carrera_a_reclamar->clave)) {
-			$request->user->setMessage (2, 'No puede reclamar secciones para '.$carrera_a_reclamar->clave.'. Usted no es coordinador de esta carrera');
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		} */
-		
-		/* Si ya está asignado, marcar error
-		if (!is_null ($seccion->asignacion)) {
-			$request->user->setMessage (2, 'La sección ya ha sido reclamada por '.$seccion->asignacion);
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		} */
-		
-		/* Ahora, intentar asignar el nrc
-		$seccion->asignacion = $carrera_a_reclamar;
-		
-		if ($seccion->updateAsignacion () === true) {
-			$request->user->setMessage (1, 'La sección '.$seccion->nrc.' ha sido marcada para la carrera '.$carrera_a_reclamar->clave);
-		} else {
-			$request->user->setMessage (2, 'La sección '.$seccion->nrc.' no pudo ser reclamada. Por favor intentelo otra vez');
-		}
-		
-		return new Gatuf_HTTP_Response_Redirect ($url);
-	}*/
-	
-	/*public $liberarNrc_precond = array ('Calif_Precondition::coordinadorRequired');
-	public function liberarNrc ($request, $match) {
-		$seccion = new Calif_Seccion ();
-		
-		if (false === ($seccion->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		$url = Gatuf_HTTP_URL_urlForView ('Calif_Views_Seccion::verNrc', $seccion->nrc);
-		
-		if (is_null ($seccion->asignacion)) {
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
-		
-		if (!$request->user->hasPerm ('SIIAU.coordinador.'.$seccion->asignacion)) {
-			$request->user->setMessage (2, 'No puede liberar la sección '.$seccion->nrc.', usted no es el coordinador que la solicitó.');
-		} else {
-			$seccion->liberarAsignacion ();
-			$request->user->setMessage (1, 'La sección '.$seccion->nrc.' ha sido liberada.');
-		}
-		
-		return new Gatuf_HTTP_Response_Redirect ($url);
-	}*/
 	
 	public $matricular_precond = array ('Gatuf_Precondition::adminRequired');
 	public function matricular ($request, $match){
@@ -825,8 +635,10 @@ class Pato_Views_Seccion {
 		} else {
 			$form = new Pato_Form_SeleccionarAlumno (null);
 		}
+		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/matricular.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'form' => $form),
 		                                         $request);
@@ -881,8 +693,9 @@ class Pato_Views_Seccion {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/desmatricular.html',
-		                                         array ('page_title' => 'NRC '.$seccion->nrc,
+		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'alumno' => $alumno),
 		                                         $request);

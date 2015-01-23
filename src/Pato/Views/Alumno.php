@@ -4,6 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Alumno {
+	public $index_precond = array ('Gatuf_Precondition::loginRequired');
 	public function index ($request, $match) {
 		$alumno =  new Pato_Alumno ();
 		
@@ -69,15 +70,15 @@ class Pato_Views_Alumno {
                                                  $request);
 	}*/
 	
-	public $verGrupos_precond = array ('Gatuf_Precondition::loginRequired');
-	public function verGrupos ($request, $match) {
+	public $verCalificaciones_precond = array ('Gatuf_Precondition::loginRequired');
+	public function verCalificaciones ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1] ) ) ) {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
+		if (!$request->user->hasPerm ('Patricia.boleta_alumno') && $request->user->login != $alumno->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
@@ -112,7 +113,7 @@ class Pato_Views_Alumno {
 		}
 		
 		/* Recoger las asistencias */
-		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-grupos.html',
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-calificaciones.html',
 		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
 		                                               'alumno' => $alumno,
 		                                               'secciones' => $secciones,
@@ -131,7 +132,7 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
+		if (!$request->user->hasPerm ('Patricia.horario_alumno') && $request->user->login != $alumno->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
@@ -273,7 +274,7 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
+		if (!$request->user->hasPerm ('Patricia.kardex_alumno') && $request->user->login != $alumno->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
@@ -301,7 +302,7 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator && !$request->user->isCoord () && $request->user->login != $alumno->codigo) {
+		if (!$request->user->hasPerm ('Patricia.kardex_alumno') && $request->user->login != $alumno->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		

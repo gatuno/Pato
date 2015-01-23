@@ -182,10 +182,10 @@ $ctl[] = array(
 			'method' => 'verPerfil',
 		),
 		array(
-			'regex' => '#^(\w\d{7})/grupos/$#',
+			'regex' => '#^(\w\d{7})/calificaciones/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
-			'method' => 'verGrupos',
+			'method' => 'verCalificaciones',
 		),
 		array(
 			'regex' => '#^(\w\d{7})/horario/$#',

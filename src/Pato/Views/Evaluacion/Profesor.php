@@ -17,14 +17,14 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $resultados_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $resultados_precond = array ('Pato_Precondition::loginRequired');
 	public function resultados ($request, $match) {
 		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		$con_p = array ();
 		
 		$maestros = array ();
 		foreach ($carreras as $c) {
-			if ($request->user->hasPerm ('Patricia.coordinador.'.$c->clave)) {
+			if ($request->user->hasPerm ('Patricia.coordinador.'.$c->clave) || $request->user->hasPerm ('Patricia.resultados_eval_profesores')) {
 				$maestros[$c->clave] = array ();
 				$con_p[] = $c;
 			}
@@ -54,7 +54,7 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $resultadoMaestro_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $resultadoMaestro_precond = array ('Pato_Precondition::loginRequired');
 	public function resultadoMaestro ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
@@ -62,7 +62,7 @@ class Pato_Views_Evaluacion_Profesor {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
+		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave) && !$request->user->hasPerm ('Patricia.resultados_eval_profesores')) {
 			throw new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
