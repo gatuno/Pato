@@ -1,7 +1,7 @@
 {extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
-<ul style="list-style-type: none;">
+<ul style="list-style-type: none;" class="do-not-print">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
 {matcoord 'puede_editar', $user, $seccion.get_materia()}
 {if $user.administrator || $user.login == $seccion.maestro || $puede_editar}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}

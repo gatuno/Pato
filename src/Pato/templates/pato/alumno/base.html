@@ -1,6 +1,6 @@
 {extends 'pato/base.html'}
 {block body}
-<ul style="list-style-type: none;">
+<ul style="list-style-type: none;" class="do-not-print">
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verPerfil', array ($alumno.codigo)}">Perfil</a></li>
 {aperm 'ver_kardex', $user, 'Patricia.kardex_alumno'}{aperm 'ver_boleta', $user, 'Patricia.boleta_alumno'}{aperm 'ver_horario', $user, 'Patricia.horario_alumno'}
 {if $ver_kardex || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>{/if}

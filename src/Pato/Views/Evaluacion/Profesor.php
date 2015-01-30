@@ -17,7 +17,7 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $resultados_precond = array ('Pato_Precondition::loginRequired');
+	public $resultados_precond = array ('Gatuf_Precondition::loginRequired');
 	public function resultados ($request, $match) {
 		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		$con_p = array ();
@@ -54,7 +54,7 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $resultadoMaestro_precond = array ('Pato_Precondition::loginRequired');
+	public $resultadoMaestro_precond = array ('Gatuf_Precondition::loginRequired');
 	public function resultadoMaestro ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		

@@ -18,6 +18,10 @@ body {
 	margin: 0px;
 }
 
+.content-div {
+	margin-left: 5px;
+}
+
 img,
 input,
 select,

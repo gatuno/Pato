@@ -1,0 +1,19 @@
+/* Css para impresión */
+.topmenu, .do-not-print {
+	display:none
+}
+
+.content-div {
+	margin-left: 0px;
+}
+
+.titulo {
+	padding-top: 0px;
+	width: 100%;
+}
+
+.print-cal {
+	float: none;
+	width: 100%;
+	text-align: right;
+}

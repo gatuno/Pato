@@ -4,6 +4,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="author" content="Félix Arreola Rodríguez" />
 	<link rel="stylesheet" media="all" type="text/css" href="{media}/css/theme.css" />
+	<link rel="stylesheet" media="print" type="text/css" href="{media}/css/print.css" />
 	{block extrahead}{/block}
 	<title>Patricia - {$page_title}</title>
 </head>
@@ -61,7 +62,7 @@
 	{block extratopbody}{/block}
 	{if $user and $user.id}{getmsgs $user}{/if}
 	<h1 class="titulo">{$page_title}</h1>
-	<div style="margin-left: 5px;">
+	<div class="content-div">
 		{block body}{/block}
 	</div>
 {block javascript}{/block}
