@@ -837,6 +837,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/reportes/oferta/materias/ODS/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Oferta',
+	'method' => 'matriculadosMateriaTodosODS',
+);
+
+$ctl[] = array (
 	'regex' => '#^/reportes/oferta/maestros-activos/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes_Oferta',
@@ -876,6 +883,13 @@ $ctl[] = array (
 	'base' => $base,
 	'model' => 'Pato_Views_Reportes_Calificaciones',
 	'method' => 'indiceReprobacionODS',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/calificaciones/promedio-carrera/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Calificaciones',
+	'method' => 'promedioCarrera',
 );
 
 $ctl[] = array (

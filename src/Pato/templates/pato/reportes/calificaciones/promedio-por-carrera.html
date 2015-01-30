@@ -1,0 +1,22 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Promedios por carrera. <strong>Advertencia</strong>: Los NA supuestos "ceros" se contabilizaron como "6".</p>
+<table>
+	<thead><tr>
+		<th>Carrera</th>
+		<th>Alumnos totales que tomaron materias</th>
+		<th>Cantidad de materias que tomaron los alumnos</th>
+		<th>Suma de sus calificaciones</th>
+		<th>Promedio</th>
+	</tr></thead>
+	<tbody>{foreach $carreras as $carrera}<tr>
+		<td>{$carrera.descripcion}</td>
+		<td>{$alumnos[$carrera.clave]}</td>
+		<td>{$materias[$carrera.clave]}</td>
+		<td>{$total[$carrera.clave]}</td>
+		<td>{$promedios[$carrera.clave]|float:2}</td>
+	</tr>{/foreach}</tbody>
+</table>
+{/block}
+		

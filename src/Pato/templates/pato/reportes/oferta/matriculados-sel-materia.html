@@ -1,7 +1,8 @@
 {extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
-<p>Este reporte determinará los alumnos matriculados y no matriculados en la materia seleccionada.</p>
+<p>Este reporte determinará los alumnos matriculados en la materia seleccionada. Por sección.</p>
+<p>Ver <a href="{url 'Pato_Views_Reportes_Oferta::matriculadosMateriaTodosODS'}">todas las materias</a></p>
 {if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 	<table>

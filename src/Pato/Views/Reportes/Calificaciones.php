@@ -132,4 +132,64 @@ class Pato_Views_Reportes_Calificaciones {
 		$ods->construir_paquete ();
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Indice_reprobacion-'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
+	
+	public $promedioCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public function promedioCarrera ($request, $match) {
+		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
+		
+		$sumas = array ();
+		$alumnos = array ();
+		$num = array ();
+		foreach ($carreras as $car) {
+			$sumas[$car->clave] = 0;
+			$alumnos[$car->clave] = array ();
+			$num[$car->clave] = 0;
+		}
+		
+		$kardexs = $request->calendario->get_pato_kardex_list ();
+		
+		foreach ($kardexs as $kardex) {
+			$alumno = $kardex->get_alumno ();
+			$ins = $alumno->get_inscripcion_for_cal ($request->calendario);
+			
+			if ($ins === null) {
+				throw new Exception (sprintf ('Alto. Algo está mal. El alumno %s no tiene inscripción en el calendario de sesion', $alumno->codigo));
+			}
+			
+			$alumnos[$ins->carrera][$alumno->codigo] = 1;
+			
+			if (!$kardex->aprobada) {
+				$sumas[$ins->carrera] += 6;
+			} else {
+				$sumas[$ins->carrera] += $kardex->calificacion;
+			}
+			$num[$ins->carrera]++;
+		}
+		
+		/* Ejecutar los promedios */
+		$promedios = array ();
+		foreach ($sumas as $carrera => $suma) {
+			if ($num[$carrera] == 0) {
+				$promedios[$carrera] = 0;
+			} else {
+				$promedios[$carrera] = ($suma / $num[$carrera]);
+			}
+		}
+		
+		/* Contabilizar alumnos diferentes */
+		$total_al = array ();
+		foreach ($alumnos as $carrera => $pack_alumnos) {
+			$total_al[$carrera] = count ($pack_alumnos);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/reportes/calificaciones/promedio-por-carrera.html',
+		                                         array('page_title' => 'Reporte de promedios por carrera',
+		                                               'calendario' => $request->calendario,
+		                                               'carreras' => $carreras,
+		                                               'alumnos' => $total_al,
+		                                               'total' => $sumas,
+		                                               'materias' => $num,
+		                                               'promedios' => $promedios),
+                                                 $request);
+	}
 }

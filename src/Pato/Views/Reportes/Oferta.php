@@ -172,6 +172,39 @@ class Pato_Views_Reportes_Oferta {
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados_'.$materia->clave.'_'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 	
+	public $matriculadosMateriaTodosODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public function matriculadosMateriaTodosODS ($request, $match) {
+		$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
+		
+		$ods = new Gatuf_ODS ();
+		
+		$ods->addNewSheet ('Reporte');
+		$ods->addStringCell ('Reporte', 1, 1, 'NRC');
+		$ods->addStringCell ('Reporte', 1, 2, 'Clave');
+		$ods->addStringCell ('Reporte', 1, 3, 'Materia');
+		$ods->addStringCell ('Reporte', 1, 4, 'Sección');
+		$ods->addStringCell ('Reporte', 1, 5, 'Profesor');
+		$ods->addStringCell ('Reporte', 1, 6, 'Cantidad de alumnos');
+		
+		$g = 2;
+		
+		foreach ($secciones as $s) {
+			$alumnos = $s->get_alumnos_list (array ('count' => true));
+			$materia = $s->get_materia ();
+			
+			$ods->addStringCell ('Reporte', $g, 1, $s->nrc);
+			$ods->addStringCell ('Reporte', $g, 2, $materia->clave);
+			$ods->addStringCell ('Reporte', $g, 3, $materia->descripcion);
+			$ods->addStringCell ('Reporte', $g, 4, $s->seccion);
+			$ods->addStringCell ('Reporte', $g, 5, (string) $s->get_maestro ());
+			$ods->addStringCell ('Reporte', $g, 6, $alumnos);
+			$g++;
+		}
+		
+		$ods->construir_paquete ();
+		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados_'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
+	}
+	
 	public $maestrosActivos_precond = array ('Gatuf_Precondition::adminRequired');
 	public function maestrosActivos ($request, $match) {
 		if ($request->method == 'POST') {
