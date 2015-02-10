@@ -139,6 +139,14 @@ td .icon {
 	background-color: #ad7fa8;
 }
 
+.nav .admision a:hover {
+	background-color: #058cff;
+}
+
+.nav .admision-adm a:hover {
+	background-color: #9108b3;
+}
+
 /* Submenús */
 .nav ul {
 	display: none;

@@ -1,0 +1,8 @@
+{extends 'admision/base.html'}
+{block body}
+<p>Convocatorias para el proceso de admisión:</p>
+<a href="{url 'Admision_Views_Convocatoria::agregar'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nueva convocatoria" />Crear una nueva convocatoria</a>
+<ul>{foreach $convocatorias as $conv}
+	<li><a href="{url 'Admision_Views_Convocatoria::ver', $conv.id}">{$conv.descripcion}</a></li>
+{/foreach}</ul>
+{/block}

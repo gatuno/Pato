@@ -1,0 +1,14 @@
+{extends 'admision/base.html'}
+{block body}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+	<tr>
+		<th><strong>Convocatoria:</strong></th>
+		<td>{$convocatoria.descripcion}</td>
+	</tr>
+	{$form.render_table}
+	<tr><td>&nbsp;</td><td><input type="submit" value="Agregar carrera a la convocatoria" /></td></tr>
+	</table>
+</form>
+{/block}

@@ -1031,6 +1031,18 @@ $ctl[] = array (
 	'sub' => include 'Admin/conf/urls.php',
 );
 
+$ctl[] = array (
+	'regex' => '#^/admision#',
+	'base' => $base,
+	'sub' => include 'Admision/conf/urls.php',
+);
+
+$ctl[] = array (
+	'regex' => '#^/sepomex#',
+	'base' => $base,
+	'sub' => include 'CP/conf/urls.php',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,
