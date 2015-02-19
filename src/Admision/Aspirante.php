@@ -96,17 +96,11 @@ class Admision_Aspirante extends Gatuf_Model {
 			       'blank' => false,
 			       'size' => 250,
 			),
-			'codigo_postal' =>
+			'colonia' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'blank' => false,
 			       'model' => 'CP_CP',
-			),
-			'colonia' =>
-			array (
-			       'type' => 'Gatuf_DB_Field_Varchar',
-			       'blank' => false,
-			       'size' => 200,
 			),
 			'numero_local' =>
 			array (
@@ -236,6 +230,36 @@ class Admision_Aspirante extends Gatuf_Model {
 			
 			/* Generar una contraseña aleatoria de 6 letras */
 			$this->token = Gatuf_Utils::getPassword (6);
+		}
+	}
+	
+	function __toString () {
+		return $this->apellido.' '.$this->nombre.' ('.$this->id.')';
+	}
+	
+	function display_estado_civil () {
+		switch ($this->estado_civil) {/* 1 = Soltero, 2 Casado, 3 Divorciado, 4 Viudo, 5 Unión libre */
+			case 1:
+				if ($this->sexo == 'F') return 'Soltera';
+				return 'Soltero';
+				break;
+			case 2:
+				if ($this->sexo == 'F') return 'Casada';
+				return 'Casado';
+				break;
+			case 3:
+				if ($this->sexo == 'F') return 'Divorciada';
+				return 'Divorciado';
+				break;
+			case 4:
+				if ($this->sexo == 'F') return 'Viuda';
+				return 'Viudo';
+				break;
+			case 5:
+				return 'Unión libre';
+				break;
+			default:
+				return 'Desconocido. No debería pasar. Llame al administrador';
 		}
 	}
 }

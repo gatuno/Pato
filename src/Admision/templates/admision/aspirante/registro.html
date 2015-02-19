@@ -341,7 +341,13 @@
 		</table>
 	</fieldset>
 	<div class="errors">{if $form.f.terms.errors}{$form.f.terms.fieldErrors}{/if}</div>
-	<p>{$form.f.terms.label}: {$form.f.terms|safe}</p>
+	<p>{$form.f.terms|unsafe} <strong>{$form.f.terms.labelTag}</strong><br />
+		<span class="helptext">Manifiesto bajo protesta, que los datos asentados en la presente solicitud de admisión son verídicos. Y que en  caso de haberme conducido con falsedad en los datos asentados en mi solicitud, acepto hacerme acreedor a cualquiera de las sanciones penales que establecen los ordenamientos aplicables, así como a las sanciones administrativas correspondientes, incluyendo la negativa de ingreso a la Universidad.</span>
+	</p>
+	<div class="errors">{if $form.f.terms2.errors}{$form.f.terms2.fieldErrors}{/if}</div>
+	<p>{$form.f.terms2|unsafe} <strong>{$form.f.terms2.labelTag}</strong><br />
+		<span class="helptext">He leído y conozco el <a href="{media}/docs/confidencialidad.pdf" target="_blank">Aviso de Confidencialidad</a>, de la Universidad Politécnica de la Zona Metropolitana de Guadalajara. Por lo que manifiesto mi consentimiento para que la Universidad realice el tratamiento y transferencia de mis datos personales que será necesario para que se cumplan con las finalidades y atribuciones de la misma.</span>
+	</p>
 	<p><input type="submit" value="Colocar solicitud" /></p>
 </form>
 {/block}

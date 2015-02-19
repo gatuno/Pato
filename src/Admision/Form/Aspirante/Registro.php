@@ -14,7 +14,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$this->fields['aspiracion'] = new Gatuf_Form_Field_Integer (
 			array (
 				'required' => true,
-				'label' => 'Aspiración',
+				'label' => 'Programa educativo',
 				'help_text' => 'La carrera',
 				'initial' => '',
 				'choices' => $choices_asp,
@@ -259,7 +259,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 				'widget' => 'Gatuf_Form_Widget_SelectInput',
 		));
 		
-		$choices_sangre = array ('O Negativa' => 'O-', 'O Positiva' => 'O+', 'A Negativa' => 'A-', 'A Positiva' => 'A+', 'B Negativa' => 'B-', 'B Positiva' => 'B+', 'AB Negativa' => 'AB-', 'AB Positiva' => 'AB+');
+		$choices_sangre = array ('O Negativo' => 'O-', 'O Positivo' => 'O+', 'A Negativo' => 'A-', 'A Positivo' => 'A+', 'B Negativo' => 'B-', 'B Positivo' => 'B+', 'AB Negativo' => 'AB-', 'AB Positivo' => 'AB+');
 		$this->fields['sanguineo_rh'] = new Gatuf_Form_Field_Varchar (
 			array (
 				'required' => true,
@@ -419,7 +419,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$this->fields['informes'] = new Gatuf_Form_Field_Varchar (
 			array (
 				'required' => true,
-				'label' => '¿Qué área te de la Universidad te dió informes?',
+				'label' => '¿Qué área de la Universidad te dió informes?',
 				'help_text' => '',
 				'initial' => 'NULL',
 				'choices' => array ('Selecciona una opción' => 'NULL', 'Vinculación' => 'Vinculación', 'Servicios Escolares' => 'Servicios Escolares'),
@@ -443,7 +443,14 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$this->fields['terms'] = new Gatuf_Form_Field_Boolean (
 			array (
 				'required' => true,
-				'label' => 'Acepto decir la verdad.',
+				'label' => 'Acepto la cláusula de veracidad de datos',
+				'initial' => false,
+		));
+		
+		$this->fields['terms2'] = new Gatuf_Form_Field_Boolean (
+			array (
+				'required' => true,
+				'label' => 'Acepto el aviso de confidencialidad',
 				'initial' => false,
 		));
 	}
@@ -455,6 +462,13 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		return $this->cleaned_data['terms'];
 	}
 	
+	public function clean_terms2() {
+		if (!$this->cleaned_data['terms2']) {
+			throw new Gatuf_Form_Invalid('No puedo aceptar tu solicitud si no estás de acuerdo con el aviso de confidencialidad');
+		}
+		return $this->cleaned_data['terms2'];
+	}
+	
 	public function clean_nombre () {
 		return mb_convert_case ($this->cleaned_data['nombre'], MB_CASE_TITLE);
 	}
@@ -464,6 +478,9 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 	}
 	
 	public function clean_curp () {
+		if (strlen (trim ($this->cleaned_data['curp'])) != 18) {
+			throw new Gatuf_Form_Invalid ('Tu curp debe ser de 18 caracteres exactamente');
+		}
 		return mb_convert_case ($this->cleaned_data['curp'], MB_CASE_UPPER);
 	}
 	
@@ -484,7 +501,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$limpio = str_replace (array (' ', '-'), '', $tel_casa);
 		
 		if (!preg_match ('/^[0-9]*$/', $limpio)) {
-			throw new Gatuf_Form_Invalid ('El teléfono de casa sólo pueden ser dígitos');
+			throw new Gatuf_Form_Invalid ('El teléfono de casa sólo puede estar formado por dígitos');
 		}
 		
 		return $limpio;
@@ -496,7 +513,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$limpio = str_replace (array (' ', '-'), '', $tel_cel);
 		
 		if (!preg_match ('/^[0-9]*$/', $limpio)) {
-			throw new Gatuf_Form_Invalid ('El teléfono celular sólo pueden ser dígitos');
+			throw new Gatuf_Form_Invalid ('El teléfono celular sólo puede estar formado por dígitos');
 		}
 		
 		return $limpio;
@@ -508,7 +525,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$limpio = str_replace (array (' ', '-'), '', $tel_casa);
 		
 		if (!preg_match ('/^[0-9]*$/', $limpio)) {
-			throw new Gatuf_Form_Invalid ('El teléfono de casa para tu contacto de emergencia sólo pueden ser dígitos');
+			throw new Gatuf_Form_Invalid ('El teléfono de casa para tu contacto de emergencia sólo puede estar formado por dígitos');
 		}
 		
 		return $limpio;
@@ -520,7 +537,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		$limpio = str_replace (array (' ', '-'), '', $tel_cel);
 		
 		if (!preg_match ('/^[0-9]*$/', $limpio)) {
-			throw new Gatuf_Form_Invalid ('El teléfono celular para tu contacto de emergencia sólo pueden ser dígitos');
+			throw new Gatuf_Form_Invalid ('El teléfono celular para tu contacto de emergencia sólo puede estar formado por dígitos');
 		}
 		
 		return $limpio;
@@ -536,7 +553,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 				throw new Gatuf_Form_Invalid ('Tienes que seleccionar tu estado de nacimiento');
 			}
 		} else {
-			$this->cleaned_data['estado_nacido'] = 0;
+			$this->cleaned_data['estado_nacimiento'] = 0;
 		}
 		
 		$casa = $this->cleaned_data['numero_local'];
@@ -553,12 +570,27 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 			throw new Gatuf_Form_Invalid ('Debes proporcionar al menos un número local o celular para tu contacto de emergencia');
 		}
 		
+		/* Revisar que no haya otro correo o curp registrados */
+		$curp = $this->cleaned_data['curp'];
+		$correo = $this->cleaned_data['email'];
+		
+		$sql = new Gatuf_SQL ('curp=%s OR email=%s', array ($curp, $correo));
+		
+		$aspi = Gatuf::factory ('Admision_Aspirante')->getList (array ('filter' => $sql->gen(), 'count' => true));
+		if ($aspi > 0) {
+			throw new Gatuf_Form_Invalid ('Ya hay otro aspirante registrado con este mismo curp o correo');
+		}
+		
 		return $this->cleaned_data;
 	}
 	
 	public function save ($commit = true) {
 		$aspirante = new Admision_Aspirante ();
 		$aspirante->setFromFormData ($this->cleaned_data);
+		
+		if ($this->cleaned_data['estado_nacimiento'] == 0) {
+			$aspirante->estado_nacimiento = null;
+		}
 		
 		$aspirante->create ();
 		

@@ -75,14 +75,12 @@ class Admision_Views_Aspirante {
 				
 				/* Enviar el correo */
 				$tmpl = new Gatuf_Template('admision/aspirante/primer-registro.txt');
-				/*$context = new Gatuf_Template_Context (
-				               array ('url' => Gatuf_Template::markSafe ($url),
-				                      'urlik' => Gatuf_Template::markSafe ($urlic),
-				                      'user' => $user,
-				                      'key' => Gatuf_Template::markSafe ($code)));*/
+				$context = new Gatuf_Template_Context (
+				               array ('numero' => $aspirante->id,
+				                      'pass' => $aspirante->token));
 				$email = new Gatuf_Mail (Gatuf::config ('from_email'), $aspirante->email, 'Bienvenido Aspirante - Continua tu trámite');
 				$email->setReturnPath (Gatuf::config ('bounce_email', Gatuf::config ('from_email')));
-				//$email->addTextMessage ($tmpl->render ($context));
+				$email->addTextMessage ($tmpl->render ($context));
 				$email->sendMail ();
 				
 				$return_url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::postRegistro');
