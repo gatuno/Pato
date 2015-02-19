@@ -57,4 +57,10 @@ class CP_CP extends Gatuf_Model {
 		
 		$this->_con = CP_DB_getDB ();
 	}
+	
+	public function display_full () {
+		$municipio = $this->get_municipio ();
+		
+		return $this->localidad.' C.P. '.$this->codigo.' '.$municipio->nombre.', '.$municipio->get_estado()->nombre;
+	}
 }

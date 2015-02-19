@@ -38,4 +38,8 @@ class CP_Estado extends Gatuf_Model {
 		
 		$this->_con = CP_DB_getDB ();
 	}
+	
+	function __toString () {
+		return $this->nombre;
+	}
 }
