@@ -32,7 +32,7 @@ class Pato_Form_Evaluacion_Profesor extends Gatuf_Form {
 			'La cordialidad y capacidad del profesor logra crear un clima de confianza para que el alumno pueda exponer sus problemas',
 		);
 		
-		$opciones = array ('Seleccione una opción' => -1, 'Totalmente de acuerdo' => 5, 'De acuerdo' => 4, 'Más o menos de acuerdo' => 3, 'En desacuerdo' => 2, 'Totalmente en desacuerdo' => 1);
+		$opciones = array ('Totalmente de acuerdo' => 5, 'De acuerdo' => 4, 'Más o menos de acuerdo' => 3, 'En desacuerdo' => 2, 'Totalmente en desacuerdo' => 1);
 		
 		$g = 1;
 		foreach ($textos as $t) {
@@ -42,10 +42,10 @@ class Pato_Form_Evaluacion_Profesor extends Gatuf_Form {
 					'label' => $t,
 					'initial' => -1,
 					'help_text' => '',
+					'choices' => $opciones,
 					'widget' => 'Gatuf_Form_Widget_SelectInput',
 					'widget_attrs' => array (
-						'choices' => $opciones,
-						'invalid' => array (-1),
+						'choices' => array ('Seleccione una opción' => -1),
 					)
 			));
 			

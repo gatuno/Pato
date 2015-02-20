@@ -154,7 +154,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 			$g++;
 			$y = $y + $altura;
 			
-			if ($g % 46 == 0) {
+			if ($g % 41 == 0) {
 				/* Cerrar el pie */
 				$this->SetY (265);
 				$this->SetX (20);

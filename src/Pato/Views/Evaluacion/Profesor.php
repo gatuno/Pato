@@ -185,6 +185,13 @@ class Pato_Views_Evaluacion_Profesor {
 			$correcto = false;
 		}
 		
+		$abierto = $gsettings->getVal ('evaluacion_prof_'.$request->calendario->clave, false);
+		
+		if ($abierto == false) {
+			$correcto = false;
+			$request->user->setMessage (2, 'Por el momento, la evaluación de profesores no se encuentra activa');
+		}
+		
 		/* Revisar cuáles respuestas están en tiempo */
 		$secciones = $alumno->get_grupos_list ();
 		
@@ -234,7 +241,15 @@ class Pato_Views_Evaluacion_Profesor {
 			$request->user->setMessage (1, 'No se permite evaluar calendarios anteriores');
 			
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Evaluacion_Profesor::listar_evals', $request->user->login);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$abierto = $gsettings->getVal ('evaluacion_prof_'.$request->calendario->clave, false);
+		
+		if ($abierto == false) {
+			$request->user->setMessage (2, 'Por el momento, la evaluación de profesores no se encuentra activa');
 			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Evaluacion_Profesor::listar_evals', $request->user->login);
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		

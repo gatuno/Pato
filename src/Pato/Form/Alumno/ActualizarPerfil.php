@@ -219,8 +219,6 @@ class Pato_Form_Alumno_ActualizarPerfil extends Gatuf_Form {
 			$antico = $antico | $an;
 		}
 		
-		$nac = implode('-', array_reverse(explode('/', $this->cleaned_data['nacimiento'])));
-		$this->perfil->nacimiento = $nac;
 		$this->perfil->anticonceptivos = $antico;
 		
 		$this->perfil->update ();

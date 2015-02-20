@@ -17,6 +17,16 @@ class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
 				'initial' => $abierto,
 				'help_text' => 'Indica si los alumnos pueden o no solicitar un trámite de suficiencia'
 		));
+		
+		$abierto = $gconf->getVal ('evaluacion_prof_'.$this->cal->clave, false);
+		
+		$this->fields['eval_profesores'] = new Gatuf_Form_Field_Boolean (
+			array (
+				'required' => true,
+				'label' => 'Evaluacion a profesores abierto',
+				'initial' => $abierto,
+				'help_text' => 'Indica si los alumnos pueden evaluar a sus profesores',
+		));
 	}
 	
 	public function save ($commit = true) {
@@ -29,5 +39,13 @@ class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
 			$sufi = false;
 		}
 		$gconf->setVal ('suficiencias_abierta_'.$this->cal->clave, $sufi);
+		
+		if ($this->cleaned_data['eval_profesores']) {
+			$eval = true;
+		} else {
+			$eval = false;
+		}
+		
+		$gconf->setVal ('evaluacion_prof_'.$this->cal->clave, $eval);
 	}
 }
