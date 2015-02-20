@@ -1,0 +1,60 @@
+{extends 'admision/base.html'}
+{block body}
+{if !$user.administrator}<p><a href="{url 'Admision_Views_Aspirante::cerrar'}"><img class="icon" src="{media '/img/application-exit.png'}" alt="Salir" />Salir</a></p>{/if}
+<table class="form">
+	<tr>
+	<th style="text-align: right">
+		{if $user.administrator}<a href="{url 'Admision_Views_Aspirante::subirFoto', $aspirante.id}">{/if}{if $aspirante.foto == ''}<img src="http://www.gravatar.com/avatar/?d=mm&s=128" />{else}<img src="{url 'Admision_Views_Aspirante::verFotoMiniatura', $aspirante.id}" />{/if}
+	</th>
+		<td>{$aspirante.apellido} {$aspirante.nombre}</td>
+	</tr>
+	<tr>
+		<th>ID de aspirante:</th>
+		<td>{$aspirante.id}</td>
+	</tr>
+	<tr>
+		<th>Fecha nacimiento:</th>
+		<td>{$aspirante.nacimiento|dateSimple:'%e de %B de %Y'}</td>
+	</tr>
+	<tr>
+		<th>Lugar de nacimiento:</th>
+		<td>{$aspirante.lugar_nacimiento}, {if $aspirante.estado_nacimiento}{$aspirante.get_estado_nacimiento().nombre}, {/if}{$aspirante.get_pais_nacimiento().nombre}</td>
+	</tr>
+	<tr>
+		<th>País de la Nacionalidad:</th>
+		<td>{$aspirante.get_nacionalidad().nombre}</td>
+	</tr>
+	<tr>
+		<th>Estado civil:</th>
+		<td>{$aspirante.display_estado_civil()}</td>
+	</tr>
+	<tr>
+		<th>Curp:</th>
+		<td>{$aspirante.curp}</td>
+	</tr>
+	<tr>
+		<th>Domicilio:</th>
+		<td>{$aspirante.domicilio}, {$aspirante.get_colonia().display_full()}</td>
+	</tr>
+	<tr>
+		<th>Números telefónicos:</th>
+		<td>{if $aspirante.numero_local != ''}Local: {$aspirante.numero_local}, {/if}{if $aspirante.numero_celular != ''}Celular: {$aspirante.numero_celular}{/if}</td>
+	</tr>
+	<tr>
+		<th>Correo electrónico:</th>
+		<td>{$aspirante.email}</td>
+	</tr>
+	<tr>
+		<th>Tipo sanguíneo:</th>
+		<td>{$aspirante.sanguineo_rh}</td>
+	</tr>
+	<tr>
+		<th>Estudios previos:</th>
+		<td>Escuela {$aspirante.escuela}, promedio: {$aspirante.promedio}. Egresado en el año: {$aspirante.egreso}</td>
+	</tr>
+	<tr>
+		<th>Contacto en caso de emergencia:</th>
+		<td>{$aspirante.emergencia_nombre}{if $aspirante.emergencia_local != ''}, teléfono local: {$aspirante.emergencia_local}{/if}{if $aspirante.emergencia_celular != ''}, teléfono celular: {$aspirante.emergencia_celular}{/if}</td>
+	</tr>
+</table>
+{/block}

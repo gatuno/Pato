@@ -67,4 +67,53 @@ $ctl_ad[] = array (
 	'method' => 'agregarCupo',
 );
 
+$ctl_ad[] = array (
+	'regex' => '#^/aspirantes/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'index',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirantes/JSON/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'buscarJSON',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirantes/continuar/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'continuar',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirante/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'ver',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirante/(\d+)/subir-foto/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'subirFoto',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirante/(\d+)/foto/miniatura/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'verFotoMiniatura',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirantes/logout/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'cerrar',
+);
+
 return $ctl_ad;

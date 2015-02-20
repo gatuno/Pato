@@ -16,14 +16,14 @@
 					<li class="admision"><a href="{url 'Admision_Views::index'}">Admisión</a>
 						<ul>
 							<li><a href="{url 'Admision_Views_Aspirante::convocatoria'}">Nuevo trámite</a></li>
-							<li><a href="#">Seguimiento de trámites</a></li>
+							<li><a href="{url 'Admision_Views_Aspirante::continuar'}">Seguimiento de trámites</a></li>
 						</ul>
 					</li>
 					{if $user.administrator}
 					<li class="admision-adm"><a href="#">Administración</a>
 						<ul>
 							<li><a href="{url 'Admision_Views_Convocatoria::index'}">Convocatorias</a></li>
-							<li><a href="#">Aspirantes</a></li>
+							<li><a href="{url 'Admision_Views_Aspirante::index'}">Aspirantes</a></li>
 						</ul>
 					</li>
 					{/if}

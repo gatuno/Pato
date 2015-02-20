@@ -1,0 +1,11 @@
+{extends 'admision/base.html'}
+{block body}
+<p>Subida de foto para {$aspirante.nombre} {$aspirante.apellido}</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" enctype="multipart/form-data" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Subir foto" /></td></tr>
+	</table>
+</form>
+{/block}

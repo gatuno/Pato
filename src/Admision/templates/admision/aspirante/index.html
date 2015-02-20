@@ -1,0 +1,25 @@
+{extends 'admision/base.html'}
+{block body}
+<p>Seleccione un aspirante:</p>
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td>
+		<td><input type="submit" value="Ver aspirante" /></td></tr>
+	</table>
+</form>
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<style>{literal}
+		.ui-autocomplete {
+			max-height: 150px;
+			overflow-y: auto;
+			/* prevent horizontal scrollbar */
+			overflow-x: hidden;
+		}
+	</style>{/literal}{/block}
+{block javascript}<script type="text/javascript">
+document.getElementById('id_aspirante').focus()
+</script>{/block}

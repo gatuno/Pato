@@ -103,4 +103,182 @@ class Admision_Views_Aspirante {
 		                                         array('page_title' => 'Registro completo'),
                                                  $request);
 	}
+	
+	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public function index ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Admision_Form_Aspirante_Seleccionar ($request->POST);
+			
+			if ($form->isValid ()) {
+				$aspirante = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Admision_Form_Aspirante_Seleccionar (null);
+		}
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/index.html',
+		                                         array ('page_title' => 'Seleccionar aspirante',
+		                                                'form' => $form),
+                                                 $request);
+	}
+	
+	public $buscarJSON_precond = array ('Gatuf_Precondition::adminRequired');
+	public function buscarJSON ($request, $match) {
+		if (!isset ($request->GET['term'])) {
+			return new Gatuf_HTTP_Response_Json (array ());
+		}
+		
+		$bus = '%'.$request->GET['term'].'%';
+		
+		$sql = new Gatuf_SQL ('nombre LIKE %s OR apellido LIKE %s OR id LIKE %s', array ($bus, $bus, $bus));
+		$aspirantes = Gatuf::factory ('Admision_Aspirante')->getList (array ('filter' => $sql->gen ()));
+		
+		$response = array ();
+		foreach ($aspirantes as $aspirante) {
+			$o = new stdClass();
+			$o->value = (string) $aspirante->id;
+			$o->label = (string) $aspirante;
+			
+			$response[] = $o;
+		}
+		
+		return new Gatuf_HTTP_Response_Json ($response);
+	}
+	
+	public function continuar ($request, $match) {
+		$logged = $request->session->getData ('aspirante_id', null);
+		
+		if ($logged !== null) {
+			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $logged);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Admision_Form_Aspirante_Login ($request->POST);
+			
+			if ($form->isValid ()) {
+				$aspirante = $form->save ();
+				
+				$request->session->setData ('aspirante_id', $aspirante->id);
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Admision_Form_Aspirante_Login ($request->POST);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/login.html',
+		                                         array ('page_title' => 'Continua tu trámite',
+		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	public function cerrar ($request, $match) {
+		$request->session->setdata ('aspirante_id');
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::continuar');
+		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
+	public function ver ($request, $match) {
+		$logged = $request->session->getData ('aspirante_id', null);
+		
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator && $logged === null) {
+			/* Redirigir al login */
+			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::continuar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if (!$request->user->administrator && $logged != $aspirante->id) {
+			/* No estás logueado con la cuenta correcta */
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/ver.html',
+		                                         array ('page_title' => 'Aspirante',
+		                                                'aspirante' => $aspirante),
+		                                         $request);
+	}
+	
+	public $subirFoto_precond = array ('Gatuf_Precondition::adminRequired');
+	public function subirFoto ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('aspirante' => $aspirante);
+		
+		if ($request->method == 'POST') {
+			$form = new Admision_Form_Aspirante_SubirFoto (array_merge ($request->POST, $request->FILES), $extra);
+			
+			if ($form->isValid ()) {
+				$aspirante = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Admision_Form_Aspirante_SubirFoto (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/subir-foto.html',
+		                                         array ('page_title' => 'Subir foto',
+		                                                'form' => $form,
+		                                                'aspirante' => $aspirante),
+		                                         $request);
+	}
+	
+	public function verFotoMiniatura ($request, $match) {
+		$logged = $request->session->getData ('aspirante_id', null);
+		
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if (!$request->user->administrator && $logged === null) {
+			/* Redirigir al login */
+			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::continuar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if (!$request->user->administrator && $logged != $aspirante->id) {
+			/* No estás logueado con la cuenta correcta */
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$miniaturas_dir = Gatuf::config ('admision_data_upload').'/thumbnails';
+		if (!is_dir($miniaturas_dir)) {
+			if (false == @mkdir($miniaturas_dir, 0777, true)) {
+		        throw new Gatuf_Form_Invalid('An error occured when creating the thumbnails folder path.');
+		    }
+		}
+		
+		$thumbnail = new Gatuf_Image_Thumbnail ($miniaturas_dir, Gatuf::config ('admision_data_upload').'/'.$aspirante->foto);
+		$thumbnail->size = array (128, 128);
+		
+		if (!$thumbnail->exists()) {
+			$thumbnail_filename = $thumbnail->generate();
+		} else {
+			$thumbnail_filename = $thumbnail->getPath();
+		}
+		
+		$name = $thumbnail->getName ();
+		$info = Gatuf_FileUtil::getMimeType ($thumbnail_filename);
+		
+		return new Gatuf_HTTP_Response_File ($thumbnail_filename, $name, $info[0], false);
+	}
 }
