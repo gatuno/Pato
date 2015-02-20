@@ -281,4 +281,44 @@ class Admision_Views_Aspirante {
 		
 		return new Gatuf_HTTP_Response_File ($thumbnail_filename, $name, $info[0], false);
 	}
+	
+	public $registrarPago_precond = array ('Gatuf_Precondition::adminRequired');
+	public function registrarPago ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($aspirante->pago !== null) {
+			$request->user->setMessage (3, 'Este aspirante ya tiene su pago registrado');
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Admision_Form_SeleccionarFechaHora ($request->POST);
+			
+			if ($form->isValid ()) {
+				$fecha = $form->save ();
+				
+				$aspirante->pago = $fecha;
+				$aspirante->update ();
+				
+				$request->user->setMessage (1, 'Pago del aspirante registrado');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Admision_Form_SeleccionarFechaHora (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/registrar-pago.html',
+		                                         array ('page_title' => 'Registrar la fecha de pago',
+		                                                'form' => $form,
+		                                                'aspirante' => $aspirante),
+		                                         $request);
+	}
 }

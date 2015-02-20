@@ -1,6 +1,6 @@
 {extends 'admision/base.html'}
 {block body}
-{if !$user.administrator}<p><a href="{url 'Admision_Views_Aspirante::cerrar'}"><img class="icon" src="{media '/img/application-exit.png'}" alt="Salir" />Salir</a></p>{/if}
+{if !$user.administrator}<p><a href="{url 'Admision_Views_Aspirante::cerrar'}"><img class="icon" src="{media '/img/application-exit.png'}" alt="Salir" />Salir</a></p>{else}<p><a href="{url 'Admision_Views_Aspirante::registrarPago', $aspirante.id}">Registrar pago</a></p>{/if}
 <table class="form">
 	<tr>
 	<th style="text-align: right">

@@ -219,6 +219,13 @@ class Admision_Aspirante extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_File',
 			       'blank' => false,
 			),
+			'pago' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Datetime',
+			       'blank' => false,
+			       'is_null' => true,
+			       'default' => null,
+			),
 		);
 		
 		$this->_con = Admision_DB_getDB ();

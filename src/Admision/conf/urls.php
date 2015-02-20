@@ -110,6 +110,13 @@ $ctl_ad[] = array (
 );
 
 $ctl_ad[] = array (
+	'regex' => '#^/aspirante/(\d+)/registrar-pago/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'registrarPago',
+);
+
+$ctl_ad[] = array (
 	'regex' => '#^/aspirantes/logout/$#',
 	'base' => $base,
 	'model' => 'Admision_Views_Aspirante',

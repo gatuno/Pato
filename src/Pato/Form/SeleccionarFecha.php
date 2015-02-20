@@ -8,7 +8,7 @@ class Pato_Form_SeleccionarFecha extends Gatuf_Form {
 			array (
 				'required' => true,
 				'initial' => $fecha,
-				'label' => 'Fecha a falsificar',
+				'label' => 'Fecha',
 				'help_text' => '',
 				'widget' => 'Gatuf_Form_Widget_DateJSInput',
 		));
