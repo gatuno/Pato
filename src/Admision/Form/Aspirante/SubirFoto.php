@@ -32,7 +32,9 @@ class Admision_Form_Aspirante_SubirFoto extends Gatuf_Form {
 	
 	function save ($commit=true) {
 		if ($this->aspirante->foto != '') {
-			@unlink(Gatuf::config ('admision_data_upload').'/'.$this->aspirante->foto);
+			if (file_exists (Gatuf::config ('admision_data_upload').'/'.$this->aspirante->foto)) {
+				@unlink(Gatuf::config ('admision_data_upload').'/'.$this->aspirante->foto);
+			}
 		}
 		$this->aspirante->foto = $this->cleaned_data['attachment_foto'];
 		

@@ -321,4 +321,30 @@ class Admision_Views_Aspirante {
 		                                                'aspirante' => $aspirante),
 		                                         $request);
 	}
+	
+	public $imprimir_precond = array ('Gatuf_Precondition::adminRequired');
+	public function imprimir ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Marcar la hora de impresión ahora */
+		if ($aspirante->print_time === null) {
+			$aspirante->print_time = date ('Y-m-d H:i:s');
+			$aspirante->update ();
+		}
+		
+		$pdf = new Admision_PDF_Admision ('P', 'mm', 'Letter');
+		
+		$pdf->renderAspirante ($aspirante);
+		
+		$pdf->Close ();
+		
+		$nombre = 'admision_'.$aspirante->id.'.pdf';
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+	}
 }

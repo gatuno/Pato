@@ -117,6 +117,13 @@ $ctl_ad[] = array (
 );
 
 $ctl_ad[] = array (
+	'regex' => '#^/aspirante/(\d+)/imprimir/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'imprimir',
+);
+
+$ctl_ad[] = array (
 	'regex' => '#^/aspirantes/logout/$#',
 	'base' => $base,
 	'model' => 'Admision_Views_Aspirante',
