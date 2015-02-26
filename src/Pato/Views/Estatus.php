@@ -135,7 +135,6 @@ class Pato_Views_Estatus {
 				
 				/* Redirigir a la confirmación */
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaVoluntariaEjecutar', $alumno->codigo);
-				
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {

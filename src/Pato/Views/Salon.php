@@ -12,7 +12,8 @@ class Pato_Views_Salon {
 
 			if ($form->isValid ()) {
 				$salon = $form->save ();
-
+				
+				Gatuf_Log::info (sprintf ('El salon %s ha sido creado por el usuario %s (%s)', $salon->id, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $salon->edificio).'#salon_'.$salon->id;
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -44,6 +45,7 @@ class Pato_Views_Salon {
 			if ($form->isValid ()) {
 				$salon = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('El salon %s ha sido actualizado por el usuario %s (%s)', $salon->id, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $salon->edificio).'#salon_'.$salon->id;
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

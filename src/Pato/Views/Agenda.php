@@ -85,7 +85,7 @@ class Pato_Views_Agenda {
 			
 			if ($form->isValid ()) {
 				$agenda = $form->save ();
-				
+				Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido creada por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -133,7 +133,7 @@ class Pato_Views_Agenda {
 			
 			if ($form->isValid ()) {
 				$agenda = $form->save ();
-				
+				Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido actualizada por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -171,6 +171,7 @@ class Pato_Views_Agenda {
 		
 		$list[0]->delete ();
 		
+		Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido eliminada por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}

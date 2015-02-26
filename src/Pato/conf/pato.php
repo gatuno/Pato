@@ -121,6 +121,9 @@ $cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin');
 
 $cfg['template_tags'] = array ('matcoord' => 'Pato_Template_Tag_MateriaCoord');
 
+$cfg['gatuf_log_file'] = '/home/www/patricia.upzmg.edu.mx/pato.log';
+Gatuf_Log::$level = Gatuf_Log::ALL;
+
 # -------------------------
 # Configuraciones de Pato
 # -------------------------

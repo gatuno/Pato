@@ -42,8 +42,8 @@ class Pato_Views_Calendario {
 				$cal = $form->save ();
 				
 				$request->session->setData ('CAL_ACTIVO', $cal->clave);
+				Gatuf_Log::info (sprintf ('El calendario %s fué creado por el usuario %s (%s)', $cal->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', $cal->clave);
-				
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
@@ -109,7 +109,7 @@ class Pato_Views_Calendario {
 				$form->save ();
 				
 				$request->user->setMessage (1, 'Preferencias del calendario guardadas');
-				
+				Gatuf_Log::info (sprintf ('Ajustes en el calendario %s fueron efectuados por el usuario %s (%s)', $calendario->clave, $request->user->login, $request->user->id));
 				$form = new Pato_Form_Calendario_Preferencias (null, array ('cal' => $calendario));
 			}
 		} else {

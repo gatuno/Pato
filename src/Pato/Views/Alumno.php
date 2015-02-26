@@ -41,6 +41,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid()) {
 				$alumno = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('El alumno %s fue creado a petición del usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -190,6 +191,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid()) {
 				$alumno = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('Los datos del alumno %s fueron actualizados por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -408,6 +410,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid ()) {
 				$form->save ();
 				
+				Gatuf_Log::info (sprintf ('El perfil del alumno %s fué actualizado por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', $alumno->codigo);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);

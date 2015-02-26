@@ -89,6 +89,7 @@ class Pato_Views_Seccion {
 			if ($form->isValid()) {
 				$seccion = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('El NRC %s (%s, %s, %s) ha sido creado por el usuario %s (%s)', $seccion->nrc, $seccion->materia, $seccion->seccion, $seccion->maestro, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($seccion->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -125,7 +126,7 @@ class Pato_Views_Seccion {
 			$sig = $gconf->getVal ('calendario_siguiente', null);
 			
 			if ($request->calendario->clave != $sig) {
-				$request->user->setMessage (3, 'No se pueden crear secciones en calendarios pasados');
+				$request->user->setMessage (3, 'No se pueden modificar secciones en calendarios pasados');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
 				
@@ -160,6 +161,7 @@ class Pato_Views_Seccion {
 			if ($form->isValid()) {
 				$seccion = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('El NRC %s (%s, %s, %s) ha sido modificado por el usuario %s (%s)', $seccion->nrc, $seccion->materia, $seccion->seccion, $seccion->maestro, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($seccion->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -186,8 +188,9 @@ class Pato_Views_Seccion {
 		if ($request->method == 'POST') {
 			/* Las calificaciones en boleta, asistencias, alumnos y horarios se eliminan solas por integridad referencial */
 			$seccion->delete ();
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
 			
+			Gatuf_Log::info (sprintf ('El NRC %s ha sido borrado por el usuario %s (%s)', $seccion->nrc, $request->user->login, $request->user->id));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
@@ -367,6 +370,7 @@ class Pato_Views_Seccion {
 			$totales['generados']++;
 		}
 		
+		Gatuf_Log::info (sprintf ('El usuario %s (%s) cerró a Kardex el NRC %s, en el grupo de evaluación %s', $request->user->login, $request->user->id, $seccion->nrc, $gpe->id));
 		$request->user->setMessage (1, 'Fueron creadas '.$totales['generados'].' calificaciones en kardex. Se omitieron '.$totales['enkardex'].' registros por que ya existían.');
 		
 		return new Gatuf_HTTP_Response_Redirect ($url);
@@ -545,6 +549,7 @@ class Pato_Views_Seccion {
 			if ($form->isValid ()) {
 				$form->save ();
 				
+				Gatuf_Log::info (sprintf ('El usuario %s (%s) ha subido calificaciones en boleta del NRC %s en la forma de evaluación %s', $request->user->login, $request->user->id, $seccion->nrc, $eval->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -628,6 +633,8 @@ class Pato_Views_Seccion {
 				
 				if ($resp !== true) {
 					$request->user->setMessage (2, 'El alumno ('.$alumno->codigo.') no se pudo matricular por la siguiente razón: '.$resp);
+				} else {
+					Gatuf_Log::info (sprintf ('El usuario %s (%s) ha matriculado al alumno %s en el NRC %s', $request->user->login, $request->user->id, $alumno->codigo, $seccion->nrc));
 				}
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -688,6 +695,8 @@ class Pato_Views_Seccion {
 			}
 			
 			$seccion->delAssoc ($alumno);
+			
+			Gatuf_Log::info (sprintf ('El usuario %s (%s) ha desmatriculado al alumno %s del NRC %s', $request->user->login, $request->user->id, $alumno->codigo, $seccion->nrc));
 			
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', array ($seccion->nrc));
 			return new Gatuf_HTTP_Response_Redirect ($url);

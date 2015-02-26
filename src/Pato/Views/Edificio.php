@@ -101,6 +101,7 @@ class Pato_Views_Edificio {
 			if ($form->isValid()) {
 				$edificio = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('El edificio %s ha sido creado por el usuario %s (%s)', $edificio->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', array ($edificio->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

@@ -225,6 +225,7 @@ class Pato_Views_Materia {
 				if ($form->isValid()) {
 					$materia = $form->save ();
 					
+					Gatuf_Log::info (sprintf ('La materia %s ha sido agregada a la carrera %s por el usuario %s (%s)', $materia->clave, $form->cleaned_data['carrera'], $request->user->login, $request->user->id));
 					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
 					return new Gatuf_HTTP_Response_Redirect ($url);
 				}
@@ -270,6 +271,7 @@ class Pato_Views_Materia {
 		if ($request->method == 'POST') {
 			/* La confirmación, eliminar la asociación */
 			$materia->delAssoc ($carrera);
+			Gatuf_Log::info (sprintf ('La materia %s ha sido desasociada de la carrera %s por el usuario %s (%s)', $materia->clave, $carrera->clave, $request->user->login, $request->user->id));
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
@@ -292,6 +294,7 @@ class Pato_Views_Materia {
 			if ($form->isValid()) {
 				$materia = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('La materia %s ha sido creada por el usuario %s (%s)', $materia->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -332,6 +335,7 @@ class Pato_Views_Materia {
 			if ($form->isValid ()) {
 				$materia = $form->save ();
 				
+				Gatuf_Log::info (sprintf ('La materia %s ha sido actualizada por el usuario %s (%s)', $maestro->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -407,6 +411,7 @@ class Pato_Views_Materia {
 			if ($form->isValid ()) {
 				$form->save ();
 				
+				Gatuf_Log::info (sprintf ('Se agrego la forma de evaluacion %s a la materia %s por el usuario %s (%s)', $form->cleaned_data['evaluacion'], $materia->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', array ($materia->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -453,6 +458,8 @@ class Pato_Views_Materia {
 			
 			$porcentaje->delete ();
 			
+			Gatuf_Log::info (sprintf ('La forma de evaluacion %s ha sido eliminada de la materia %s por el usuario %s (%s)', $eval->id, $materia->clave, $request->user->login, $request->user->id));
+			
 			$request->user->setMessage (1, 'La forma de evaluación "'.$eval->descripcion.'" ha sido eliminada de la materia');
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', $materia->clave);
 			return new Gatuf_HTTP_Response_Redirect ($url);
@@ -493,6 +500,7 @@ class Pato_Views_Materia {
 				$form->save ();
 				
 				$request->user->setMessage (1, 'Se ha ajustado la forma de evaluación');
+				Gatuf_Log::info (sprintf ('Se ha ajustado la forma de evaluacion %s de la materia %s, por el usuario %s (%s)', $eval->id, $materia->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verEvals', array ($materia->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
