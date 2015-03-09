@@ -330,6 +330,17 @@ class Admision_Views_Aspirante {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		/* Enviar el correo del ceneval */
+		$tmpl = new Gatuf_Template('admision/aspirante/correo-ceneval.txt');
+		$context = new Gatuf_Template_Context (
+		               array ('numero' => $aspirante->id,
+		                      'nombre' => $aspirante->nombre,
+		                      'apellido' => $aspirante->apellido));
+		$email = new Gatuf_Mail (Gatuf::config ('from_email'), $aspirante->email, 'Continua tu trámite - Registro para el examen CENEVAL');
+		$email->setReturnPath (Gatuf::config ('bounce_email', Gatuf::config ('from_email')));
+		$email->addTextMessage ($tmpl->render ($context));
+		$email->sendMail ();
+		
 		/* Marcar la hora de impresión ahora */
 		if ($aspirante->print_time === null) {
 			$aspirante->print_time = date ('Y-m-d H:i:s');

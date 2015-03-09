@@ -1,0 +1,25 @@
+Hola {$nombre} {$apellido}:
+
+A contituación deberas llenar en línea el cuestionario de CENEVAL en la siguiente dirección:
+
+http://registroenlinea.ceneval.edu.mx/RegistroLinea/indexCerrado.php
+
+Si ya completaste este paso, por favor haz caso omiso de este correo.
+
+En el apartado de "Institución" selecciona "Universidad Politécnica de la Zona Metropolitana de Guadalajara". En la opción "Programa/Carrera" deberás seleccionar la misma carrera que solicitaste. En el campo "matrícula" deberás ingresar tu número de aspirante.
+
+Tu número de aspirante para hacer seguimiento del trámite es: {$numero}
+
+Al terminar deberás imprimir el pase de ingreso que presentarás el 23 de mayo del 2015 al momento de ingresar al aula para aplicar el examen.
+
+La guía del examen EXANI II, podrás descargarla en:
+
+http://archivos.ceneval.edu.mx/archivos_portal/18201/GuiadelEXANI-II2015.pdf
+
+Por favor, no dejes el registro hasta el último momento, ¡sin el pase de ingreso no podrás presentar tu examen de admisión!
+
+--
+Atte. Control Escolar de la Universidad Politécnica de la Zona Metropolitana de Guadalajara
+a través de Patricia
+No respondas a este correo, es un correo automático.
+Tel. 30409916 y 30409918

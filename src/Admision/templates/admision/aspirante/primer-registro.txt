@@ -15,4 +15,8 @@ Presentarse  en  ventanilla de servicios escolares de la Universidad  a parti
 Tu número de aspirante para hacer seguimiento del trámite es: {$numero}
 Tu contraseña de seguirdad para acceder es: {$pass}
 
-
+--
+Atte. Control Escolar de la Universidad Politécnica de la Zona Metropolitana de Guadalajara
+a través de Patricia
+No respondas a este correo, es un correo automático.
+Tel. 30409916 y 30409918
