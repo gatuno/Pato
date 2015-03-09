@@ -30,7 +30,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		$this->SetX (13);
 		$materia = $seccion->get_materia ();
 		
-		$this->Cell (135, 8, 'Materia: '.$materia->descripcion, 0, 0, 'L');
+		$this->Cell (90, 8, 'Materia: '.$materia->descripcion, 0, 0, 'L');
 		$this->SetX (13);
 		$this->Cell (135, 8, 'Evaluación: '.$gpe->descripcion, 0, 0, 'R');
 		

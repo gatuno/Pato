@@ -31,7 +31,7 @@
 	<h2>Calificaciones</h2>
 	{if count($alumnos) != 0}
 		{regroup $evals, 'grupo', 'por_grupo'}
-		{foreach $por_grupo as $gpe}
+		{foreach $por_grupo as $gpe}{if $gpe.list[0].get_grupo().matchSeccion ($seccion.seccion)}
 		<h3>Forma de evaluación: {$gpe.list[0].get_grupo}</h3>
 		{if $es_el_dueno || $user.administrator}
 			{foreach $gpe.list as $eval}
@@ -59,7 +59,7 @@
 				</tr>{/foreach}
 			</tbody>
 		</table>
-		{/foreach}
+		{/if}{/foreach}
 		{if count ($evals) == 0}
 			<p>No hay formas de evaluación registradas para esta materia, por lo tanto, no hay calificaciones.</p>
 		{/if}

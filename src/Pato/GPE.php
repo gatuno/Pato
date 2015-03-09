@@ -34,4 +34,10 @@ class Pato_GPE extends Gatuf_Model {
 	function __toString () {
 		return $this->descripcion;
 	}
+	
+	function matchSeccion ($seccion) {
+		$letra = substr ($seccion, 0, 1);
+		if (strpos ($this->secciones, $letra) === false) return false;
+		return true;
+	}
 }

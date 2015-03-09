@@ -10,8 +10,8 @@
 	<p>Asistencia para este grupo: {if $asistencias[$seccion.nrc]}{$asistencias[$seccion.nrc].asistencia}%{else}-{/if}</p>
 	{if count($por_grupo) != 0}
 	<div id="tabs_{$seccion.nrc}">
-	<ul>{foreach $por_grupo as $gpe}<li><a href="#t_{$seccion.nrc}_{$gpe.grouper}">{$gpe.list[0].get_grupo}</a></li>{/foreach}</ul>
-	{foreach $por_grupo as $gpe}
+	<ul>{foreach $por_grupo as $gpe}{if $gpe.list[0].get_grupo().matchSeccion ($seccion.seccion)}<li><a href="#t_{$seccion.nrc}_{$gpe.grouper}">{$gpe.list[0].get_grupo}</a></li>{/if}{/foreach}</ul>
+	{foreach $por_grupo as $gpe}{if $gpe.list[0].get_grupo().matchSeccion ($seccion.seccion)}
 	<div id="t_{$seccion.nrc}_{$gpe.grouper}">
 	<table border="1">
 		<thead><tr><td />{foreach $gpe.list as $eval}<td>{$eval.descripcion}</td>{/foreach}</tr></thead>
@@ -33,7 +33,7 @@
 		</tbody>
 	</table>
 	</div>
-	{/foreach}
+	{/if}{/foreach}
 	</div>
 	<script type="text/javascript">
 	// <![CDATA[

@@ -335,7 +335,7 @@ class Pato_Views_Materia {
 			if ($form->isValid ()) {
 				$materia = $form->save ();
 				
-				Gatuf_Log::info (sprintf ('La materia %s ha sido actualizada por el usuario %s (%s)', $maestro->clave, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('La materia %s ha sido actualizada por el usuario %s (%s)', $materia->clave, $request->user->login, $request->user->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Materia::verMateria', array ($materia->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
