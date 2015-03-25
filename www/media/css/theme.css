@@ -139,6 +139,10 @@ td .icon {
 	background-color: #ad7fa8;
 }
 
+.nav .biblioteca a:hover {
+	background-color: #897f65;
+}
+
 .nav .admision a:hover {
 	background-color: #058cff;
 }

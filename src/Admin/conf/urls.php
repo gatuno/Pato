@@ -67,4 +67,53 @@ $ctl_a[] = array (
 	'method' => 'registrarSalida',
 );
 
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca',
+	'method' => 'index',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/equipo/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca_Equipo',
+	'method' => 'index',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/equipo/add/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca_Equipo',
+	'method' => 'agregar',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/equipo/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca_Equipo',
+	'method' => 'ver',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/prestar/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca_Equipo',
+	'method' => 'prestar',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/equipo/(\d+)/regresar/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca_Equipo',
+	'method' => 'regresarPorEquipo',
+);
+
+$ctl_a[] = array (
+	'regex' => '#^/biblioteca/prestamo/(\d+)/regresar/$#',
+	'base' => $base,
+	'model' => 'Admin_Views_Biblioteca_Equipo',
+	'method' => 'regresarPorPrestamo',
+);
+
 return $ctl_a;

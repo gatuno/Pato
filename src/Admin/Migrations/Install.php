@@ -4,6 +4,9 @@ Gatuf::loadFunction ('Admin_DB_getDB');
 function Admin_Migrations_Install_setup ($params=null) {
 	$models = array ('Admin_SI_Laboratorio',
 	                 'Admin_SI_LaboratorioIngreso',
+	                 'Admin_Biblioteca',
+	                 'Admin_Biblioteca_Equipo',
+	                 'Admin_Biblioteca_Prestamo',
 	                 );
 	
 	$db = Admin_DB_getDB ();
@@ -22,6 +25,9 @@ function Admin_Migrations_Install_setup ($params=null) {
 function Admin_Migrations_Install_teardown ($params=null) {
 	$models = array ('Admin_SI_Laboratorio',
 	                 'Admin_SI_LaboratorioIngreso',
+	                 'Admin_Biblioteca',
+	                 'Admin_Biblioteca_Equipo',
+	                 'Admin_Biblioteca_Prestamo',
 	                 );
 	
 	$db = Admin_DB_getDB ();

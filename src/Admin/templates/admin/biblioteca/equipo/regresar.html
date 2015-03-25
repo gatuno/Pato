@@ -1,0 +1,17 @@
+{extends 'admin/base.html'}
+{block body}
+<p>Está usted a punto de regresar el préstamo de:
+{if $prestamo.maestro}<p>Profesor: {$prestamo.get_maestro()}</p>{/if}
+<p>El (los) equipo (s) salieron a las {$prestamo.salida|date:"%d/%m/%Y %H:%M"}</p>
+<p><strong>Importante:</strong> Antes de aceptar el equipo de regreso, revise que entregue los siguientes equipos:</p>
+<ul>{foreach $equipos as $e}
+	<li>{$e.nombre}</li>
+{/foreach}</ul>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Tomar equipo de regreso" /></td></tr>
+	</table>
+</form>
+{/block}

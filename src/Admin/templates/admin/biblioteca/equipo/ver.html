@@ -1,0 +1,16 @@
+{extends 'admin/base.html'}
+{block body}
+<p>Equipo: {$equipo.nombre}</p>
+<p>Descripcion: {$equipo.descripcion}</p>
+{if $equipo.prestado ()}
+	<p><strong>El equipo está prestado</strong></p>
+	<p>Prestado a:
+	{if $prestamo.maestro}Profesor: {$prestamo.get_maestro()}{/if}
+	</p>
+	<p>Fué prestado a las {$prestamo.salida|date:"%d/%m/%Y %H:%M"}.</p>
+	<a href="{url 'Admin_Views_Biblioteca_Equipo::regresarPorEquipo', $equipo.id}">Regresar</a>
+	<p>Notas: {$prestamo.notas}</p>
+{else}
+	<p>El equipo se encuentra <a href="{url 'Admin_Views_Biblioteca_Equipo::prestar', array ($equipo.biblioteca), array ('equipo' => $equipo.id)}">disponible para préstamo</a></p>
+{/if}
+{/block}

@@ -1,0 +1,29 @@
+{extends 'admin/base.html'}
+{block body}
+{regroup $equipos, 'biblioteca', 'por_biblioteca'}
+	{aperm 'agregar_equipo', $user, 'Admin.biblioteca-agregar-equipo'}
+	{aperm 'prestar_equipo', $user, 'Admin.biblioteca-prestar-equipo'}
+	{if $agregar_equipo}<p><a href="{url 'Admin_Views_Biblioteca_Equipo::agregar'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar equipo" />Agregar un nuevo equipo</a></p>{/if}
+	<div id="tabs_biblioteca">
+	<ul>{foreach $por_biblioteca as $biblio}<li><a href="#t_biblio_{$biblio.grouper}">{$biblio.list[0].get_biblioteca().nombre}</a></li>{/foreach}</ul>
+	{foreach $por_biblioteca as $biblio}
+	<div id="#t_biblio_{$biblio.grouper}">
+		<table width="100%">
+			<thead><tr><th>Tipo</th><th>Nombre</th><th>Estado</th><th>Acciones</th></tr></thead>
+			<tbody>
+				{foreach $biblio.list as $equipo}<tr><td>{$equipo.display_tipo()}</td><td>{$equipo.nombre}</td>
+				<td>{if $equipo.prestado ()}Prestado. <a href="{url 'Admin_Views_Biblioteca_Equipo::ver', $equipo.id}">Revisar detalles</a>{else}Disponible{/if}</td>
+				<td>{if $prestar_equipo}{if $equipo.prestado()}<a href="{url 'Admin_Views_Biblioteca_Equipo::regresarPorEquipo', $equipo.id}">Regresar</a>{else}<a href="{url 'Admin_Views_Biblioteca_Equipo::prestar', array ($equipo.biblioteca), array ('equipo' => $equipo.id)}">Prestar</a>{/if}{/if}</tr>{/foreach}
+			</tbody>
+		</table>
+	</div>
+	{/foreach}
+	<script type="text/javascript">
+	// <![CDATA[
+		$('#tabs_biblioteca').tabs();
+	// ]]>
+	</script>
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>{/block}
