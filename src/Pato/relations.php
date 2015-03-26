@@ -22,5 +22,8 @@ $m['Pato_PerfilAlumno'] = array ('relate_to' => array ('Pato_Alumno'));
 $m['Pato_Log_Estatus'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_User', 'Pato_Estatus', 'Pato_Calendario'));
 $m['Pato_Log_Kardex'] = array ('relate_to' => array ('Pato_Kardex', 'Pato_User'));
 
+$m['Pato_Asignatura_Planeacion'] = array ('relate_to' => array ('Pato_Seccion'));
+$m['Pato_Asignatura_Seguimiento'] = array ('relate_to' => array ('Pato_Asignatura_Planeacion'));
+
 /* Conexión de señales aquí */
 return $m;

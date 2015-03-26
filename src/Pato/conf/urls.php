@@ -526,6 +526,24 @@ $ctl[] = array (
 			'model' => 'Pato_Views_Seccion',
 			'method' => 'cerrarAKardex',
 		),
+		array (
+			'regex' => '#^(\d+)/planeacion/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Asignatura_Planeacion',
+			'method' => 'ver',
+		),
+		array (
+			'regex' => '#^(\d+)/planeacion/add/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Asignatura_Planeacion',
+			'method' => 'agregarPlan',
+		),
+		array (
+			'regex' => '#^(\d+)/planeacion/(\d+)/seguimiento/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Asignatura_Planeacion',
+			'method' => 'seguimiento',
+		),
 	)
 );
 

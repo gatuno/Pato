@@ -1,0 +1,17 @@
+{extends 'pato/seccion/base.html'}
+{block body_seccion}
+<p>Sección del profesor <a href="{url 'Pato_Views_Maestro::verMaestro', array ($seccion.maestro)}">{$seccion.get_maestro}</a></p>
+{if $suplente}<p>Profesor Suplente <a href="{url 'Pato_Views_Maestro::verMaestro', array ($suplente.codigo)}">{$suplente}</a></p>{/if}
+<h2>Planeación de la asignatura</h2>
+{if $es_el_dueno}{if $abierto}<p><a href="{url 'Pato_Views_Asignatura_Planeacion::agregarPlan', $seccion.nrc}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar unidad de aprendizaje" />Agregar una nueva unidad de aprendizaje</a></p>{else}<p>No puede planear las unidades de su asignatura porque está cerrado.{/if}{/if}
+{if count($planes) == 0}
+	<p>La sección aún no tiene planeado su programa</p>
+{else}
+	<table>
+		<thead><tr><th>Fecha</th><th>Unidad de aprendizaje</th><th>Resultado de aprendizaje</th><th>Estrategia de aprendizaje</th><th>Evidencia</th><th>Seguimiento</th></tr></thead>
+		<tbody>{foreach $planes as $plan}
+			<tr><td>{$plan.programada|dateSimple:'%e de %B de %Y'}</td><td>{$plan.unidad}</td><td>{$plan.resultado}</td><td>{$plan.estrategia}</td><td>{$plan.evidencia}</td><td>{if $plan.getSeguimiento() !== null}<img class="icon" src="{media '/img/ok.png'}" alt="Seguimiento completo" />{elseif $es_el_dueno}<a href="{url 'Pato_Views_Asignatura_Planeacion::seguimiento', array ($seccion.nrc, $plan.id)}"><img class="icon" src="{media '/img/eval.png'}" alt="Realizar seguimiento" />Hacer seguimiento</a>{/if}</tr>
+		{/foreach}</tbody>
+	</table>
+{/if}
+{/block}
