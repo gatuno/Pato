@@ -34,6 +34,14 @@ $ctl[] = array (
 	'method' => 'logout',
 );
 
+/* Avisos */
+$ctl[] = array (
+	'regex' => '#^/aviso/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Aviso',
+	'method' => 'leer',
+);
+
 /* Calendarios */
 $ctl[] = array (
 	'regex' => '#^/calendario/$#',

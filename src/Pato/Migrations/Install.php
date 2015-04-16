@@ -14,6 +14,7 @@ function Pato_Migrations_Install_setup ($params=null) {
 	                 'Pato_Materia',
 	                 'Pato_Salon',
 	                 'Pato_PerfilAlumno',
+	                 'Pato_Aviso',
 	                 );
 	$db = Gatuf::db ();
 	$schema = new Gatuf_DB_Schema ($db);
@@ -42,6 +43,7 @@ function Pato_Migrations_Install_teardown ($params=null) {
 	                 'Pato_Materia',
 	                 'Pato_Salon',
 	                 'Pato_PerfilAlumno',
+	                 'Pato_Aviso',
 	                 );
 	
 	Pato_Migrations_Install_1Vistas_teardown ();

@@ -145,7 +145,8 @@ class Pato_Views_Usuario {
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/user/cambiar-password.html',
 		                                         array ('page_title' => 'Cambiar Contraseña',
-		                                                'form' => $form),
+		                                                'form' => $form,
+		                                                '_redirect_after' => $success_url),
 		                                         $request);
 	}
 	

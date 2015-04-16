@@ -25,5 +25,7 @@ $m['Pato_Log_Kardex'] = array ('relate_to' => array ('Pato_Kardex', 'Pato_User')
 $m['Pato_Asignatura_Planeacion'] = array ('relate_to' => array ('Pato_Seccion'));
 $m['Pato_Asignatura_Seguimiento'] = array ('relate_to' => array ('Pato_Asignatura_Planeacion'));
 
+$m['Pato_Aviso'] = array ('relate_to_many' => array ('Pato_User'));
+
 /* Conexión de señales aquí */
 return $m;
