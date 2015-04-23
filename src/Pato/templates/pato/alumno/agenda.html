@@ -14,10 +14,10 @@
 	{if $abierta && $agenda.alumno == $user.login}<p>Pasar al <a href="{url 'Pato_Views_Agenda::registro', $alumno.codigo}">registro de materias</a></p>{/if}
 {else}
 	{if $user.administrator}
-		{if $inscripcion != null}
+		{if $inscripcion != null && $estatus.isActivo()}
 		<p><a href="{url 'Pato_Views_Agenda::crearAgenda', $alumno.codigo}"><img class="icon" src="{media '/img/list-add.png'}" alt="Crear" />Crear agenda para el alumno</a></p>
 		{else}
-		<p>No se puede crear, modificar o eliminar la agenda para este alumno, puesto no tiene inscripciones activas. Revise su Kardex y estatus</p>
+		<p>No se puede crear, modificar o eliminar la agenda para este alumno, puesto no tiene inscripciones activas. Revise su Kardex y/o estatus.</p>
 		{/if}
 	{/if}
 	<p>La agenda del alumno <strong>NO</strong> permite el registro</p>

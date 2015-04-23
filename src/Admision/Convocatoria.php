@@ -32,12 +32,12 @@ class Admision_Convocatoria extends Gatuf_Model {
 			'apertura' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Datetime',
-			       'blank' => true,
+			       'blank' => false,
 			),
 			'cierre' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Datetime',
-			       'blank' => true,
+			       'blank' => false,
 			),
 		);
 		

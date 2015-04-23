@@ -318,6 +318,8 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$estatus = $inscripcion->get_current_estatus ();
+		
 		/* Recoger las materias en kardex pertenecientes a esta carrera */
 		$carrera = $inscripcion->get_carrera ();
 		$materia = new Pato_Materia ();
@@ -348,7 +350,8 @@ class Pato_Views_Alumno {
 		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
 		                                                'alumno' => $alumno,
 		                                                'inscripcion' => $inscripcion,
-		                                                'kardexs' => $kardexs),
+		                                                'kardexs' => $kardexs,
+		                                                'estatus' => $estatus),
 		                                         $request);
 	}
 	

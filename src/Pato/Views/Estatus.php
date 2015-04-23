@@ -53,9 +53,14 @@ class Pato_Views_Estatus {
 	                                                 $request);
 		}
 		
-		$estatus = $ins->get_estatus ();
-		if ($estatus->clave == 'LI') {
+		$estatus = $ins->get_current_estatus ();
+		if ($estatus->get_estatus()->clave == 'LI') {
 			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' ya tiene una licencia activa');
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::licenciaSeleccionar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		} else if (!$estatus->isActivo ()) {
+			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' no está activo, por lo tanto no se puede aplicar una licencia. Estatus: '.((string) $estatus));
 			
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::licenciaSeleccionar');
 			return new Gatuf_HTTP_Response_Redirect ($url);
@@ -87,26 +92,25 @@ class Pato_Views_Estatus {
 				$seccion->delAssoc ($alumno);
 			}
 			
-			$gsettings = new Gatuf_GSetting ();
+			/*$gsettings = new Gatuf_GSetting ();
 			$gsettings->setApp ('Patricia');
 		
 			$cal = $gsettings->getVal ('calendario_activo', null);
 		
-			$calendario_actual = new Pato_Calendario ($cal);
+			$calendario_actual = new Pato_Calendario ($cal);*/
 			
-			/* Registrar los cambios de estatus */
-			$log = new Pato_Log_Estatus ();
-			$log->alumno = $alumno;
-			$log->viejo = $ins->get_estatus ();
-			$log->usuario = $request->user;
-			$log->calendario = $calendario_actual;
+			/* Cerrar el estatus anterior */
+			$estatus->fin = date ('Y-m-d H:i:s');
+			$estatus->update ();
 			
-			$estatus = new Pato_Estatus ('LI');
-			$log->nuevo = $ins->estatus = $estatus;
-			$ins->update ();
+			$estatus = new Pato_InscripcionEstatus ();
+			$estatus->inicio = date ('Y-m-d H:i:s');
+			$estatus->inscripcion = $ins;
+			$estatus->estatus = new Pato_Estatus ('LI');
 			
-			$log->create ();
+			$estatus->create ();
 			
+			/* TODO: Poner en el log del sistema */
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de licencia');
 			/* Redirigir al estatus del alumno */
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
@@ -121,7 +125,8 @@ class Pato_Views_Estatus {
 		                                               'alumno' => $alumno,
 		                                               'estatus' => $estatus,
 		                                               'inscripcion' => $ins,
-		                                               'carrera' => $car),
+		                                               'carrera' => $car,
+		                                               'estatus' => $estatus),
 		                                         $request);
 	}
 	
@@ -166,14 +171,21 @@ class Pato_Views_Estatus {
 	                                                 $request);
 		}
 		
-		$estatus = $ins->get_estatus ();
-		if ($estatus->clave == 'BV') {
+		$estatus = $ins->get_current_estatus ();
+		if ($estatus->get_estatus()->clave == 'BV') {
 			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' ya está de baja voluntaria');
 			
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::licenciaSeleccionar');
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaVoluntariaSeleccionar');
 			return new Gatuf_HTTP_Response_Redirect ($url);
+		} else if (!$estatus->isActivo ()) {
+			$request->user->setMessage (2, 'Está pendiente ver si se puede aplicar una baja voluntaria cuando el alumno no está activo. Atte. Patricia');
+			//$request->user->setMessage (2, 'El alumno '.((string) $alumno).' no está activo, por lo tanto no se puede aplicar una licencia. Estatus: '.((string) $estatus));
+			
+			//$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaVoluntariaSeleccionar');
+			//return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		/* Para poder marcar su calendario de egreso */
 		$gsettings = new Gatuf_GSetting ();
 		$gsettings->setApp ('Patricia');
 		
@@ -208,20 +220,19 @@ class Pato_Views_Estatus {
 			}
 			
 			/* Registrar los cambios de estatus */
-			$log = new Pato_Log_Estatus ();
-			$log->alumno = $alumno;
-			$log->viejo = $ins->get_estatus ();
-			$log->usuario = $request->user;
-			$log->calendario = $calendario_actual;
+			$estatus->fin = date ('Y-m-d H:i:s');
+			$estatus->update ();
 			
-			$estatus = new Pato_Estatus ('BV');
-			$log->nuevo = $ins->estatus = $estatus;
+			$estatus = new Pato_InscripcionEstatus ();
+			$estatus->inicio = date ('Y-m-d H:i:s');
+			$estatus->inscripcion = $ins;
+			$estatus->estatus = new Pato_Estatus ('BV');
+			$estatus->create ();
 			
 			$ins->egreso = $calendario_actual;
 			$ins->update ();
 			
-			$log->create ();
-			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de baja voluntaria.');
+			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha sido dado de baja. Causa: Baja Voluntaria (BV).');
 			
 			/* Redirigir al estatus del alumno */
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
@@ -237,7 +248,8 @@ class Pato_Views_Estatus {
 		                                               'estatus' => $estatus,
 		                                               'inscripcion' => $ins,
 		                                               'calendario_actual' => $calendario_actual,
-		                                               'carrera' => $car),
+		                                               'carrera' => $car,
+		                                               'estatus' => $estatus),
 		                                         $request);
 	}
 	
@@ -280,6 +292,14 @@ class Pato_Views_Estatus {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		$estatus = $ins->get_current_estatus ();
+		if (!$estatus->isActivo ()) {
+			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' no está activo, por lo tanto no se puede cambiar de carrera. Estatus: '.((string) $estatus));
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Estatus_CambioCarrera ($request->POST);
 			
@@ -288,36 +308,42 @@ class Pato_Views_Estatus {
 				
 				$egreso = new Pato_Calendario ($data['egreso']);
 				/* Registrar los cambios de estatus */
-				$log = new Pato_Log_Estatus ();
-				$log->alumno = $alumno;
-				$log->viejo = $ins->get_estatus ();
-				$log->usuario = $request->user;
-				$log->calendario = $egreso;
-				$estatus = new Pato_Estatus ('CC'); /* Cambio de carrera */
+				
+				/* Primero, cerrar la vieja carrera */
+				$estatus->fin = date ('Y-m-d H:i:s');
+				$estatus->update ();
+				
+				$estatus = new Pato_InscripcionEstatus ();
+				$estatus->inicio = date ('Y-m-d H:i:s');
+				$estatus->estatus = new Pato_Estatus ('CC');
+				$estatus->inscripcion = $ins;
+				$estatus->create ();
 				
 				$ins->egreso = $egreso;
-				$log->nuevo = $ins->estatus = $estatus;
-				
 				$ins->update ();
 				
-				$log->create ();
-				
+				/* Crear la nueva inscripcion */
 				$nueva = new Pato_Carrera ($data['carrera']);
 				
 				$gconf = new Gatuf_GSetting ();
 				$gconf->setApp ('Patricia');
 				$ingreso = new Pato_Calendario ($gconf->getVal ('calendario_activo', null));
-				$estatus = new Pato_Estatus ('AC'); /* Activo */
 				
 				$inscripcion = new Pato_Inscripcion ();
 				$inscripcion->alumno = $alumno;
 				$inscripcion->ingreso = $ingreso;
 				$inscripcion->carrera = $nueva;
 				$inscripcion->turno = $data['turno'];
-				$inscripcion->estatus = $estatus;
 				
 				$inscripcion->create ();
 				
+				$estatus = new Pato_InscripcionEstatus ();
+				$estatus->inicio = date ('Y-m-d H:i:s');
+				$estatus->estatus = new Pato_Estatus ('AC');
+				$estatus->inscripcion = $inscripcion;
+				$estatus->create ();
+				
+				/* TODO: Registrar en el log del sistema */
 				$request->user->setMessage (1, 'El alumno ha sido movido satisfactoriamente a la nueva carrera');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
@@ -331,7 +357,8 @@ class Pato_Views_Estatus {
 		                                         array('page_title' => 'Cambiar carrera',
                                                        'form' => $form,
                                                        'alumno' => $alumno,
-                                                       'inscripcion' => $ins),
+                                                       'inscripcion' => $ins,
+                                                       'estatus' => $estatus),
                                                  $request);
 	}
 	

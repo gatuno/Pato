@@ -8,7 +8,7 @@
 		<thead><tr><th colspan="5">{$alumno.nombre} {$alumno.apellido}</th></tr></thead>
 		<tbody>
 			{foreach $inscripciones as $inscripcion}
-			<tr><td>{$inscripcion.get_carrera}</td><td>{$inscripcion.get_ingreso}</td><td>{if $inscripcion.egreso}{$inscripcion.get_egreso}{else}-{/if}</td><td>{$inscripcion.get_estatus}</td><td><form action="{url 'Pato_Views_Alumno::kardexCarrera', array ($alumno->codigo, $inscripcion->id)}" method="get"><input type="submit" value="Ver kardex" /></form></td></tr>
+			<tr><td>{$inscripcion.get_carrera}</td><td>{$inscripcion.get_ingreso}</td><td>{if $inscripcion.egreso}{$inscripcion.get_egreso}{else}-{/if}</td><td>{$inscripcion.get_current_estatus()}</td><td><form action="{url 'Pato_Views_Alumno::kardexCarrera', array ($alumno->codigo, $inscripcion->id)}" method="get"><input type="submit" value="Ver kardex" /></form></td></tr>
 			{/foreach}
 		</tbody>
 	</table>

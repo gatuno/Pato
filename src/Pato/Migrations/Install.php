@@ -9,6 +9,7 @@ function Pato_Migrations_Install_setup ($params=null) {
 	                 'Pato_Evaluacion',
 	                 'Pato_GPE',
 	                 'Pato_Inscripcion',
+	                 'Pato_InscripcionEstatus',
 	                 'Pato_Kardex',
 	                 'Pato_Maestro',
 	                 'Pato_Materia',

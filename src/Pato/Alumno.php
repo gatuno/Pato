@@ -75,9 +75,10 @@ class Pato_Alumno extends Gatuf_Model {
 		
 		if (count ($inscripciones) == 0) return null;
 		foreach ($inscripciones as $ins) {
-			$estatus = $ins->get_estatus ();
+			//$estatus = $ins->get_estatus ();
 			
-			if ($estatus->activo) return $ins;
+			//if ($estatus->activo) return $ins;
+			return $ins;
 		}
 		
 		return null;

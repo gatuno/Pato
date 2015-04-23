@@ -33,9 +33,9 @@ class Pato_Views_Utils {
 		$inscripciones = $carrera->get_pato_inscripcion_list (array ('filter' => 'egreso IS NULL'));
 		
 		foreach ($inscripciones as $ins) {
-			$estatus = $ins->get_estatus ();
+			$estatus = $ins->get_current_estatus ();
 			
-			if (!$estatus->activo) continue;
+			if (!$estatus->isActivo) continue;
 			
 			$alumno = $ins->get_alumno ();
 			

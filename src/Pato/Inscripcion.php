@@ -49,19 +49,29 @@ class Pato_Inscripcion extends Gatuf_Model {
 			       'model' => 'Pato_Calendario',
 			       'relate_name' => 'egreso',
 			),
-			'estatus' =>
+			/*'estatus' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'blank' => false,
 			       'model' => 'Pato_Estatus',
-			),
+			),*/
 		);
 		$this->_a['idx'] = array (
-			'calificacion_idx' =>
+			'carrera_idx' =>
 			array (
 				   'col' => 'alumno, carrera, ingreso',
 				   'type' => 'unique',
 			),
 		);
+	}
+	
+	public function get_current_estatus () {
+		$estatus = $this->get_pato_inscripcionestatus_list (array ('filter' => 'fin IS NULL'));
+		
+		if (count ($estatus) != 1) {
+			throw new Exception ('Alto. No debería pasar. Este alumno no tiene su estatus correcto con respecto a su inscripcion');
+		}
+		
+		return $estatus[0];
 	}
 } 

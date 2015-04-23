@@ -31,8 +31,10 @@ class Pato_Views_Agenda {
 		$ins = $alumno->get_current_inscripcion ();
 		$abierta = false;
 		$agenda = null;
+		$estatus = null;
 		if ($ins != null) {
-			if (count ($list) != 0) {
+			$estatus = $ins->get_current_estatus ();
+			if ($estatus->isActivo () && count ($list) != 0) {
 				$agenda = $list[0];
 				$unix_inicio = strtotime ($agenda->inicio);
 				$unix_fin = strtotime ($agenda->fin);
@@ -50,7 +52,8 @@ class Pato_Views_Agenda {
 		                                                'abierta' => $abierta,
 		                                                'hora' => $hora,
 		                                                'agenda' => $agenda,
-		                                                'inscripcion' => $ins),
+		                                                'inscripcion' => $ins,
+		                                                'estatus' => $estatus),
 		                                         $request);
 	}
 	
@@ -76,6 +79,14 @@ class Pato_Views_Agenda {
 		$ins = $alumno->get_current_inscripcion ();
 		if ($ins == null) {
 			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		if (!$estatus->isActivo ()) {
+			/* No permite crearle una agenda porque no está activo */
+			$request->user->setMessage (3, 'No puede crear una agenda para este alumno porque no está activo. Revise su estatus: '.((string) $estatus));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$extra = array ('alumno' => $alumno);
@@ -124,6 +135,14 @@ class Pato_Views_Agenda {
 		$ins = $alumno->get_current_inscripcion ();
 		if ($ins == null) {
 			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		if (!$estatus->isActivo ()) {
+			/* No permite crearle una agenda porque no está activo */
+			$request->user->setMessage (3, 'No puede cambiar la agenda de este alumno porque no está activo. Revise su estatus: '.((string) $estatus));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$extra = array ('agenda' => $list[0]);
@@ -191,6 +210,13 @@ class Pato_Views_Agenda {
 		$ins = $alumno->get_current_inscripcion ();
 		if ($ins == null) {
 			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		if (!$estatus->isActivo ()) {
+			/* No permitirle registrar materias porque no está activo */
+			$request->user->setMessage (3, 'No puedes registrar materias porque no estás activo. Revisa tu estatus con Control Escolar: '.((string) $estatus));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 		}
 		
 		$gconf = new Gatuf_GSetting ();
@@ -272,6 +298,18 @@ class Pato_Views_Agenda {
 		
 		if ($request->user->type != 'a' || $request->user->login != $alumno->codigo) {
 			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$ins = $alumno->get_current_inscripcion ();
+		if ($ins == null) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		if (!$estatus->isActivo ()) {
+			/* No permitirle registrar materias porque no está activo */
+			$request->user->setMessage (3, 'No puedes registrar materias porque no estás activo. Revisa tu estatus con Control Escolar: '.((string) $estatus));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 		}
 		
 		$gconf = new Gatuf_GSetting ();

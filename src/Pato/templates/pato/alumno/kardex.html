@@ -2,7 +2,7 @@
 {block body_alumno}
 <p>Alumno: {$alumno.nombre} {$alumno.apellido}</p>
 <p>Carrera: {$inscripcion.get_carrera}</p>
-<p>Estatus: {$inscripcion.get_estatus}</p>
+<p>Estatus: {$estatus}</p>
 <p>Calendario de ingreso: {$inscripcion.get_ingreso}</p>
 {if $inscripcion.egreso}<p>Calendario de egreso: {$inscripcion.get_egreso}</p>{/if}
 {regroup $kardexs, 'calendario', 'por_calendario'}

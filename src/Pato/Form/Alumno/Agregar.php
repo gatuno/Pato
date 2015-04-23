@@ -149,9 +149,18 @@ class Pato_Form_Alumno_Agregar extends Gatuf_Form {
 		$inscripcion->carrera = new Pato_Carrera ($carrera);
 		$inscripcion->ingreso = new Pato_Calendario ($cal);
 		$inscripcion->egreso = null;
-		$inscripcion->estatus = new Pato_Estatus ($est);
+		//$inscripcion->estatus = new Pato_Estatus ($est);
 		
 		$inscripcion->create ();
+		
+		$estatus = new Pato_InscripcionEstatus ();
+		$estatus->inscripcion = $inscripcion;
+		$estatus->inicio = date ('Y-m-d H:i:s');
+		$estatus->estatus = new Pato_Estatus ($est);
+		$estatus->fin = null;
+		
+		$estatus->create ();
+		
 		return $alumno;
 	}
 }
