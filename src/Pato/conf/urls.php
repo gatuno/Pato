@@ -982,6 +982,34 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/estatus/baja-administrativa/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaAdministrativaSeleccionar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/baja-administrativa/(\w\d{7})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaAdministrativaAlumno',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/baja-administrativa/regresar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaAdministrativaRegresarSeleccionar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/baja-administrativa/regresar/(\w\d{7})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaAdministrativaRegresar',
+);
+
+$ctl[] = array (
 	'regex' => '#^/evaluacion/profesores/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Evaluacion_Profesor',

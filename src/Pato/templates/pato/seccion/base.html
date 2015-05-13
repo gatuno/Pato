@@ -6,6 +6,9 @@
 {matcoord 'puede_editar', $user, $seccion.get_materia()}
 {if $user.administrator || $user.login == $seccion.maestro || $puede_editar}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verFormatos', array ($seccion.nrc)}">Formatos</a></li>
+{if ($user.type == 'm' && ($seccion.maestro == $user.login || $seccion.suplente == $user.login))}
+<li style="display: inline;"><a href="{url 'Pato_Views_Asignatura_Planeacion::ver', array ($seccion.nrc)}">Planeación</a></li>
+{/if}
 {if $puede_editar}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)}">Actualizar</a></li>
 {/if}

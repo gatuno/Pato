@@ -8,7 +8,7 @@ class Pato_Views_Estatus {
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/index.html',
 		                                         array('page_title' => 'Administración de estatus del Alumno'),
-                                                 $request);
+		                                         $request);
 	}
 	
 	public $licenciaSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
@@ -31,7 +31,7 @@ class Pato_Views_Estatus {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/licencia-seleccionar.html',
 		                                         array('page_title' => 'Aplicar licencia',
 		                                               'form' => $form),
-                                                 $request);
+		                                         $request);
 	}
 	
 	public $licenciaEjecutar_precond = array ('Gatuf_Precondition::adminRequired');
@@ -110,7 +110,8 @@ class Pato_Views_Estatus {
 			
 			$estatus->create ();
 			
-			/* TODO: Poner en el log del sistema */
+			/* Poner en el log del sistema */
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Licencia. Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de licencia');
 			/* Redirigir al estatus del alumno */
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
@@ -149,7 +150,7 @@ class Pato_Views_Estatus {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-voluntaria-seleccionar.html',
 		                                         array('page_title' => 'Baja voluntaria',
 		                                               'form' => $form),
-                                                 $request);
+		                                         $request);
 	}
 	
 	public $bajaVoluntariaEjecutar_precond = array ('Gatuf_Precondition::adminRequired');
@@ -232,6 +233,7 @@ class Pato_Views_Estatus {
 			$ins->egreso = $calendario_actual;
 			$ins->update ();
 			
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Baja Voluntaria. Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha sido dado de baja. Causa: Baja Voluntaria (BV).');
 			
 			/* Redirigir al estatus del alumno */
@@ -270,8 +272,8 @@ class Pato_Views_Estatus {
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/cambio-carrera-seleccionar.html',
 		                                         array('page_title' => 'Cambiar carrera',
-                                                       'form' => $form),
-                                                 $request);
+		                                               'form' => $form),
+		                                         $request);
 	}
 	
 	public $cambioCarreraAlumno_precond = array ('Gatuf_Precondition::adminRequired');
@@ -286,7 +288,7 @@ class Pato_Views_Estatus {
 		
 		if ($ins === null) {
 			/* No está activo, no podemos moverlo de carrera */
-			$request->user->setMessage (3, 'El alumno seleccionado no tiene ninguna carrera activa');
+			$request->user->setMessage (3, 'El alumno seleccionado no tiene una carrera activa');
 			
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
 			return new Gatuf_HTTP_Response_Redirect ($url);
@@ -343,7 +345,8 @@ class Pato_Views_Estatus {
 				$estatus->inscripcion = $inscripcion;
 				$estatus->create ();
 				
-				/* TODO: Registrar en el log del sistema */
+				/* Registrar en el log del sistema */
+				Gatuf_Log::info (sprintf ('El alumno %s cambió de carrera. Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
 				$request->user->setMessage (1, 'El alumno ha sido movido satisfactoriamente a la nueva carrera');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
@@ -355,11 +358,11 @@ class Pato_Views_Estatus {
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/cambio-carrera.html',
 		                                         array('page_title' => 'Cambiar carrera',
-                                                       'form' => $form,
-                                                       'alumno' => $alumno,
-                                                       'inscripcion' => $ins,
-                                                       'estatus' => $estatus),
-                                                 $request);
+		                                               'form' => $form,
+		                                               'alumno' => $alumno,
+		                                               'inscripcion' => $ins,
+		                                               'estatus' => $estatus),
+		                                         $request);
 	}
 	
 	public $bajaAcademica_precond = array ('Gatuf_Precondition::adminRequired');
@@ -379,8 +382,9 @@ class Pato_Views_Estatus {
 			
 			if ($ins == null) continue; /* Ya está dado de baja */
 			
-			$estatus = $ins->get_estatus ();
-			if ($estatus->activo == 0) continue; /* Ya está de baja */
+			$estatus = $ins->get_current_estatus ();
+			/* Aunque tenga Baja Administrativa, puede aplicar una baja academica */
+			if (!$estatus->isActivo() && $estatus->get_estatus()->clave != 'B6') continue; /* Ya está de baja */
 			
 			$sql = new Gatuf_SQL ('alumno = %s AND materia = %s AND aprobada = 0', array ($r->alumno, $r->materia));
 			$muestra = $kardex->getList (array ('filter' => $sql->gen ()));
@@ -388,6 +392,7 @@ class Pato_Views_Estatus {
 			$o = new stdClass();
 			$o->alumno = $alumno;
 			$o->inscripcion = $ins;
+			$o->estatus = $estatus;
 			$o->materia = $r->get_materia ();
 			$o->muestra = $muestra;
 			$reporte[] = $o;
@@ -396,26 +401,22 @@ class Pato_Views_Estatus {
 		if ($request->method == 'POST') {
 			$estatus = new Pato_Estatus ('B5'); /* Baja academica */
 			
+			$calendario_actual = new Pato_Calendario ($gconf->getVal ('calendario_activo', null));
 			foreach ($reporte as &$r) {
-				/* Registrar los cambios de estatus */
-				$log = new Pato_Log_Estatus ();
-				$log->alumno = $r->alumno;
-				$log->viejo = $r->inscripcion->get_estatus ();
-				$log->usuario = $request->user;
-				$gconf = new Gatuf_GSetting ();
-				$gconf->setApp ('Patricia');
-				$egreso = new Pato_Calendario ($gconf->getVal ('calendario_activo', null));
-				$log->calendario = $egreso;
-				
-				$log->nuevo = $estatus;
-				$log->create ();
-				
-				$r->inscripcion->estatus = $estatus;
-				$r->inscripcion->egreso = $egreso;
-				
+				$r->estatus->fin = date ('Y-m-d H:i:s');
+				$r->estatus->update ();
+			
+				$estatus = new Pato_InscripcionEstatus ();
+				$estatus->inicio = date ('Y-m-d H:i:s');
+				$estatus->inscripcion = $r->inscripcion;
+				$estatus->estatus = new Pato_Estatus ('B5');
+				$estatus->create ();
+			
+				$r->inscripcion->egreso = $calendario_actual;
 				$r->inscripcion->update ();
+			
+				/* Registrar los cambios de estatus */
 				/* Desmatricular las posibles materias que tenga */
-				
 				foreach ($r->alumno->get_grupos_list as $seccion) {
 					/* Borrar las calificaciones y asistencias
 					 * TODO: Convertir esto en un TRIGGER */
@@ -443,7 +444,178 @@ class Pato_Views_Estatus {
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-academica.html',
 		                                         array('page_title' => 'Bajas Académicas',
-                                                       'reporte' => $reporte),
-                                                 $request);
+		                                               'reporte' => $reporte),
+		                                         $request);
+	}
+	
+	public $bajaAdministrativaSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function bajaAdministrativaSeleccionar ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
+			
+			if ($form->isValid ()) {
+				$alumno = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAdministrativaAlumno', $alumno->codigo);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_SeleccionarAlumno (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-administrativa-seleccionar.html',
+		                                         array('page_title' => 'Baja Administrativa',
+		                                               'form' => $form),
+		                                         $request);
+	}
+	
+	public $bajaAdministrativaAlumno_precond = array ('Gatuf_Precondition::adminRequired');
+	public function bajaAdministrativaAlumno ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if ($alumno->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$ins = $alumno->get_current_inscripcion ();
+		
+		if ($ins === null) {
+			/* No está activo, no podemos moverlo de carrera */
+			$request->user->setMessage (3, 'El alumno seleccionado no tiene una carrera activa');
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAdministrativaSeleccionar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		// No necesita estar activo para la Baja Administrativa
+		/*if (!$estatus->isActivo ()) {
+			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' no está activo, por lo tanto no se puede cambiar de carrera. Estatus: '.((string) $estatus));
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAdministrativa');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}*/
+		/* Para poder marcar su calendario de egreso */
+		$gsettings = new Gatuf_GSetting ();
+		$gsettings->setApp ('Patricia');
+		
+		$cal = $gsettings->getVal ('calendario_activo', null);
+		
+		$calendario_actual = new Pato_Calendario ($cal);
+		
+		if ($request->method == 'POST') {
+/* Registrar los cambios de estatus */
+			$estatus->fin = date ('Y-m-d H:i:s');
+			$estatus->update ();
+			
+			$estatus = new Pato_InscripcionEstatus ();
+			$estatus->inicio = date ('Y-m-d H:i:s');
+			$estatus->inscripcion = $ins;
+			$estatus->estatus = new Pato_Estatus ('B6');
+			$estatus->create ();
+			
+			//$ins->egreso = $calendario_actual;
+			//$ins->update ();
+			
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Baja Administrativa (B6). Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha sido dado de baja. Causa: Baja Administrativa (B6).');
+			
+			/* Redirigir al estatus del alumno */
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
+			
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$car = $ins->get_carrera ();
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-administrativa.html',
+		                                         array('page_title' => 'Baja Administrativa',
+		                                               'alumno' => $alumno,
+		                                               'inscripcion' => $ins,
+		                                               'carrera' => $car,
+		                                               'estatus' => $estatus),
+		                                         $request);
+	}
+	
+	public $bajaAdministrativaRegresarSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function bajaAdministrativaRegresarSeleccionar ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
+			
+			if ($form->isValid ()) {
+				$alumno = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAdministrativaRegresar', $alumno->codigo);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_SeleccionarAlumno (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-administrativa-regresar-seleccionar.html',
+		                                         array('page_title' => 'Regresar de baja administrativa',
+		                                               'form' => $form),
+		                                         $request);
+	}
+	
+	public $bajaAdministrativaRegresar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function bajaAdministrativaRegresar ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if ($alumno->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$ins = $alumno->get_current_inscripcion ();
+		
+		if ($ins === null) {
+			/* No está activo, no podemos moverlo de carrera */
+			$request->user->setMessage (3, 'El alumno seleccionado no tiene una carrera activa');
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAdministrativaRegresarSeleccionar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		// Necesita tener una baja administrativa
+		if ($estatus->get_estatus()->clave != 'B6') {
+			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' no tiene baja administrativa, por lo tanto no se puede revertir a activo. Estatus actual: '.((string) $estatus));
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAdministrativaRegresarSeleccionar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			/* Registrar los cambios de estatus */
+			$estatus->fin = date ('Y-m-d H:i:s');
+			$estatus->update ();
+			
+			$estatus = new Pato_InscripcionEstatus ();
+			$estatus->inicio = date ('Y-m-d H:i:s');
+			$estatus->inscripcion = $ins;
+			$estatus->estatus = new Pato_Estatus ('AC');
+			$estatus->create ();
+			
+			//$ins->egreso = $calendario_actual;
+			//$ins->update ();
+			
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Activo (AC). Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha regresado de la muerte administrativa. Estatus: Activo (AC)');
+			
+			/* Redirigir al estatus del alumno */
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
+			
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$car = $ins->get_carrera ();
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-administrativa-regresar.html',
+		                                         array('page_title' => 'Regresar de baja administrativa',
+		                                               'alumno' => $alumno,
+		                                               'inscripcion' => $ins,
+		                                               'carrera' => $car,
+		                                               'estatus' => $estatus),
+		                                         $request);
 	}
 }

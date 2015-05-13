@@ -187,7 +187,7 @@ class Pato_Views_Evaluacion_Profesor {
 		
 		$abierto = $gsettings->getVal ('evaluacion_prof_'.$request->calendario->clave, false);
 		
-		if ($abierto == false) {
+		if ($correcto && $abierto == false) {
 			$correcto = false;
 			$request->user->setMessage (2, 'Por el momento, la evaluación de profesores no se encuentra activa');
 		}
@@ -216,6 +216,35 @@ class Pato_Views_Evaluacion_Profesor {
 		                                               'secciones' => $secciones,
 		                                               'correcto' => $correcto),
                                                  $request);
+	}
+	
+	public static function checar_si_evaluo ($alumno) {
+		$gsettings = new Gatuf_GSetting ();
+		$gsettings->setApp ('Patricia');
+		$cal = $gsettings->getVal ('calendario_activo', null);
+		$calendario = new Pato_Calendario ($cal);
+		
+		/* Mover al calendario activo actual */
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		//$request->session->setData ('CAL_ACTIVO', $calendario->clave);
+		
+		/* Revisar cuáles respuestas están en tiempo */
+		$secciones = $alumno->get_grupos_list ();
+		
+		$respuestas = 0;
+		
+		foreach ($secciones as $seccion) {
+			$sql = new Gatuf_SQL ('seccion=%s', $seccion->nrc);
+			$rs = $alumno->get_pato_evaluacion_respuesta_list (array ('filter' => $sql->gen ()));
+			
+			/* Revisar si contestó la encuesta o no */
+			if (count ($rs) != 0) {
+				$respuestas++;
+			}
+		}
+		
+		/* Verdadero si evaluó todas los grupos */
+		return (count ($secciones) == $respuestas);
 	}
 	
 	public $evaluar_precond = array ('Gatuf_Precondition::loginRequired');

@@ -6,7 +6,7 @@
 	<tr><th>Calendario</th><th>Calificación</th></tr></thead>
 	<tbody>{foreach $reporte as $r}
 		<tr>{assign $row = count($r.muestra)}
-			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.inscripcion.get_estatus()}</td><td rowspan="{$row}">{$r.materia}</td>
+			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.estatus}</td><td rowspan="{$row}">{$r.materia}</td>
 			{assign $g = 0}{foreach $r.muestra as $kardex}{if $g != 0}<tr>{else}{assign $g = $g + 1}{/if}<td>{$kardex.get_calendario()}</td><td><strong>{$kardex.calificacion|float:2}</strong></td></tr>{/foreach}
 	{/foreach}</tbody>
 </table>
