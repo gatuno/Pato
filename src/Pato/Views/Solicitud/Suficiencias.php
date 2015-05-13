@@ -96,9 +96,12 @@ class Pato_Views_Solicitud_Suficiencias {
 			$form = new Pato_Form_Solicitud_Suficiencia_Agregar (null, $extra);
 		}
 		
-		$context = new Gatuf_Template_Context(array());
-		$tmpl = new Gatuf_Template('pato/solicitud/suficiencia/terminos.html');
-		$terms = Gatuf_Template::markSafe($tmpl->render($context));
+		//$context = new Gatuf_Template_Context(array());
+		//$tmpl = new Gatuf_Template('pato/solicitud/suficiencia/terminos.html');
+		//$terms = Gatuf_Template::markSafe($tmpl->render($context));
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		$terms = Gatuf_Template::markSafe ($gconf->getVal ('terminos_suficiencias', '<p>Texto pendiente</p>'));
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/agregar.html',
 		                                         array ('page_title' => 'Nueva solicitud de suficiencia',

@@ -1,0 +1,18 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Esta configuración corresponde al texto oculto al momento de pedir una suficiencia.</p>
+{if $form.errors}
+	<div class="errors">
+	<p>El formulario contiene algunos errores:</p>
+	</div>
+{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar texto" /></td></tr>
+	</table>
+</form>
+{/block}
+{block extrahead}
+<script type="text/javascript" src="{media}/js/nicEdit.js"></script>
+{/block}

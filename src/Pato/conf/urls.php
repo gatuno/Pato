@@ -730,6 +730,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/preferencias/terminos-suficiencias/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'terminosSuficiencias',
+);
+
+$ctl[] = array (
 	'regex' => '#^/utils/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Utils',

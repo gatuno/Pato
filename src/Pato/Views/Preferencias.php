@@ -155,4 +155,33 @@ class Pato_Views_Preferencias {
 		                                                'fecha' => $fecha,),
 		                                         $request);
 	}
+	
+	public $terminosSuficiencias_precond = array ('Gatuf_Precondition::adminRequired');
+	public function terminosSuficiencias ($request, $match) {
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		$terms = $gconf->getVal ('terminos_suficiencias', '<p>Texto pendiente</p>');
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Preferencias_Terminos ($request->POST, array ('terms' => $terms));
+			
+			if ($form->isValid ()) {
+				$terms = $form->save ();
+				
+				$gconf->setVal ('terminos_suficiencias', $terms);
+				
+				$request->user->setMessage (1, 'Texto cambiado');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Preferencias::terminosSuficiencias');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Preferencias_Terminos (null, array ('terms' => $terms));
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/terminos_suficiencias.html',
+		                                         array ('page_title' => 'Texto para los términos de las suficiencias',
+		                                                'form' => $form),
+		                                         $request);
+	}
 }
