@@ -178,6 +178,20 @@ class Pato_Form_Alumno_ActualizarPerfil extends Gatuf_Form {
 					'choices' => $choices_antico,
 				),
 		));
+		
+		$this->fields['tabaco'] = new Gatuf_Form_Field_Boolean (
+			array (
+				'required' => false,
+				'label' => 'Tabaco',
+				'initial' => $this->perfil->tabaco,
+		));
+		
+		$this->fields['drogas'] = new Gatuf_Form_Field_Boolean (
+			array (
+				'required' => false,
+				'label' => 'Drogas',
+				'initial' => $this->perfil->drogas,
+		));
 	}
 	
 	public function clean_emergencia_local () {

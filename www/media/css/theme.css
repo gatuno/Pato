@@ -111,43 +111,43 @@ td .icon {
 }
 
 /* Colores especiales */
-.nav .general a:hover {
+.nav .general:hover, .nav .general li:hover {
 	background-color: #4F38C6;
 }
 
-.nav .calificaciones a:hover {
+.nav .calificaciones:hover, .nav .calificaciones li:hover {
 	background-color: #EB2927;
 }
 
-.nav .tramites a:hover {
+.nav .tramites:hover, .nav .tramites li:hover {
 	background-color: #FDDC3B;
 }
 
-.nav .especial a:hover {
+.nav .especial:hover, .nav .especial li:hover {
 	background-color: #23B600;
 }
 
-.nav .admin a:hover {
+.nav .admin:hover, .nav .admin li:hover {
 	background-color: #868686;
 }
 
-.nav .informatica a:hover {
+.nav .informatica:hover, .nav .informatica li:hover {
 	background-color: #ef7432;
 }
 
-.nav .sgenerales a:hover {
+.nav .sgenerales:hover, .nav .sgenerales li:hover {
 	background-color: #ad7fa8;
 }
 
-.nav .biblioteca a:hover {
+.nav .biblioteca:hover, .nav .biblioteca li:hover {
 	background-color: #897f65;
 }
 
-.nav .admision a:hover {
+.nav .admision:hover, .nav .admision li:hover {
 	background-color: #058cff;
 }
 
-.nav .admision-adm a:hover {
+.nav .admision-adm:hover, .nav .admision-adm li:hover {
 	background-color: #9108b3;
 }
 

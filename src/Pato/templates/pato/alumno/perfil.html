@@ -55,6 +55,14 @@
 		<th>Métodos anticonceptivos:</th>
 		<td>{if $perfil.anticonceptivos == 0}Ninguno{else}{if $perfil.anticonceptivos & 1}Orales, {/if}{if $perfil.anticonceptivos & 2}Parches, {/if}{if $perfil.anticonceptivos & 4}Preservativos, {/if}{if $perfil.anticonceptivos & 8}Inyecciones, {/if}{if $perfil.anticonceptivos & 256}Otros{/if}{/if}</td>
 	</tr>
+	<tr>
+		<th>Uso de tabaco:</th>
+		<td>{if $perfil.tabaco}Sí{else}No{/if}</td>
+	</tr>
+	<tr>
+		<th>Uso de drogas:</th>
+		<td>{if $perfil.drogas}Sí{else}No{/if}</td>
+	</tr>
 	{/if}
 </table>
 {/block}

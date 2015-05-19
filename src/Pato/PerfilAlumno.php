@@ -114,6 +114,18 @@ class Pato_PerfilAlumno extends Gatuf_Model {
 			       'default' => 0,
 			       'blank' => false,
 			),
+			'tabaco' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'default' => false,
+			       'blank' => false,
+			),
+			'drogas' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'default' => false,
+			       'blank' => false,
+			),
 			'last_update' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Datetime',
