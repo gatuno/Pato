@@ -4,7 +4,6 @@
 <p>He aquí los resultados:</p>
 {foreach $carreras as $c}
 	<h2>Carrera {$c->descripcion}</h2>
-	<p>Hay un total de {$maestros[$c->clave]|count} respuestas.</p>
 	{if count($maestros[$c->clave])}
 	<p>Los siguientes profesores fueron evaluados:</p>
 	<table><thead><tr><th colspan="2">Profesor</th></tr></thead>

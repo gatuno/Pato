@@ -14,8 +14,9 @@ class Pato_Views_Reportes_Oferta {
 		foreach (Gatuf::factory ('Pato_Alumno')->getList () as $alumno) {
 			$ins = $alumno->get_inscripcion_for_cal ($calendario);
 			
-			if ($ins == null) continue;
-			
+			if ($ins == null) {
+				continue;
+			}
 			$total++;
 			
 			$count_s = $alumno->get_grupos_list (array ('count' => true));

@@ -23,27 +23,36 @@ class Pato_Views_Evaluacion_Profesor {
 		$con_p = array ();
 		
 		$maestros = array ();
+		
+		/* Query original
+		SELECT DISTINCT maestro,carrera FROM eval_alum_prof AS EAP
+		LEFT JOIN secciones AS S ON S.nrc = EAP.seccion
+		LEFT JOIN patricia.inscripciones AS I ON EAP.alumno = I.alumno AND I.egreso IS NULL */
+		$respuesta_model = new Pato_Evaluacion_Respuesta ();
+		
+		$s_model = new Pato_Seccion ();
+		$i_model = new Pato_Inscripcion ();
+		
+		$s_model_t = $s_model->getSqlTable ();
+		$i_model_t = $i_model->getSqlTable ();
+		$r_model_t = $respuesta_model->getSqlTable ();
+		
+		$respuesta_model->_a['views']['por_m']['select'] = 'DISTINCT S.maestro, I.carrera';
+		$respuesta_model->_a['views']['por_m']['join'] = sprintf ('LEFT JOIN %s AS S ON S.nrc = %s.seccion LEFT JOIN %s AS I ON %s.alumno = I.alumno AND I.egreso IS NULL', $s_model_t, $r_model_t, $i_model_t, $r_model_t);
+		$respuesta_model->_a['views']['por_m']['props'] = array ('maestro', 'carrera');
+		
+		$maestro = new Pato_Maestro ();
 		foreach ($carreras as $c) {
 			if ($request->user->hasPerm ('Patricia.coordinador.'.$c->clave) || $request->user->hasPerm ('Patricia.resultados_eval_profesores')) {
-				$maestros[$c->clave] = array ();
 				$con_p[] = $c;
-			}
-		}
-		
-		$respuestas = Gatuf::factory ('Pato_Evaluacion_Respuesta')->getList ();
-		foreach ($respuestas as $res) {
-			$alumno = $res->get_alumno ();
-			$maestro = $res->get_seccion ()->get_maestro ();
-			
-			$ins = $alumno->get_inscripcion_for_cal ($request->calendario);
-			
-			if ($ins != null) {
-				$carrera = $ins->get_carrera ();
-				if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
-					continue;
-				}
+				$maestros[$c->clave] = array ();
+				$respuesta_model->_a['views']['por_m']['where'] = sprintf ('I.carrera = %s', $i_model->_con->esc($c->clave));
 				
-				$maestros[$carrera->clave][$maestro->codigo] = $maestro;
+				$lista = $respuesta_model->getList (array ('view' => 'por_m'));
+				foreach ($lista as $l) {
+					$maestro->get ($l->maestro);
+					$maestros[$c->clave][] = clone ($maestro);
+				}
 			}
 		}
 		
@@ -77,20 +86,21 @@ class Pato_Views_Evaluacion_Profesor {
 		$comentarios = array ();
 		$secciones = array ();
 		
-		$respuestas = Gatuf::factory ('Pato_Evaluacion_Respuesta')->getList ();
+		$respuesta_model = new Pato_Evaluacion_Respuesta ();
+		
+		$s_model = new Pato_Seccion ();
+		$i_model = new Pato_Inscripcion ();
+		
+		$s_model_t = $s_model->getSqlTable ();
+		$i_model_t = $i_model->getSqlTable ();
+		$r_model_t = $respuesta_model->getSqlTable ();
+		
+		$respuesta_model->_a['views']['por_m']['join'] = sprintf ('LEFT JOIN %s AS S ON S.nrc = %s.seccion LEFT JOIN %s AS I ON %s.alumno = I.alumno AND I.egreso IS NULL', $s_model_t, $r_model_t, $i_model_t, $r_model_t);
+		$respuesta_model->_a['views']['por_m']['where'] = sprintf ('I.carrera = %s AND S.maestro = %s', $i_model->_con->esc($carrera->clave), $maestro->_con->esc ($maestro->codigo));
+		
+		$respuestas = $respuesta_model->getList (array ('view' => 'por_m'));
 		foreach ($respuestas as $res) {
-			$m_res = $res->get_seccion ()->get_maestro ();
 			$alumno = $res->get_alumno ();
-			if ($maestro->codigo != $m_res->codigo) continue;
-			
-			$ins = $alumno->get_inscripcion_for_cal ($request->calendario);
-			
-			if ($ins == null) continue;
-			$c_res = $ins->get_carrera ();
-			
-			if ($c_res->clave != $carrera->clave) {
-				continue;
-			}
 			
 			if (!isset ($total[$res->seccion])) {
 				$secciones[] = $res->get_seccion ();
