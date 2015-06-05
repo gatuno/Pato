@@ -22,6 +22,13 @@ class Admision_Aspirante extends Gatuf_Model {
 			       'model' => 'Admision_CupoCarrera',
 			       'blank' => false,
 			),
+			'turno' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Char',
+			       'blank' => false,
+			       'size' => 1,
+			       'default' => 'U',
+			),
 			'token' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Char',

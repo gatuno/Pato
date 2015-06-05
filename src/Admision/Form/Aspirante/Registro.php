@@ -21,6 +21,18 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 				'widget' => 'Gatuf_Form_Widget_SelectInput',
 		));
 		
+		$choices_turnos = array ('Matutino' => 'M', 'Vespertino' => 'V');
+		
+		$this->fields['turno'] = new Gatuf_Form_Field_Varchar (
+			array (
+				'required' => true,
+				'label' => 'Turno',
+				'help_text' => '',
+				'initial' => 'M',
+				'choices' => $choices_turnos,
+				'widget' => 'Gatuf_Form_Widget_SelectInput',
+		));
+		
 		$this->fields['nombre'] = new Gatuf_Form_Field_Varchar (
 			array (
 				'required' => true,
@@ -576,9 +588,16 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 		
 		$sql = new Gatuf_SQL ('curp=%s OR email=%s', array ($curp, $correo));
 		
-		$aspi = Gatuf::factory ('Admision_Aspirante')->getList (array ('filter' => $sql->gen(), 'count' => true));
+		/*$aspi = Gatuf::factory ('Admision_Aspirante')->getList (array ('filter' => $sql->gen(), 'count' => true));
 		if ($aspi > 0) {
 			throw new Gatuf_Form_Invalid ('Ya hay otro aspirante registrado con este mismo curp o correo');
+		}*/
+		$aspis = Gatuf::factory ('Admision_Aspirante')->getList (array ('filter' => $sql->gen()));
+		foreach ($aspis as $aspi) {
+			$conv = $aspi->get_aspiracion();
+			if ($conv->convocatoria == $this->convocatoria->id) {
+				throw new Gatuf_Form_Invalid ('Ya hay otro aspirante registrado con este mismo curp o correo');
+			}
 		}
 		
 		return $this->cleaned_data;

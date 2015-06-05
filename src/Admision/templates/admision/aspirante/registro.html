@@ -13,6 +13,13 @@
 			<span class="helptext">{$form.f.aspiracion.help_text}</span>
 			</td>
 		</tr>
+		<tr>
+			<th><strong>{$form.f.turno.labelTag}:</strong></th>
+			<td>{if $form.f.turno.errors}{$form.f.turno.fieldErrors}{/if}
+			{$form.f.turno|safe}<br />
+			<span class="helptext">{$form.f.turno.help_text}</span>
+			</td>
+		</tr>
 	</table>
 	<fieldset><legend>Datos de nacimiento:</legend>
 		<table>
