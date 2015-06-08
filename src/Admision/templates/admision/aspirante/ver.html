@@ -7,7 +7,7 @@
 <table class="form">
 	<tr>
 	<th style="text-align: right">
-		{if $user.administrator}<a href="{url 'Admision_Views_Aspirante::subirFoto', $aspirante.id}">{/if}{if $aspirante.foto == ''}<img src="http://www.gravatar.com/avatar/?d=mm&s=128" />{else}<img src="{url 'Admision_Views_Aspirante::verFotoMiniatura', $aspirante.id}" />{/if}
+		{if $user.administrator}<a href="{url 'Admision_Views_Aspirante::subirFoto', $aspirante.id}">{/if}{if $aspirante.foto == ''}<img src="http://www.gravatar.com/avatar/?d=mm&s=128" />{else}<img src="{url 'Admision_Views_Aspirante::verFotoMiniatura', $aspirante.id}" />{/if}{if $user.administrator}</a>{/if}
 	</th>
 		<td>{$aspirante.apellido} {$aspirante.nombre}</td>
 	</tr>

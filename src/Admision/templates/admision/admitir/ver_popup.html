@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="Félix Arreola Rodríguez" />
+	<link rel="stylesheet" media="all" type="text/css" href="{media}/css/theme.css" />
+	<link rel="stylesheet" media="print" type="text/css" href="{media}/css/print.css" />
+	{block extrahead}{/block}
+	<title>Patricia - {$page_title}</title>
+</head>
+<body>
+<h1 class="titulo">{$page_title}</h1>
+	<div class="content-div">
+		<table class="form">
+			<tr>
+			<th style="text-align: right">
+				{if $aspirante.foto == ''}<img src="http://www.gravatar.com/avatar/?d=mm&s=128" />{else}<img src="{url 'Admision_Views_Aspirante::verFotoMiniatura', $aspirante.id}" />{/if}
+			</th>
+				<td>{$aspirante.apellido} {$aspirante.nombre}</td>
+			</tr>
+			<tr>
+				<th>ID de aspirante:</th>
+				<td>{$aspirante.id}</td>
+			</tr>
+			<tr>
+				<th>Carrera solicitdad:</th>
+				<td>{$aspirante.get_aspiracion().get_carrera()}</td>
+			</tr>
+			<tr>
+				<th>Turno deseado:</th>
+				<td>{if $aspirante.turno == 'M'}Matutino{elseif $aspirante.turno == 'V'}Vespertino{else}Indefinido{/if}</td>
+			</tr>
+			<tr>
+				<th>Trabaja:</th>
+				<td>{if $aspirante.trabaja}Sí{else}No{/if}</td>
+			</tr>
+			<tr>
+				<th>Discapacidad:</th>
+				<td>{$aspirante.discapacidad}</td>
+			</tr>
+			<tr>
+				<th>Licenciatura previa:</th>
+				<td>{$aspirante.lic_previa}</td>
+			</tr>
+			<tr>
+				<th>Puntaje Ceneval:</th>
+				<td>{$aspirante.ceneval|float:3}</td>
+			</tr>
+			<tr>
+				<th>Promedio Prepa:<br />(no verificado)</th>
+				<td>{$aspirante.promedio}</td>
+			</tr>
+			<tr>
+				<th>Fecha nacimiento:</th>
+				<td>{$aspirante.nacimiento|dateSimple:'%e de %B de %Y'}</td>
+			</tr>
+			<tr>
+				<th>Lugar de nacimiento:</th>
+				<td>{$aspirante.lugar_nacimiento}, {if $aspirante.estado_nacimiento}{$aspirante.get_estado_nacimiento().nombre}, {/if}{$aspirante.get_pais_nacimiento().nombre}</td>
+			</tr>
+			<tr>
+				<th>País de la Nacionalidad:</th>
+				<td>{$aspirante.get_nacionalidad().nombre}</td>
+			</tr>
+			<tr>
+				<th>Estado civil:</th>
+				<td>{$aspirante.display_estado_civil()}</td>
+			</tr>
+			<tr>
+				<th>Curp:</th>
+				<td>{$aspirante.curp}</td>
+			</tr>
+			<tr>
+				<th>Domicilio:</th>
+				<td>{$aspirante.domicilio}, {$aspirante.get_colonia().display_full()}</td>
+			</tr>
+			<tr>
+				<th>Números telefónicos:</th>
+				<td>{if $aspirante.numero_local != ''}Local: {$aspirante.numero_local}, {/if}{if $aspirante.numero_celular != ''}Celular: {$aspirante.numero_celular}{/if}</td>
+			</tr>
+			<tr>
+				<th>Correo electrónico:</th>
+				<td>{$aspirante.email}</td>
+			</tr>
+			<tr>
+				<th>Tipo sanguíneo:</th>
+				<td>{$aspirante.sanguineo_rh}</td>
+			</tr>
+			<tr>
+				<th>Estudios previos:</th>
+				<td>Escuela {$aspirante.escuela}, promedio: {$aspirante.promedio}. Egresado en el año: {$aspirante.egreso}</td>
+			</tr>
+			<tr>
+				<th>Contacto en caso de emergencia:</th>
+				<td>{$aspirante.emergencia_nombre}{if $aspirante.emergencia_local != ''}, teléfono local: {$aspirante.emergencia_local}{/if}{if $aspirante.emergencia_celular != ''}, teléfono celular: {$aspirante.emergencia_celular}{/if}</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

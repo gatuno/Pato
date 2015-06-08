@@ -1,0 +1,122 @@
+{extends 'admision/base.html'}
+{block body}
+<p>Admitiendo alumnos en la carrera de <strong>{$cupo_carrera.get_carrera()}</strong>, en la convocatoria <strong>{$convocatoria.descripcion}</strong>. Hay un total de {$alumnos|count} aspirantes</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>
+{if $form.get_top_errors}<p>{$form.render_top_errors|unsafe}</p>{/if}{/if}
+<div class="admitidos"><table><tr><td>Máximo de aspirantes a admitir:</td><td class="center"><span id="span_total">{$cupo_carrera.cupo}</span></td></tr>
+<tr><td>Número de aspirantes admitidos:</td><td class="center"><span id="span_admitidos">0</span></td></tr>
+<tr><td>Aspirantes pendientes por admitir:</td><td class="center"><span id="span_pendientes">0</span></td></tr></table></div>
+<form id="form_admitidos" method="post" action=".">
+	<table width="95%" border="1" id="table_alumnos" class="ordenada">
+	<thead>
+		<tr><th>Número</th><th>Nombre completo</th><th width="10%">Supuesto promedio de prepa</th><th width="10%">Examen Ceneval</th><th>Turno deseado</th><th>Estatus</th><th>Turno final</th></tr>
+	</thead>
+	<tbody>
+	{foreach $alumnos as $aspi}
+		<tr><td class="center">{$aspi.id}</td>
+		<td><a href="{url 'Admision_Views_Admitir::verAspirante', $aspi.id}" onclick="return popitup(this.href)">{$aspi.nombre} {$aspi.apellido}</a></td>
+		<td class="center">{$aspi.promedio}</td>
+		<td class="center">{$aspi.ceneval|float:3}</td>
+		<td class="center">{if $aspi.turno == 'M'}Matutino{elseif $aspi.turno == 'V'}Vespertino{/if}</td>
+		{assign $a = 'admision_'~$aspi.id}
+		<td class="center"><div class="errors">{if $form.f.__get($a).errors}{$form.f.__get($a).fieldErrors}{/if}</div>
+		{$form.f.__get($a).label}:<br />{$form.f.__get($a)|safe}</td>
+		{assign $t = 'turno_final_'~$aspi.id}
+		<td class="center"><div class="errors">{if $form.f.__get($t).errors}{$form.f.__get($t).fieldErrors}{/if}</div>
+		{$form.f.__get($t).label}:<br />{$form.f.__get($t)|safe}</td>
+		</tr>
+	{/foreach}
+	</tbody>
+	</table>
+	<input type="submit" value="Marcar mis selecciones" />
+	<div class="clearbottom"></div>
+</form>
+{/block}
+{block extrahead}
+<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{media '/js/jquery-tablesorter.js'}"></script>
+<style type="text/css">{literal}
+div.admitidos {
+	position: fixed;
+	padding: 5px;
+	background-color: rgb(255, 255, 255);
+	left: 15px;
+	border: 3px outset rgb(145, 8, 179);
+	bottom: 0px;
+	margin-bottom: 15px;
+}
+td.center {
+	text-align: center;
+}
+div.clearbottom {
+	height: 110px;
+	display: block;
+}
+span.rojo {
+	color: red;
+	font-weight: bold;
+}
+/* Para el table sorter */
+table.ordenada thead tr .header {
+	{/literal}background-image: url({media '/img/bg.gif'});{literal}
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.ordenada thead tr .headerSortUp {
+	{/literal}background-image: url({media '/img/asc.gif'});{literal}
+}
+table.ordenada thead tr .headerSortDown {
+	{/literal}background-image: url({media '/img/desc.gif'});{literal}
+}
+{/literal}</style>
+{/block}
+{block javascript}<script type="text/javascript">{literal}
+	function update_cupos () {
+		var form = document.getElementById("form_admitidos");
+		var g;
+		var name;
+		var admitidos = 0;
+		var pendientes = 0;
+		for (g = 0; g < form.length; g++) {
+			name = form.elements[g].name;
+			
+			if (name.indexOf("admision_") != -1) {
+				/* Sumar este admitido */
+				if (form.elements[g].value == 1) {
+					admitidos++;
+				} else if (form.elements[g].value == 0) {
+					pendientes++;
+				}
+			}
+		}
+		
+		var total = parseInt (document.getElementById ("span_total").innerHTML);
+		document.getElementById ("span_admitidos").innerHTML = admitidos;
+		document.getElementById ("span_pendientes").innerHTML = pendientes;
+		
+		if (admitidos > total) {
+			document.getElementById ("span_admitidos").className = "rojo";
+		} else {
+			document.getElementById ("span_admitidos").className = "";
+		}
+		
+		if (pendientes > 0) {
+			document.getElementById ("span_pendientes").className = "rojo";
+		} else {
+			document.getElementById ("span_pendientes").className = "";
+		}
+	}
+	
+	function popitup(url) {
+		newwindow = window.open(url,'admitido','height=780,width=680,menubar=no,scrollbars=yes,titlebar=no,toolbar=no');
+		if (window.focus) {newwindow.focus()}
+		return false;
+	}
+	
+	update_cupos ();
+	
+	$("#table_alumnos").tablesorter({headers: { 5: { sorter: false}, 6: {sorter: false} }});
+{/literal}</script>{/block}

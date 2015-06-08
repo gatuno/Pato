@@ -21,6 +21,7 @@ class Admision_Aspirante extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'model' => 'Admision_CupoCarrera',
 			       'blank' => false,
+			       'relate_name' => 'alumnos',
 			),
 			'turno' =>
 			array (
@@ -231,6 +232,28 @@ class Admision_Aspirante extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Datetime',
 			       'blank' => false,
 			       'is_null' => true,
+			       'default' => null,
+			),
+			'ceneval' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Float',
+			       'blank' => true,
+			       'is_null' => true,
+			       'default' => null,
+			       'decimal_places' => 2,
+			),
+			'admision' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Integer',
+			       'blank' => true,
+			       'default' => 0,
+			),
+			'turno_final' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Char',
+			       'blank' => true,
+			       'is_null' => true,
+			       'size' => 1,
 			       'default' => null,
 			),
 		);

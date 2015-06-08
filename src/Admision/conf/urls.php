@@ -130,4 +130,32 @@ $ctl_ad[] = array (
 	'method' => 'cerrar',
 );
 
+$ctl_ad[] = array (
+	'regex' => '#^/admitir/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Admitir',
+	'method' => 'index',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/admitir/convocatoria/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Admitir',
+	'method' => 'admitir',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/admitir/carrera/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Admitir',
+	'method' => 'admitirCarrera',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/admitir/aspirante/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Admitir',
+	'method' => 'verAspirante',
+);
+
 return $ctl_ad;

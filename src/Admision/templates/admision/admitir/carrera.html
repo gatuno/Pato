@@ -1,0 +1,8 @@
+{extends 'admision/base.html'}
+{block body}
+<p>Convocatoria: <strong>{$convocatoria.descripcion}</strong></p>
+<p>Seleccione una carrera. Si la carrera deseada no aparece en la lista, revise los permisos con su administrador.</p>
+<ul>{foreach $cupos as $cupo}
+	<li><a href="{url 'Admision_Views_Admitir::admitirCarrera', $cupo.id}">{$cupo.get_carrera ()}</a></li>
+{/foreach}</ul>
+{/block}
