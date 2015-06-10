@@ -358,4 +358,37 @@ class Admision_Views_Aspirante {
 		
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
+	
+	public $actualizar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function actualizar ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('aspirante' => $aspirante);
+		
+		if ($request->method == 'POST') {
+			$form = new Admision_Form_Aspirante_Actualizar ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$request->user->setMessage (1, 'Datos actualizados');
+				Gatuf_Log::info (sprintf ('El usuario %s (%s) actualizó la información del aspirante %s', $request->user->login, $request->user->id, $aspirante->id));
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Admision_Form_Aspirante_Actualizar (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/actualizar.html',
+		                                         array ('page_title' => 'Aspirante '.$aspirante->id,
+		                                                'aspirante' => $aspirante,
+		                                                'convocatoria' => $aspirante->get_aspiracion()->get_convocatoria(),
+		                                                'form' => $form),
+		                                         $request);
+	}
 }

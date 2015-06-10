@@ -2,7 +2,8 @@
 {block body}
 {if !$user.administrator}<p><a href="{url 'Admision_Views_Aspirante::cerrar'}"><img class="icon" src="{media '/img/application-exit.png'}" alt="Salir" />Salir</a></p>{else}
 <p><a href="{url 'Admision_Views_Aspirante::registrarPago', $aspirante.id}">Registrar pago</a>&nbsp;
-<a href="{url 'Admision_Views_Aspirante::imprimir', $aspirante.id}">Imprimir formato</a></p>
+<a href="{url 'Admision_Views_Aspirante::imprimir', $aspirante.id}">Imprimir formato</a>&nbsp;
+<a href="{url 'Admision_Views_Aspirante::actualizar', $aspirante.id}">Actualizar información</a></p>
 {/if}
 <table class="form">
 	<tr>
@@ -14,6 +15,22 @@
 	<tr>
 		<th>ID de aspirante:</th>
 		<td>{$aspirante.id}</td>
+	</tr>
+	<tr>
+		<th>Carrera solicitdad:</th>
+		<td>{$aspirante.get_aspiracion().get_carrera()}</td>
+	</tr>
+	<tr>
+		<th>Turno deseado:</th>
+		<td>{if $aspirante.turno == 'M'}Matutino{elseif $aspirante.turno == 'V'}Vespertino{else}Indefinido{/if}</td>
+	</tr>
+	<tr>
+		<th>Puntaje Ceneval:</th>
+		<td>{$aspirante.ceneval|float:3}</td>
+	</tr>
+	<tr>
+		<th>Promedio Prepa:<br />(no verificado)</th>
+		<td>{$aspirante.promedio}</td>
 	</tr>
 	<tr>
 		<th>Fecha nacimiento:</th>

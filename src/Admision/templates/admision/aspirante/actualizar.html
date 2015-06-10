@@ -1,0 +1,330 @@
+{extends 'admision/base.html'}
+{block body}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>
+{if $form.get_top_errors}<p>{$form.render_top_errors|unsafe}</p>{/if}{/if}
+<form method="post" action=".">
+	<table>
+		<tr><th><strong>Convocatoria:</strong></th>
+		<td>{$convocatoria.descripcion}</td></tr>
+		<tr>
+			<th><strong>{$form.f.aspiracion.labelTag}:</strong></th>
+			<td>{if $form.f.aspiracion.errors}{$form.f.aspiracion.fieldErrors}{/if}
+			{$form.f.aspiracion|safe}<br />
+			<span class="helptext">{$form.f.aspiracion.help_text}</span>
+			</td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.turno.labelTag}:</strong></th>
+			<td>{if $form.f.turno.errors}{$form.f.turno.fieldErrors}{/if}
+			{$form.f.turno|safe}<br />
+			<span class="helptext">{$form.f.turno.help_text}</span>
+			</td>
+		</tr>
+	</table>
+	<fieldset><legend>Datos de nacimiento:</legend>
+		<table>
+			<tr>
+				<th><strong>{$form.f.apellido.labelTag}:</strong></th>
+				<td>{if $form.f.apellido.errors}{$form.f.apellido.fieldErrors}{/if}
+				{$form.f.apellido|safe}<br />
+				<span class="helptext">{$form.f.apellido.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.nombre.labelTag}:</strong></th>
+				<td>{if $form.f.nombre.errors}{$form.f.nombre.fieldErrors}{/if}
+				{$form.f.nombre|safe}<br />
+				<span class="helptext">{$form.f.nombre.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.nacimiento.labelTag}:</strong></th>
+				<td>{if $form.f.nacimiento.errors}{$form.f.nacimiento.fieldErrors}{/if}
+				{$form.f.nacimiento|safe}<br />
+				<span class="helptext">{$form.f.nacimiento.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.pais_nacimiento.labelTag}:</strong></th>
+				<td>{if $form.f.pais_nacimiento.errors}{$form.f.pais_nacimiento.fieldErrors}{/if}
+				{$form.f.pais_nacimiento|safe}<br />
+				<span class="helptext">{$form.f.pais_nacimiento.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.estado_nacimiento.labelTag}:</strong></th>
+				<td>{if $form.f.estado_nacimiento.errors}{$form.f.estado_nacimiento.fieldErrors}{/if}
+				{$form.f.estado_nacimiento|safe}<br />
+				<span class="helptext">{$form.f.estado_nacimiento.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.lugar_nacimiento.labelTag}:</strong></th>
+				<td>{if $form.f.lugar_nacimiento.errors}{$form.f.lugar_nacimiento.fieldErrors}{/if}
+				{$form.f.lugar_nacimiento|safe}<br />
+				<span class="helptext">{$form.f.lugar_nacimiento.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.nacionalidad.labelTag}:</strong></th>
+				<td>{if $form.f.nacionalidad.errors}{$form.f.nacionalidad.fieldErrors}{/if}
+				{$form.f.nacionalidad|safe}<br />
+				<span class="helptext">{$form.f.nacionalidad.help_text}</span>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset><legend>Datos de generales:</legend>
+		<table>
+			<tr>
+				<th><strong>{$form.f.sexo.labelTag}:</strong></th>
+				<td>{if $form.f.sexo.errors}{$form.f.sexo.fieldErrors}{/if}
+				{$form.f.sexo|safe}<br />
+				<span class="helptext">{$form.f.sexo.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.estado_civil.labelTag}:</strong></th>
+				<td>{if $form.f.estado_civil.errors}{$form.f.estado_civil.fieldErrors}{/if}
+				{$form.f.estado_civil|safe}<br />
+				<span class="helptext">{$form.f.estado_civil.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.curp.labelTag}:</strong></th>
+				<td>{if $form.f.curp.errors}{$form.f.curp.fieldErrors}{/if}
+				{$form.f.curp|safe}<br />
+				<span class="helptext">{$form.f.curp.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.email.labelTag}:</strong></th>
+				<td>{if $form.f.email.errors}{$form.f.email.fieldErrors}{/if}
+				{$form.f.email|safe}<br />
+				<span class="helptext">{$form.f.email.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.trabaja.labelTag}:</strong></th>
+				<td>{if $form.f.trabaja.errors}{$form.f.trabaja.fieldErrors}{/if}
+				{$form.f.trabaja|safe}<br />
+				<span class="helptext">{$form.f.trabaja.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.discapacidad.labelTag}:</strong></th>
+				<td>{if $form.f.discapacidad.errors}{$form.f.discapacidad.fieldErrors}{/if}
+				{$form.f.discapacidad|safe}<br />
+				<span class="helptext">{$form.f.discapacidad.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.sanguineo_rh.labelTag}:</strong></th>
+				<td>{if $form.f.sanguineo_rh.errors}{$form.f.sanguineo_rh.fieldErrors}{/if}
+				{$form.f.sanguineo_rh|safe}<br />
+				<span class="helptext">{$form.f.sanguineo_rh.help_text}</span>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset><legend>Domicilio:</legend>
+		<table>
+			<tr>
+				<th><strong>{$form.f.domicilio.labelTag}:</strong></th>
+				<td>{if $form.f.domicilio.errors}{$form.f.domicilio.fieldErrors}{/if}
+				{$form.f.domicilio|safe}<br />
+				<span class="helptext">{$form.f.domicilio.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.codigo_postal.labelTag}:</strong></th>
+				<td>{if $form.f.codigo_postal.errors}{$form.f.codigo_postal.fieldErrors}{/if}
+				{$form.f.codigo_postal|safe}<br />
+				<span class="helptext">{$form.f.codigo_postal.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.colonia.labelTag}:</strong></th>
+				<td>{if $form.f.colonia.errors}{$form.f.colonia.fieldErrors}{/if}
+				{$form.f.colonia|safe}<br />
+				<span class="helptext">{$form.f.colonia.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th>Estado:</th>
+				<td><span id="id_estado">Selecciona tu colonia...</span></td>
+			</tr>
+			<tr>
+				<th>Municipio:</th>
+				<td><span id="id_municipio">Selecciona tu colonia...</span></td>
+			</tr>
+			<script type="text/javascript">{literal}
+				// <![CDATA[
+					function on_cp_change () {
+						cp_obj = document.getElementById ('id_codigo_postal');
+						colonia = document.getElementById ('id_colonia');
+						
+						cp = cp_obj.value.trim();
+						{/literal}
+						var cp_json_url = '{url 'CP_Views::buscarCPJSON'}';
+						{literal}
+						if (cp.length == 5) {
+							$.getJSON (cp_json_url, {codigo: cp})
+							.done (function (data) {
+								colonia.options.length=0;
+								if (data.length == 0) {
+									colonia.options[0] = new Option('Código Postal desconocido', 0, false, false);
+								} else {
+									$.each (data, function (i, item) {
+										colonia.options[i] = new Option(item.localidad, item.id, false, false);
+									});
+								}
+								on_colonia_change ();
+							});
+						}
+					}
+					
+					cp_obj = document.getElementById ('id_codigo_postal');
+					cp_obj.onchange = on_cp_change;
+					
+					//on_cp_change ();
+					
+					function on_colonia_change () {
+						colonia = document.getElementById ('id_colonia');
+						
+						{/literal}
+						var cp_json_url = '{url 'CP_Views::buscarCPJSON'}';
+						{literal}
+						
+						var id_col = colonia.value;
+						if (id_col != 0) {
+							$.getJSON (cp_json_url, {id: id_col})
+							.done (function (data) {
+								estado = document.getElementById ('id_estado');
+								municipio = document.getElementById ('id_municipio');
+								
+								estado.innerHTML = data[0].estado.nombre;
+								municipio.innerHTML = data[0].municipio.nombre;
+							});
+						} else {
+							estado = document.getElementById ('id_estado');
+							municipio = document.getElementById ('id_municipio');
+							
+							estado.innerHTML = 'Selecciona tu colonia...';
+							municipio.innerHTML = 'Selecciona tu colonia...';
+						}
+					}
+					
+					colonia_obj = document.getElementById ('id_colonia');
+					colonia_obj.onchange = on_colonia_change;
+					
+					on_colonia_change ();
+				// ]]>
+			{/literal}</script>
+			<tr>
+				<th><strong>{$form.f.numero_local.labelTag}:</strong></th>
+				<td>{if $form.f.numero_local.errors}{$form.f.numero_local.fieldErrors}{/if}
+				{$form.f.numero_local|safe}<br />
+				<span class="helptext">{$form.f.numero_local.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.numero_celular.labelTag}:</strong></th>
+				<td>{if $form.f.numero_celular.errors}{$form.f.numero_celular.fieldErrors}{/if}
+				{$form.f.numero_celular|safe}<br />
+				<span class="helptext">{$form.f.numero_celular.help_text}</span>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset><legend>Estudios previos:</legend>
+		<table>
+			<tr>
+				<th><strong>{$form.f.escuela.labelTag}:</strong></th>
+				<td>{if $form.f.escuela.errors}{$form.f.escuela.fieldErrors}{/if}
+				{$form.f.escuela|safe}<br />
+				<span class="helptext">{$form.f.escuela.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.promedio.labelTag}:</strong></th>
+				<td>{if $form.f.promedio.errors}{$form.f.promedio.fieldErrors}{/if}
+				{$form.f.promedio|safe}<br />
+				<span class="helptext">{$form.f.promedio.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.egreso.labelTag}:</strong></th>
+				<td>{if $form.f.egreso.errors}{$form.f.egreso.fieldErrors}{/if}
+				{$form.f.egreso|safe}<br />
+				<span class="helptext">{$form.f.egreso.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.escuela_colonia.labelTag}:</strong></th>
+				<td>{if $form.f.escuela_colonia.errors}{$form.f.escuela_colonia.fieldErrors}{/if}
+				{$form.f.escuela_colonia|safe}<br />
+				<span class="helptext">{$form.f.escuela_colonia.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.escuela_municipio.labelTag}:</strong></th>
+				<td>{if $form.f.escuela_municipio.errors}{$form.f.escuela_municipio.fieldErrors}{/if}
+				{$form.f.escuela_municipio|safe}<br />
+				<span class="helptext">{$form.f.escuela_municipio.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.escuela_tipo.labelTag}:</strong></th>
+				<td>{if $form.f.escuela_tipo.errors}{$form.f.escuela_tipo.fieldErrors}{/if}
+				{$form.f.escuela_tipo|safe}<br />
+				<span class="helptext">{$form.f.escuela_tipo.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.tipo_prepa.labelTag}:</strong></th>
+				<td>{if $form.f.tipo_prepa.errors}{$form.f.tipo_prepa.fieldErrors}{/if}
+				{$form.f.tipo_prepa|safe}<br />
+				<span class="helptext">{$form.f.tipo_prepa.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.lic_previa.labelTag}:</strong></th>
+				<td>{if $form.f.lic_previa.errors}{$form.f.lic_previa.fieldErrors}{/if}
+				{$form.f.lic_previa|safe}<br />
+				<span class="helptext">{$form.f.lic_previa.help_text}</span>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset><legend>Contacto de emergencia:</legend>
+		<table>
+			<tr>
+				<th><strong>{$form.f.emergencia_nombre.labelTag}:</strong></th>
+				<td>{if $form.f.emergencia_nombre.errors}{$form.f.emergencia_nombre.fieldErrors}{/if}
+				{$form.f.emergencia_nombre|safe}<br />
+				<span class="helptext">{$form.f.emergencia_nombre.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.emergencia_local.labelTag}:</strong></th>
+				<td>{if $form.f.emergencia_local.errors}{$form.f.emergencia_local.fieldErrors}{/if}
+				{$form.f.emergencia_local|safe}<br />
+				<span class="helptext">{$form.f.emergencia_local.help_text}</span>
+				</td>
+			</tr>
+			<tr>
+				<th><strong>{$form.f.emergencia_celular.labelTag}:</strong></th>
+				<td>{if $form.f.emergencia_celular.errors}{$form.f.emergencia_celular.fieldErrors}{/if}
+				{$form.f.emergencia_celular|safe}<br />
+				<span class="helptext">{$form.f.emergencia_celular.help_text}</span>
+				</td>
+			</tr>
+		</table>
+	</fieldset>
+	<p><input type="submit" value="Actualizar información" /></p>
+</form>
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>{/block}

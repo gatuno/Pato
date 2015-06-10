@@ -124,6 +124,13 @@ $ctl_ad[] = array (
 );
 
 $ctl_ad[] = array (
+	'regex' => '#^/aspirante/(\d+)/actualizar/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'actualizar',
+);
+
+$ctl_ad[] = array (
 	'regex' => '#^/aspirantes/logout/$#',
 	'base' => $base,
 	'model' => 'Admision_Views_Aspirante',
