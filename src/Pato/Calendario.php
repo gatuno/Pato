@@ -126,6 +126,17 @@ function Pato_Calendario_installVistasSetup ($params = null) {
 	    .'LEFT JOIN '.$maestro_tabla.' ON '.$seccion_tabla.'.maestro = '.$maestro_tabla.'.codigo';
 	$db->execute ($sql);
 	
+	/* Vista de alumnos en este calendario */
+	$inscripcion_tabla = Gatuf::factory ('Pato_Inscripcion')->getSqlTable ();
+	$alumnos_tabla = Gatuf::factory ('Pato_Alumnos')->getSqlTable ();
+	$clave = Pato_Calendario_getDefault ();
+	
+	$sql = 'CREATE VIEW '.$dbname.'.'.$dbpfx.'alumnos_actuales AS '."\n"
+	     .'SELECT A.codigo AS alumno, I.carrera AS carrera'."\n"
+	     .'FROM '.$alumnos_tabla.' AS A'."\n"
+	     .'INNER JOIN '.$inscripcion_tabla.' AS I ON'."\n"
+	     .'A.codigo = I.alumno AND STRCMP(I.ingreso, "'.$clave.'") <= 0 AND (I.egreso IS NULL OR STRCMP(I.egreso, "'.$clave.'") >= 0)';
+	$db->execute ($sql);
 	/* Vista de horarios
 	$salon_tabla = Gatuf::factory ('Pato_Salon')->getSqlTable ();
 	$carrera_tabla = Gatuf::factory ('Pato_Carrera')->getSqlTable ();

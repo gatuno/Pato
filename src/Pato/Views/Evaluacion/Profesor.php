@@ -31,14 +31,14 @@ class Pato_Views_Evaluacion_Profesor {
 		$respuesta_model = new Pato_Evaluacion_Respuesta ();
 		
 		$s_model = new Pato_Seccion ();
-		$i_model = new Pato_Inscripcion ();
 		
 		$s_model_t = $s_model->getSqlTable ();
-		$i_model_t = $i_model->getSqlTable ();
 		$r_model_t = $respuesta_model->getSqlTable ();
 		
-		$respuesta_model->_a['views']['por_m']['select'] = 'DISTINCT S.maestro, I.carrera';
-		$respuesta_model->_a['views']['por_m']['join'] = sprintf ('LEFT JOIN %s AS S ON S.nrc = %s.seccion LEFT JOIN %s AS I ON %s.alumno = I.alumno AND I.egreso IS NULL', $s_model_t, $r_model_t, $i_model_t, $r_model_t);
+		$a_actuales = $s_model->_con->dbname.'.'.$s_model->_con->pfx.'alumnos_actuales';
+		
+		$respuesta_model->_a['views']['por_m']['select'] = 'DISTINCT S.maestro, A.carrera';
+		$respuesta_model->_a['views']['por_m']['join'] = sprintf ('LEFT JOIN %s AS S ON S.nrc = %s.seccion INNER JOIN %s AS A ON %s.alumno = A.alumno', $s_model_t, $r_model_t, $a_actuales, $r_model_t);
 		$respuesta_model->_a['views']['por_m']['props'] = array ('maestro', 'carrera');
 		
 		$maestro = new Pato_Maestro ();
@@ -46,9 +46,9 @@ class Pato_Views_Evaluacion_Profesor {
 			if ($request->user->hasPerm ('Patricia.coordinador.'.$c->clave) || $request->user->hasPerm ('Patricia.resultados_eval_profesores')) {
 				$con_p[] = $c;
 				$maestros[$c->clave] = array ();
-				$respuesta_model->_a['views']['por_m']['where'] = sprintf ('I.carrera = %s', $i_model->_con->esc($c->clave));
-				
+				$respuesta_model->_a['views']['por_m']['where'] = sprintf ('A.carrera = %s', $s_model->_con->esc($c->clave));
 				$lista = $respuesta_model->getList (array ('view' => 'por_m'));
+				
 				foreach ($lista as $l) {
 					$maestro->get ($l->maestro);
 					$maestros[$c->clave][] = clone ($maestro);
@@ -89,16 +89,17 @@ class Pato_Views_Evaluacion_Profesor {
 		$respuesta_model = new Pato_Evaluacion_Respuesta ();
 		
 		$s_model = new Pato_Seccion ();
-		$i_model = new Pato_Inscripcion ();
 		
 		$s_model_t = $s_model->getSqlTable ();
-		$i_model_t = $i_model->getSqlTable ();
 		$r_model_t = $respuesta_model->getSqlTable ();
 		
-		$respuesta_model->_a['views']['por_m']['join'] = sprintf ('LEFT JOIN %s AS S ON S.nrc = %s.seccion LEFT JOIN %s AS I ON %s.alumno = I.alumno AND I.egreso IS NULL', $s_model_t, $r_model_t, $i_model_t, $r_model_t);
-		$respuesta_model->_a['views']['por_m']['where'] = sprintf ('I.carrera = %s AND S.maestro = %s', $i_model->_con->esc($carrera->clave), $maestro->_con->esc ($maestro->codigo));
+		$a_actuales = $s_model->_con->dbname.'.'.$s_model->_con->pfx.'alumnos_actuales';
+		
+		$respuesta_model->_a['views']['por_m']['join'] = sprintf ('LEFT JOIN %s AS S ON S.nrc = %s.seccion INNER JOIN %s AS A ON %s.alumno = A.alumno', $s_model_t, $r_model_t, $a_actuales, $r_model_t);
+		$respuesta_model->_a['views']['por_m']['where'] = sprintf ('A.carrera = %s AND S.maestro = %s', $s_model->_con->esc($carrera->clave), $maestro->_con->esc ($maestro->codigo));
 		
 		$respuestas = $respuesta_model->getList (array ('view' => 'por_m'));
+		
 		foreach ($respuestas as $res) {
 			$alumno = $res->get_alumno ();
 			
