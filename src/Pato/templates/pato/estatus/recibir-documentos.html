@@ -1,0 +1,15 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Seleccione los documentos que serán recibidos</p>
+<form method="post" action=".">
+	<table>
+		<tr>
+			<th><strong>Alumno:</strong></th>
+			<td>{$alumno}</td>
+		</tr>
+		{$form.render_table}
+		<tr><td>&nbsp;</td>
+		<td><input type="submit" value="Recibir documentos" /></td></tr>
+	</table>
+</form>
+{/block}

@@ -1,0 +1,10 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Los siguientes documentos están en posesión por parte del alumno {$alumno}:</p>
+<ul>{foreach $documentos as $doc}
+	<li>{$doc.descripcion}</li>
+{/foreach}</ul>
+{/block}
+{block extrahead}
+	<meta http-equiv="refresh" content="2; url={url 'Pato_Views_Estatus::recibirDocumentosReportePDF', array ($alumno.codigo)}" />
+{/block}

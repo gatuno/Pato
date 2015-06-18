@@ -36,7 +36,7 @@ function Pato_Utils_buscarSalonVacio ($semana, $bus_inicio, $bus_fin, $edificios
 	return $libres;
 }
 
-function Pato_Utils_numeroLetra($numero, $decimales = 1) {
+function Pato_Utils_numeroLetra ($numero, $decimales = 1) {
 	$flotante = number_format($numero,$decimales);
 	
 	$decenas_letra = array (3 => 'TREINTA', 4 => 'CUARENTA', 5 => 'CINCUENTA', 6 => 'SESENTA', 7 => 'SETENTA', 8 => 'OCHENTA', 9 => 'NOVENTA', 10 => 'CIEN');
@@ -67,4 +67,46 @@ function Pato_Utils_numeroLetra($numero, $decimales = 1) {
 	}
 	
 	return trim ($cadena_entero.' '.$cadena_flotante);
+}
+
+function Pato_Utils_referencia ($texto) {
+	$map_letras = array ('A' => 1, 'B' => 2, 'C' => 3, 'D' => 4, 'E' => 5, 'F' => 6, 'G' => 7, 'H' => 8, 'I' => 9, 'J' => 1, 'K' => 2, 'L' => 3, 'M' => 4, 'N' => 5, 'O' => 6, 'P' => 7, 'Q' => 8, 'R' => 9, 'S' => 2, 'T' => 3, 'U' => 4, 'V' => 5, 'W' => 6, 'X' => 7, 'Y' => 8, 'Z' => 9);
+	$map_mult2 = array (0 => 0, 1 => 2, 2 => 4, 3 => 6, 4 => 8, 5 => 1, 6 => 3, 7 => 5, 8 => 7, 9 => 9);
+	
+	$texto = strtoupper ($texto);
+	
+	$len = strlen ($texto);
+	$suma = 0;
+	
+	$ref = '';
+	
+	for ($g = 0; $g < $len; $g++) {
+		$letra = substr ($texto, $g, 1);
+		
+		if (ctype_digit ($letra)) {
+			$num = (int) $letra;
+		} else {
+			$num = (int) ($map_letras[$letra]);
+		}
+		
+		$ref .= $num;
+		
+		$pos = $len - $g;
+		
+		if (($pos % 2) + 1 == 2) {
+			$mul = $map_mult2 [$num];
+		} else {
+			$mul = $num;
+		}
+		
+		$suma += $mul;
+	}
+	
+	$res = 10 - ($suma % 10);
+	
+	if ($res == 10) $res = 0;
+	
+	$ref = $texto.$res;
+	
+	return $ref;
 }

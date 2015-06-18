@@ -618,4 +618,129 @@ class Pato_Views_Estatus {
 		                                               'estatus' => $estatus),
 		                                         $request);
 	}
+	
+	public $recibirDocumentosSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function recibirDocumentosSeleccionar ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
+			
+			if ($form->isValid ()) {
+				$alumno = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::recibirDocumentos', $alumno->codigo);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_SeleccionarAlumno (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/recibir-documentos-seleccionar.html',
+		                                         array('page_title' => 'Recibir documentos',
+		                                               'form' => $form),
+		                                         $request);
+	}
+	
+	public $recibirDocumentos_precond = array ('Gatuf_Precondition::adminRequired');
+	public function recibirDocumentos ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if ($alumno->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$ins = $alumno->get_current_inscripcion ();
+		
+		if ($ins === null) {
+			/* No está activo, no podemos moverlo de carrera */
+			$request->user->setMessage (3, 'El alumno seleccionado no tiene una carrera activa');
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::recibirDocumentosSeleccionar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$estatus = $ins->get_current_estatus ();
+		// Necesita tener una baja administrativa
+		if ($estatus->get_estatus()->clave != 'B2') {
+			$request->user->setMessage (2, 'El alumno '.((string) $alumno).' no tiene estatus pendiente de de documentos. Estatus actual: '.((string) $estatus));
+			
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::recibirDocumentosSeleccionar');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Estatus_Documentos ($request->POST);
+			
+			if ($form->isValid ()) {
+				$docs_id = $form->save ();
+				
+				$doc = new Admision_Documento ();
+				
+				foreach ($docs_id as $id) {
+					$doc->get ($id);
+					
+					$alumno->setAssoc ($doc);
+				}
+				
+				/* Registrar los cambios de estatus */
+				$estatus->fin = date ('Y-m-d H:i:s');
+				$estatus->update ();
+				
+				$estatus = new Pato_InscripcionEstatus ();
+				$estatus->inicio = date ('Y-m-d H:i:s');
+				$estatus->inscripcion = $ins;
+				$estatus->estatus = new Pato_Estatus ('AC');
+				$estatus->create ();
+				
+				Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Activo (AC). Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				$request->user->setMessage (1, 'Se ha recibido documentos del alumno '.((string) $alumno).' . Estatus: Activo (AC)');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::recibirDocumentosReporte', $alumno->codigo);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Estatus_Documentos (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/recibir-documentos.html',
+		                                         array('page_title' => 'Recibir documentos',
+		                                               'alumno' => $alumno,
+		                                               'form' => $form),
+		                                         $request);
+	}
+	
+	public function recibirDocumentosReporte ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if ($alumno->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$docs = $alumno->get_documentos_list ();
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/recibir-documentos-reporte.html',
+		                                         array('page_title' => 'Documentos del alumno',
+		                                               'alumno' => $alumno,
+		                                               'documentos' => $docs),
+		                                         $request);
+	}
+	
+	public function recibirDocumentosReportePDF ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if ($alumno->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$pdf = new Pato_PDF_Estatus_Documentos ('P', 'mm', 'Letter');
+		
+		$pdf->render ($alumno, $request->user);
+		
+		$pdf->Close ();
+		
+		$nombre = 'recibo_'.$alumno->codigo.'.pdf';
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+	}
 }
