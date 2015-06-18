@@ -1010,6 +1010,34 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/estatus/documentos/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'recibirDocumentosSeleccionar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/documentos/(\w\d{7})/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'recibirDocumentos',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/documentos/(\w\d{7})/reporte/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'recibirDocumentosReporte',
+);
+
+$ctl[] = array (
+	'regex' => '#^/estatus/documentos/(\w\d{7})/reporte/PDF/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'recibirDocumentosReportePDF',
+);
+
+$ctl[] = array (
 	'regex' => '#^/evaluacion/profesores/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Evaluacion_Profesor',

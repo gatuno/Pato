@@ -158,7 +158,7 @@ class Pato_Views_Maestro {
 		                                         $request);
 	}
 	
-	public $buscarJSON_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $buscarJSON_precond = array ('Gatuf_Precondition::loginRequired');
 	public function buscarJSON ($request, $match) {
 		if (!isset ($request->GET['term'])) {
 			return new Gatuf_HTTP_Response_Json (array ());

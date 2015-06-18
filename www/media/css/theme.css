@@ -14,12 +14,18 @@ a img {
 	margin-left: 0.3em;
 }
 
+html {
+	height: 100%;
+}
+
 body {
 	margin: 0px;
+	height: 100%;
 }
 
 .content-div {
 	margin-left: 5px;
+	padding-bottom: 50px;
 }
 
 img,
@@ -206,6 +212,21 @@ td .icon {
 }
 
 .helptext {
-  font-size: 80%;
-  color: #555753;
+	font-size: 80%;
+	color: #555753;
 }
+
+#wrapper {
+	min-height: 100%;
+	position: relative;
+}
+
+.footer {
+	bottom: 0;
+	height: 50px;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+

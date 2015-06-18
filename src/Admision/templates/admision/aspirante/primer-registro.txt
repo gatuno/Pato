@@ -1,16 +1,15 @@
 Tu registro ha sido exitoso.
 
-Ahora debes seguir estos pasos:
-Realizar un  pago de $ 950.00 pesos en el banco HSBC
-   Clave RAP: 1210
-   No. De Referencia: 201530003
+Presentarse en ventanilla de servicios escolares de la Universidad a partir del 1 de junio y hasta el 22 de julio del 2015 con la siguiente documentación:
+ * Ficha de pago por $950.00 (novecientos cincuenta pesos). Realizar un pago de $950.00 pesos en el banco HSBC
+   Clave RAP: 1210
+   No. De Referencia: 201530003
 
-Presentarse  en  ventanilla de servicios escolares de la Universidad  a partir del  23 de febrero  y hasta el 20 de mayo del 2015 con la siguiente documentación:
- * Ficha de pago por $ 950.00 (novecientos cincuenta  pesos).
- * Copia  de certificado  de bachillerado  con  promedio  mínimo de 7 (o constancia de estudios que está cursando el 6° cuatrimestre de bachillerato).
- * Copia de CURP.
+ * Copia de certificado de bachillerado con promedio mínimo de 7 (o constancia de estudios que está cursando el 6° cuatrimestre de bachillerato).
+ * Copia de CURP.
  * Copia de identificación oficial con fotografía (credencial de elector de preferencia).
  * Dos fotografías tamaño infantil blanco y negro.
+ * Después de haber entregado tu documentación en Servicios Escolares se te proporcionara un número de folio con el cual podrás realizar tu registro en línea.
 
 Tu número de aspirante para hacer seguimiento del trámite es: {$numero}
 Tu contraseña de seguirdad para acceder es: {$pass}

@@ -22,6 +22,9 @@ $cfg['secret_key'] = 'Qj2OnzPaKaJULrzLVrdyVwZANTaK8WPFGusvMSzpGqW+hruY90hyJ';
 # Debe ser escribible por el servidor web.
 $cfg['tmp_folder'] = '/tmp';
 
+# Subida de archivos para admision
+$cfg['admision_data_upload'] = 'admision_user_data_upload';
+
 # Ruta a la carpeta PEAR
 $cfg['pear_path'] = '/usr/share/php';
 
@@ -29,6 +32,7 @@ $cfg['pear_path'] = '/usr/share/php';
 $cfg['template_folders'] = array(
    dirname(__FILE__).'/../templates',
    dirname(__FILE__).'/../../Admin/templates',
+   dirname(__FILE__).'/../../Admision/templates',
 );
 
 # ---------------------------------------------------------------------------- #
@@ -110,6 +114,7 @@ $cfg['middleware_classes'] = array(
 	'Gatuf_Middleware_Session',
 	'Pato_Middleware_Calendario',
 	'Pato_Middleware_Password',
+	'Pato_Middleware_Aviso',
 );
 
 $cfg['gatuf_custom_user'] = 'Pato_User';
@@ -117,7 +122,7 @@ $cfg['gatuf_custom_user'] = 'Pato_User';
 /*$cfg['template_tags'] = array ('coordperm' => 'Calif_Template_CoordPerm',
 	'jefeperm' => 'Calif_Template_JefePerm');*/
 
-$cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin');
+$cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin', 'CP', 'Admision');
 
 $cfg['template_tags'] = array ('matcoord' => 'Pato_Template_Tag_MateriaCoord');
 
