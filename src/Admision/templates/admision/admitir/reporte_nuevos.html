@@ -1,0 +1,10 @@
+{extends 'admision/base.html'}
+{block body}
+<p>Procesando los ingresos de alumnos en la carrera de <strong>{$cupo_carrera.get_carrera()}</strong>, en la convocatoria <strong>{$convocatoria.descripcion}</strong>. Hay un total de {$aspirantes|count} aspirantes admitidos.</p>
+<table border="1">
+	<thead><tr><th>Aspirante</th><th>Nombre</th><th>Código generado</th></tr></thead>
+	<tbody>
+		{foreach $aspirantes as $aspi}<tr><td>{$aspi.id}</td><td>{$aspi.nombre} {$aspi.apellido}</td><td>{$aspi.matricula}</td></tr>{/foreach}
+	</tbody>
+</table>
+{/block}

@@ -165,4 +165,11 @@ $ctl_ad[] = array (
 	'method' => 'verAspirante',
 );
 
+$ctl_ad[] = array (
+	'regex' => '#^/admitir/carrera/(\d+)/procesar/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Admitir',
+	'method' => 'procesar',
+);
+
 return $ctl_ad;

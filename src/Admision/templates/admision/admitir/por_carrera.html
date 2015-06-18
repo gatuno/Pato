@@ -16,7 +16,7 @@
 		<tr><td class="center">{$aspi.id}</td>
 		<td><a href="{url 'Admision_Views_Admitir::verAspirante', $aspi.id}" onclick="return popitup(this.href)">{$aspi.nombre} {$aspi.apellido}</a></td>
 		<td class="center">{$aspi.promedio}</td>
-		<td class="center">{$aspi.ceneval|float:3}</td>
+		<td class="center">{$aspi.ceneval|float:0}</td>
 		<td class="center">{if $aspi.turno == 'M'}Matutino{elseif $aspi.turno == 'V'}Vespertino{/if}</td>
 		{assign $a = 'admision_'~$aspi.id}
 		<td class="center"><div class="errors">{if $form.f.__get($a).errors}{$form.f.__get($a).fieldErrors}{/if}</div>

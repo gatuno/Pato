@@ -1,0 +1,25 @@
+{$nombre} {$apellido}
+P R E S E N T E
+
+Estimado {$nombre}, a través de la presente la Universidad Politécnica de la Zona Metropolitana de Guadalajara le informa que ha sido admitido en su solicitud de ingreso.
+Reciba la más cordial de nuestras felicitaciones por la aceptación para formar parte del alumnado de nuestra Universidad y por lo cual, le solicitamos se presente en nuestras oficinas de Tlajomulco a partir del día 15 de Junio al 24  de Julio del año en curso para comenzar los trámites de inscripción.
+Requisitos de inscripción:
+
+* Original y copia de acta de nacimiento.
+* Original y copia de certificado de preparatoria, promedio mínimo de 7 (debidamente legalizado por el estado), en el caso que estés por concluir documento que explique el promedio obtenido y cuando lo recibirás el certificado.
+* 6 Fotografías t/infantil blanco y negro de estudio.
+* 2 copias de comprobante de domicilio.
+* 2 copias de identificación oficial (credencial de elector, cartilla militar, pasaporte y en caso de ser menor de edad credencial de la escuela de preparatoria).
+* Original y copia de certificado médico de una Institución oficial, con tipo de sangre (IMSS, Cruz Verde o Cruz Roja).
+* 2 copias de la CURP.
+* Presentar la ficha  del pago cuatrimestral por la cantidad de $1,500.00 pesos, mismo que debe realizarse en el banco HSBC con referencia personal, que es la siguiente: 
+
+Clave RAP: 1210
+No. De Referencia: {$referencia}
+
+Para cualquier duda o aclaración, quedo a sus órdenes. 
+Por su atención, gracias. 
+ATENTAMENTE
+MTRO. JAVIER ENRIQUE SOLÓRZANO CARRILLO
+RECTOR DE LA UNIVERSIDAD
+

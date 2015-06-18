@@ -162,11 +162,11 @@ class Admision_PDF_Admision extends External_FPDF {
 		$this->SetX (18);
 		$tels = array ();
 		if ($aspirante->emergencia_local != '') {
-			$tels[] = 'Local '.$aspirante->numero_local;
+			$tels[] = 'Local '.$aspirante->emergencia_local;
 		}
 		
 		if ($aspirante->emergencia_celular != '') {
-			$tels[] = 'Celular '.$aspirante->numero_celular;
+			$tels[] = 'Celular '.$aspirante->emergencia_celular;
 		}
 		
 		$this->Cell (100, 4, 'Teléfono (s): '.implode (', ', $tels), 0, 0);

@@ -34,6 +34,12 @@ class Admision_CupoCarrera extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Integer',
 			       'blank' => true,
 			),
+			'procesada' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'blank' => true,
+			       'default' => false,
+			),
 		);
 		
 		$this->_con = Admision_DB_getDB ();

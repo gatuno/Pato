@@ -256,6 +256,14 @@ class Admision_Aspirante extends Gatuf_Model {
 			       'size' => 1,
 			       'default' => null,
 			),
+			'matricula' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Char',
+			       'default' => null,
+			       'is_null' => true,
+			       'blank' => true,
+			       'size' => 8,
+			),
 		);
 		
 		$this->_con = Admision_DB_getDB ();

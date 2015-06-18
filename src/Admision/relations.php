@@ -9,4 +9,6 @@ $m['Admision_Aspirante'] = array ('relate_to' => array ('Admision_CupoCarrera', 
 
 $m['Admision_Estadistica'] = array ('relate_to' => array ('Admision_Aspirante'));
 
+$m['Admision_Documento'] = array ('relate_to_many' => array ('Pato_Alumno'));
+
 return $m;
