@@ -926,6 +926,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/reportes/alumnos/ingreso/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Alumnos',
+	'method' => 'ingreso',
+);
+
+$ctl[] = array (
+	'regex' => '#^/reportes/alumnos/ingreso/(\w+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Reportes_Alumnos',
+	'method' => 'ingresoReporte',
+);
+
+$ctl[] = array (
 	'regex' => '#^/estatus/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Estatus',

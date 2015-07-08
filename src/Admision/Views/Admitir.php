@@ -196,6 +196,7 @@ class Admision_Views_Admitir {
 			$inscripcion->alumno = $alumno;
 			$inscripcion->carrera = $carrera;
 			$inscripcion->ingreso = $calendario;
+			$inscripcion->turno = $aspi->turno_final;
 			$inscripcion->egreso = null;
 			
 			$inscripcion->create ();
