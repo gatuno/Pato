@@ -370,7 +370,7 @@ class Pato_Views_Seccion {
 			$totales['generados']++;
 		}
 		
-		Gatuf_Log::info (sprintf ('El usuario %s (%s) cerró a Kardex el NRC %s, en el grupo de evaluación %s', $request->user->login, $request->user->id, $seccion->nrc, $gpe->id));
+		Gatuf_Log::info (sprintf ('El usuario %s (%s) cerró a Kardex el NRC %s, en el grupo de evaluacion %s', $request->user->login, $request->user->id, $seccion->nrc, $gpe->id));
 		$request->user->setMessage (1, 'Fueron creadas '.$totales['generados'].' calificaciones en kardex. Se omitieron '.$totales['enkardex'].' registros por que ya existían.');
 		
 		return new Gatuf_HTTP_Response_Redirect ($url);
@@ -549,7 +549,7 @@ class Pato_Views_Seccion {
 			if ($form->isValid ()) {
 				$form->save ();
 				
-				Gatuf_Log::info (sprintf ('El usuario %s (%s) ha subido calificaciones en boleta del NRC %s en la forma de evaluación %s', $request->user->login, $request->user->id, $seccion->nrc, $eval->id));
+				Gatuf_Log::info (sprintf ('El usuario %s (%s) ha subido calificaciones en boleta del NRC %s en la forma de evaluacion %s', $request->user->login, $request->user->id, $seccion->nrc, $eval->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

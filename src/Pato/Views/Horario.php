@@ -201,7 +201,7 @@ class Pato_Views_Horario {
 			$form = new Pato_Form_Horario_Actualizar ($request->POST, $extra);
 			
 			if ($form->isValid ()) {
-				Gatuf_Log::info (sprintf ('La hora (%s, %s) del NRC %s va a ser actualizada', $hora->id, $horario->hash(), $horario->nrc));
+				Gatuf_Log::info (sprintf ('La hora (%s, %s) del NRC %s va a ser actualizada', $hora->id, $hora->hash(), $hora->nrc));
 				$horario = $form->save ();
 				Gatuf_Log::info (sprintf ('A: %s, por el usuario %s (%s)', $horario->hash(), $request->user->login, $request->user->id));
 				
