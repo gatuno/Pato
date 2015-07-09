@@ -1,0 +1,14 @@
+{extends 'pato/base.html'}
+{block body}
+	<p>Reporte de alumnos por calendario de ingreso y su posible estatus.</p>
+	<table border="1"><thead><tr><th rowspan="2">Carrera</th><th colspan="2">Activo (AC)</th><th colspan="2">Admitido pero sin Documentos (B2)</th><th colspan="2">Otros</th></tr>
+		<tr><th>M</th><th>V</th><th>M</th><th>V</th><th>M</th><th>V</th></tr></thead>
+		<tbody>{foreach $carreras as $c}
+		<tr><td>{$c.descripcion}</td>
+			<td>{$conteo[$c.clave]['ac']['M']}</td><td>{$conteo[$c.clave]['ac']['V']}</td>
+			<td>{$conteo[$c.clave]['b2']['M']}</td><td>{$conteo[$c.clave]['b2']['V']}</td>
+			<td>{$conteo[$c.clave]['o']['M']}</td><td>{$conteo[$c.clave]['o']['V']}</td>
+		</tr>{/foreach}
+		</tbody>
+	</table>
+{/block}
