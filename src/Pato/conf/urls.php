@@ -1129,6 +1129,34 @@ $ctl[] = array(
 );
 
 $ctl[] = array (
+	'regex' => '#^/whatsapp/registro/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_WhatsApp_Alumno',
+	'method' => 'registrar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/whatsapp/completar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_WhatsApp_Alumno',
+	'method' => 'completar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/whatsapp/mensajes/enviar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_WhatsApp_Sistema',
+	'method' => 'enviar',
+);
+
+$ctl[] = array (
+	'regex' => '#^/whatsapp/mensajes/enviado/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_WhatsApp_Sistema',
+	'method' => 'enviado',
+);
+
+$ctl[] = array (
 	'regex' => '#^/admin#',
 	'base' => $base,
 	'sub' => include 'Admin/conf/urls.php',

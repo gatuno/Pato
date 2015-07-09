@@ -126,6 +126,20 @@ class Pato_PerfilAlumno extends Gatuf_Model {
 			       'default' => false,
 			       'blank' => false,
 			),
+			'whatsapp' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Varchar',
+			       'default' => null,
+			       'is_null' => true,
+			       'blank' => true,
+			       'size' => 30,
+			),
+			'whatsapp_verificado' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'default' => false,
+			       'blank' => true,
+			),
 			'last_update' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Datetime',
