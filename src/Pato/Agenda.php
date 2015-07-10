@@ -34,6 +34,14 @@ class Pato_Agenda extends Gatuf_Model {
 			),
 		);
 		
+		$this->_a['idx'] = array (
+			'alumno_idx' =>
+			array (
+			       'col' => 'alumno',
+			       'type' => 'unique',
+			),
+		);
+		
 		Gatuf::loadFunction ('Pato_Calendario_getDefault');
 		$this->_con = Pato_Calendario_getDBForCal (Pato_Calendario_getDefault ());
 	}

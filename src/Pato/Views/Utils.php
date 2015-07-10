@@ -282,4 +282,80 @@ class Pato_Views_Utils {
                                                        'form' => $form),
                                                  $request);
 	}
+	
+	public $generarAgendas_precond = array ('Gatuf_Precondition::adminRequired');
+	public function generarAgendas ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Utils_Agenda ($request->POST);
+			
+			if ($form->isValid ()) {
+				$data = $form->save ();
+				
+				$calendario = new Pato_Calendario ($data['calendario']);
+				
+				/* Forzar el cambio de calendario */
+				$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+				
+				$db = Pato_Calendario_getDBForCal ($calendario->clave);
+				
+				$alumno_model = new Pato_Alumno ();
+				
+				$a_actuales = $db->dbname.'.'.$db->pfx.'alumnos_actuales';
+				
+				$alumno_model->_a['views']['por_m']['join'] = sprintf ('RIGHT JOIN %s AS AA ON %s.codigo = AA.alumno', $a_actuales, $alumno_model->getSqlTable ());
+				$carrera = null;
+				if (!is_null ($data['carrera'])) {
+					$carrera = new Pato_Carrera ($data['carrera']);
+					$sql = new Gatuf_SQL ('AA.carrera = %s', $data['carrera']);
+					$alumno_model->_a['views']['por_m']['where'] = $sql->gen ();
+				}
+				
+				$alumnos = $alumno_model->getList (array ('view' => 'por_m'));
+				
+				$total = 0;
+				/* Generar las agendas, o en su defecto, actualizar */
+				foreach ($alumnos as $alumno) {
+					$ins = $alumno->get_inscripcion_for_cal ($calendario);
+					$estatus = $ins->get_current_estatus ();
+					
+					if (!$estatus->isActivo ()) continue;
+					
+					$total++;
+					
+					$agendas = $alumno->get_agenda_list ();
+					
+					if (count ($agendas) == 0) {
+						/* Crearle la agenda */
+						$agenda = new Pato_Agenda ();
+						$agenda->alumno = $alumno;
+						$agenda->inicio = $data['inicio'];
+						$agenda->fin = $data['fin'];
+						
+						$agenda->create ();
+					} else {
+						/* Actualizar la agenda */
+						$agendas[0]->inicio = $data['inicio'];
+						$agendas[0]->fin = $data['fin'];
+						
+						$agendas[0]->update ();
+					}
+				}
+				
+				/* Aquí presentar el reporte */
+				return Gatuf_Shortcuts_RenderToResponse ('pato/utils/generar-agendas-reporte.html',
+				                                         array('page_title' => 'Generar agendas',
+		                                                       'total' => $total,
+		                                                       'carrera' => $carrera,
+		                                                       'calendario' => $calendario),
+		                                                 $request);
+			}
+		} else {
+			$form = new Pato_Form_Utils_Agenda (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/generar-agendas.html',
+		                                         array('page_title' => 'Generar agendas',
+                                                       'form' => $form),
+                                                 $request);
+	}
 }

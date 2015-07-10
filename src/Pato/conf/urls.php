@@ -786,6 +786,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/utils/generar-agendas/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'generarAgendas',
+);
+
+$ctl[] = array (
 	'regex' => '#^/calificaciones/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Calificaciones',
