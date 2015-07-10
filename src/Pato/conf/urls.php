@@ -793,6 +793,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/utils/agregar-postal/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Utils',
+	'method' => 'agregarPostal',
+);
+
+$ctl[] = array (
 	'regex' => '#^/calificaciones/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Calificaciones',

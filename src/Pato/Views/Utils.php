@@ -358,4 +358,27 @@ class Pato_Views_Utils {
                                                        'form' => $form),
                                                  $request);
 	}
+	
+	public $agregarPostal_precond = array ('Gatuf_Precondition::adminRequired');
+	public function agregarPostal ($request, $match) {
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Utils_AgregarPostal ($request->POST);
+			
+			if ($form->isValid ()) {
+				$postal = $form->save ();
+				
+				$request->user->setMessage (1, 'Código postal creado');
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Utils::index');
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Utils_AgregarPostal (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/agregar-postal.html',
+		                                         array('page_title' => 'Agregar código postal',
+                                                       'form' => $form),
+                                                 $request);
+	}
 }
