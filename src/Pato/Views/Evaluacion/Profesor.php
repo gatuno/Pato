@@ -183,24 +183,25 @@ class Pato_Views_Evaluacion_Profesor {
 			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
-		/* Si el calendario actual no es igual al calendario activo,
+		/* Si el calendario actual no es igual al calendario marcado en la configuración,
 		 * No permitir las evaluaciones */
 		$gsettings = new Gatuf_GSetting ();
 		$gsettings->setApp ('Patricia');
-		$cal = $gsettings->getVal ('calendario_activo', null);
-		$calendario = new Pato_Calendario ($cal);
-		
 		$correcto = true;
-		if ($calendario->clave != $request->calendario->clave) {
-			$request->user->setMessage (1, 'No se permite evaluar calendarios anteriores');
-			$correcto = false;
-		}
 		
-		$abierto = $gsettings->getVal ('evaluacion_prof_'.$request->calendario->clave, false);
+		$abierto = $gsettings->getVal ('evaluacion_profesores_abierta', false);
 		
-		if ($correcto && $abierto == false) {
+		if ($abierto == false) {
 			$correcto = false;
 			$request->user->setMessage (2, 'Por el momento, la evaluación de profesores no se encuentra activa');
+		}
+		
+		$cal = $gsettings->getVal ('evaluacion_profesores_cal', '');
+		$calendario = new Pato_Calendario ($cal);
+		
+		if ($correcto && $calendario->clave != $request->calendario->clave) {
+			$request->user->setMessage (1, 'No se permite evaluar calendarios anteriores');
+			$correcto = false;
 		}
 		
 		/* Revisar cuáles respuestas están en tiempo */
@@ -232,7 +233,15 @@ class Pato_Views_Evaluacion_Profesor {
 	public static function checar_si_evaluo ($alumno) {
 		$gsettings = new Gatuf_GSetting ();
 		$gsettings->setApp ('Patricia');
-		$cal = $gsettings->getVal ('calendario_activo', null);
+		
+		/* Si no está abierta la evaluación de profesores, no sirve de nada forzar a que evaluen */
+		$abierto = $gsettings->getVal ('evaluacion_profesores_abierta', false);
+		
+		if (!$abierto) {
+			return true;
+		}
+		
+		$cal = $gsettings->getVal ('evaluacion_profesores_cal', '');
 		$calendario = new Pato_Calendario ($cal);
 		
 		/* Mover al calendario activo actual */
@@ -270,11 +279,11 @@ class Pato_Views_Evaluacion_Profesor {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		/* Si el calendario actual no es igual al calendario activo,
+		/* Si el calendario actual no es igual al calendario de las preferencias,
 		 * No permitir las evaluaciones */
 		$gsettings = new Gatuf_GSetting ();
 		$gsettings->setApp ('Patricia');
-		$cal = $gsettings->getVal ('calendario_activo', null);
+		$cal = $gsettings->getVal ('evaluacion_profesores_cal', '');
 		$calendario = new Pato_Calendario ($cal);
 		
 		if ($calendario->clave != $request->calendario->clave) {
@@ -284,7 +293,7 @@ class Pato_Views_Evaluacion_Profesor {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
-		$abierto = $gsettings->getVal ('evaluacion_prof_'.$request->calendario->clave, false);
+		$abierto = $gsettings->getVal ('evaluacion_profesores_abierta', false);
 		
 		if ($abierto == false) {
 			$request->user->setMessage (2, 'Por el momento, la evaluación de profesores no se encuentra activa');

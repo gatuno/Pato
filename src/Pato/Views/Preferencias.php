@@ -184,4 +184,35 @@ class Pato_Views_Preferencias {
 		                                                'form' => $form),
 		                                         $request);
 	}
+	
+	public $evalProf =array ('Gatuf_Precondition::adminRequired');
+	public function evalProf ($request, $match) {
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		
+		$abierto = $gconf->getVal ('evaluacion_profesores_abierta', false);
+		$cal = $gconf->getVal ('evaluacion_profesores_cal', '');
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Preferencias_EvalProf ($request->POST);
+			
+			if ($form->isValid ()) {
+				$form->save ();
+				
+				$request->user->setMessage (1, 'Preferencias guardadas');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Preferencias::evalProf');
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Preferencias_EvalProf (null);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/evaluacion_profesores.html',
+		                                         array ('page_title' => 'Configuraciones sobre la evaluación a profesores',
+		                                                'abierta' => $abierto,
+		                                                'cal' => $cal,
+		                                                'form' => $form),
+		                                         $request);
+	}
 }

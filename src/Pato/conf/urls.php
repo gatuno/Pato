@@ -737,6 +737,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/preferencias/evaluacion_profesores/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Preferencias',
+	'method' => 'evalProf',
+);
+
+$ctl[] = array (
 	'regex' => '#^/utils/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Utils',
