@@ -106,16 +106,6 @@ $cfg['from_email'] = 'pato@upzmg.edu.mx';
 # Email address for the bounced messages.
 $cfg['bounce_email'] = 'pato@upzmg.edu.mx';
 
-# ----------------------------------------
-# Configuraciones del servicio de WhatsApp
-# ----------------------------------------
-
-$cfg['send_whatsapp'] = true;
-$cfg['whatsapp_login'] = ;
-$cfg['whatsapp_pass'] = ;
-$cfg['whatsapp_nick'] = ;
-$cfg['whatsapp_tempdir'] = '/tmp/whatsmedia';
-
 # -----------------------
 # Configuraciones varias
 # -----------------------
