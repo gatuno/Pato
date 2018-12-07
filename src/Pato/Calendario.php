@@ -33,6 +33,12 @@ class Pato_Calendario extends Gatuf_Model {
 			       'blank' => false,
 			       'default' => false,
 			),
+			'anio_for_show' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Integer',
+			       'blank' => false,
+			       'default' => false,
+			),
 			'letra' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Char',
@@ -128,7 +134,7 @@ function Pato_Calendario_installVistasSetup ($params = null) {
 	
 	/* Vista de alumnos en este calendario */
 	$inscripcion_tabla = Gatuf::factory ('Pato_Inscripcion')->getSqlTable ();
-	$alumnos_tabla = Gatuf::factory ('Pato_Alumnos')->getSqlTable ();
+	$alumnos_tabla = Gatuf::factory ('Pato_Alumno')->getSqlTable ();
 	$clave = Pato_Calendario_getDefault ();
 	
 	$sql = 'CREATE VIEW '.$dbname.'.'.$dbpfx.'alumnos_actuales AS '."\n"

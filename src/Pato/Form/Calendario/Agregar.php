@@ -47,12 +47,14 @@ class Pato_Form_Calendario_Agregar extends Gatuf_Form {
 		$anio = substr ($this->cleaned_data['clave'], 0, 4);
 		$clave = substr ($this->cleaned_data['clave'], 4);
 		
+		$calendario->anio = (int) $anio;
+		
 		if ($clave == 'C' || $clave == 'D') {
 			/* Los "C" y "D" trabajan en el ciclo escolar anterior */
-			$calendario->anio = ((int) $anio) - 1;
+			$calendario->anio_for_show = ((int) $anio) - 1;
 		} else if ($clave == 'E') {
 			/* Los "E" van en su propio año */
-			$calendario->anio = (int) $anio;
+			$calendario->anio_for_show = (int) $anio;
 		}
 		
 		$calendario->letra = $clave;

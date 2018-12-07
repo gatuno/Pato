@@ -57,7 +57,7 @@ class Pato_PDF_Seccion_Acta extends External_FPDF {
 		
 		/* Condicionado a que esto se elimine */
 		$this->SetX (148);
-		$this->Cell (56, 8, 'Ciclo: '.$calendario->anio.'-'.($calendario->anio + 1), 1, 0, 'L');
+		$this->Cell (56, 8, 'Ciclo: '.$calendario->anio_for_show.'-'.($calendario->anio_for_show + 1), 1, 0, 'L');
 		
 		$this->SetY (58); $this->SetX (13);
 		$this->Cell (42, 8, 'Cuatrimestre: '.$materia->cuatrimestre.'º', 1);

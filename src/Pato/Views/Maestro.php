@@ -4,6 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Maestro {
+	public $index_precond = array ('Gatuf_Precondition::loginRequired');
 	public function index ($request, $match) {
 		$maestro = new Pato_Maestro ();
 		
@@ -56,8 +57,13 @@ class Pato_Views_Maestro {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$grupos = $maestro->get_primario_list (array ('view' => 'paginador'));
-		if ($grupos_suplente = $maestro->get_suplente_list (array ('view' => 'paginador')) ){
+		$sec = new Pato_Seccion ();
+		$sql = new Gatuf_SQL ('secciones_view.maestro = %s', array ($maestro->codigo));
+		$grupos = $sec->getList (array ('view' => 'paginador', 'filter' => $sql->gen ()));
+		
+		$sql = new Gatuf_SQL ('secciones_view.suplente = %s', array ($maestro->codigo));
+		$grupos_suplente = $sec->getList (array ('view' => 'paginador', 'filter' => $sql->gen ()));
+		if (count ($grupos_suplente) > 0){
 			foreach ($grupos_suplente as $suple) {
 			$grupos[] = $suple;
 			}

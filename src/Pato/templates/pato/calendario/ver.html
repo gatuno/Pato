@@ -3,7 +3,7 @@
 <p><strong>Clave</strong>: {$calendario.clave}</p>
 <p><strong>Descripción</strong>: {$calendario.descripcion}</p>
 <p>{if $es_activo}<strong>Este es el calendario activo</strong>{else}Usted puede convertir este calendario <a href="{url 'Pato_Views_Calendario::cambiarActual', $calendario.clave}">activo por defecto</a>{/if}</p>
-<p>{if $es_siguiente}<strong>Este es el calendario siguiente</strong>{else}Usted puede convertir este calendario <a href="{url 'Pato_Views_Calendario::cambiarSiguiente', $calendario.clave}">en el próxmio para ingreso de materias</a>{/if}</p>
+<p>{if $es_siguiente}<strong>Este es el calendario siguiente</strong>{else}Usted puede convertir este calendario <a href="{url 'Pato_Views_Calendario::cambiarSiguiente', $calendario.clave}">en el próximo para ingreso de materias</a>{/if}</p>
 <h2>Configuraciones del calendario</h2>
 {if $form.errors}
 	<div class="errors">

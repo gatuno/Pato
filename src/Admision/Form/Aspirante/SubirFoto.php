@@ -6,7 +6,10 @@ class Admision_Form_Aspirante_SubirFoto extends Gatuf_Form {
 		$this->aspirante = $extra['aspirante'];
 		
 		$upload_path = Gatuf::config ('admision_data_upload');
-		$curp_filename = sprintf ('%s/foto_%s_%%s', $this->aspirante->id, $this->aspirante->id);
+		$sub_id = (int) ($this->aspirante->id / 100);
+		$carpeta = str_pad ($sub_id, 3, "0", STR_PAD_LEFT);
+		
+		$foto_filename = sprintf ('%s/foto_%s.%%e', $sub_id, $this->aspirante->id);
 		$this->fields['attachment_foto'] = new Gatuf_Form_Field_File (
 			array (
 				'required' => true,
@@ -15,7 +18,7 @@ class Admision_Form_Aspirante_SubirFoto extends Gatuf_Form {
 				'move_function_params' => array (
 					'upload_path' => $upload_path,
 					'upload_path_create' => true,
-					'file_name' => $curp_filename,
+					'file_name' => $foto_filename,
 					'upload_overwrite' => true,
 				),
 		));
