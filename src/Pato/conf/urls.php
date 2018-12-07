@@ -72,6 +72,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/calendarios/(\w+)/configurar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Calendario',
+	'method' => 'configurar',
+);
+
+$ctl[] = array (
 	'regex' => '#^/calendarios/(\w+)/actual/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Calendario',
@@ -83,6 +90,13 @@ $ctl[] = array (
 	'base' => $base,
 	'model' => 'Pato_Views_Calendario',
 	'method' => 'cambiarSiguiente',
+);
+
+$ctl[] = array (
+	'regex' => '#^/calendarios/(\w+)/festivo/agregar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_DiaFestivo',
+	'method' => 'agregar',
 );
 
 /* Recuperación de contraseñas */

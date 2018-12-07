@@ -102,6 +102,35 @@ class Pato_Views_Calendario {
 			if ($siguiente->clave == $calendario->clave) $es_siguiente = true;
 		}
 		
+		/* Calcular los días festivos */
+		$sql = new Gatuf_SQL ('inicio > %s AND fin < %s', array ($calendario->inicio, $calendario->fin));
+		$festivos = Gatuf::factory ('Pato_DiaFestivo')->getList (array ('filter' => $sql->gen (), 'order' => 'inicio ASC'));
+		$hoy = date("Y-m-d");
+		
+		/* Mostrar algunas de sus configuraciones */
+		$configs = array ();
+		$configs['suficiencias'] = $gconf->getVal ('suficiencias_abierta_'.$calendario->clave, false);
+		$configs['planeacion'] = $gconf->getVal ('planeacion_asignatura_'.$calendario->clave, false);
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/calendario/ver.html',
+		                                         array ('page_title' => 'Calendario '.$calendario->descripcion,
+		                                                'calendario' => $calendario,
+		                                                'es_activo' => $es_activo,
+		                                                'es_siguiente' => $es_siguiente,
+		                                                'festivos' => $festivos,
+		                                                'hoy' => $hoy,
+		                                                'configs' => $configs),
+		                                         $request);
+	}
+	
+	public $configurar_precond = array ('Gatuf_Precondition::adminRequired');
+	public function configurar ($request, $match) {
+		$calendario = new Pato_Calendario ();
+		
+		if (false === $calendario->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Calendario_Preferencias ($request->POST, array ('cal' => $calendario));
 			
@@ -110,17 +139,17 @@ class Pato_Views_Calendario {
 				
 				$request->user->setMessage (1, 'Preferencias del calendario guardadas');
 				Gatuf_Log::info (sprintf ('Ajustes en el calendario %s fueron efectuados por el usuario %s (%s)', $calendario->clave, $request->user->login, $request->user->id));
-				$form = new Pato_Form_Calendario_Preferencias (null, array ('cal' => $calendario));
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', $calendario->clave);
+				
+				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
 			$form = new Pato_Form_Calendario_Preferencias (null, array ('cal' => $calendario));
 		}
 		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/calendario/ver.html',
-		                                         array ('page_title' => 'Calendario '.$calendario->descripcion,
+		return Gatuf_Shortcuts_RenderToResponse ('pato/calendario/configurar.html',
+		                                         array ('page_title' => 'Configurar calendario '.$calendario->descripcion,
 		                                                'calendario' => $calendario,
-		                                                'es_activo' => $es_activo,
-		                                                'es_siguiente' => $es_siguiente,
 		                                                'form' => $form),
 		                                         $request);
 	}

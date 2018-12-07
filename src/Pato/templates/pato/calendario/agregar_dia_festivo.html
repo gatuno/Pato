@@ -1,0 +1,87 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Usted está agregando un día festivo al calendario {$calendario.clave}. El calendario está programado del {$calendario.inicio|dateSimple:'%e/%b/%Y'} al {$calendario.fin|dateSimple:'%e/%b/%Y'}. El día(s) festivos deben estar dentro del rango del calendario.</p>
+{if $form.errors}
+	<div class="errors">
+	<p>El formulario contiene algunos errores:</p>
+	</div>
+	{if $form.get_top_errors}<p>{$form.render_top_errors|unsafe}</p>{/if}
+{/if}
+<form method="post" action=".">
+	<table>
+		<tr>
+			<th><strong id="label_inicio">{$form.f.inicio.labelTag}:</strong></th>
+			<td>{if $form.f.inicio.errors}{$form.f.inicio.fieldErrors}{/if}
+			{$form.f.inicio|safe}<br />
+			<span class="helptext" id="helptext_inicio">{$form.f.inicio.help_text}</span></td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.check.labelTag}:</strong></th>
+			<td>{$form.f.check|safe}<br />
+			<span class="helptext">{$form.f.check.help_text}</span></td>
+		</tr>
+		<tr>
+			<th><span id="span_fin_label"><strong>{$form.f.fin.labelTag}:</strong></span></th>
+			<td><span id="span_fin">{if $form.f.fin.errors}{$form.f.fin.fieldErrors}{/if}
+			{$form.f.fin|safe}<br />
+			<span class="helptext">{$form.f.fin.help_text}</span></span></td>
+		</tr>
+		</tbody>
+		<tr>
+			<th><strong>{$form.f.admvos.labelTag}:</strong></th>
+			<td>{if $form.f.admvos.errors}{$form.f.admvos.fieldErrors}{/if}
+			{$form.f.admvos|safe}<br />
+			<span class="helptext">{$form.f.admvos.help_text}</span></td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.acad.labelTag}:</strong></th>
+			<td>{if $form.f.acad.errors}{$form.f.acad.fieldErrors}{/if}
+			{$form.f.acad|safe}<br />
+			<span class="helptext">{$form.f.acad.help_text}</span></td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.descripcion.labelTag}:</strong></th>
+			<td>{if $form.f.descripcion.errors}{$form.f.descripcion.fieldErrors}{/if}
+			{$form.f.descripcion|safe}<br />
+			<span class="helptext">{$form.f.descripcion.help_text}</span></td>
+		</tr>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Nuevo día festivo" /></td></tr>
+	</table>
+</form>
+{/block}
+{block extrahead}<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>{/block}
+{block javascript}{literal}
+<script type="text/javascript">
+// <![CDATA[
+	function on_change_check () {
+		var checkbox = document.getElementById ("id_check");
+		
+		var inicio_label = document.getElementById ("label_inicio");
+		var help_text = document.getElementById ("helptext_inicio");
+		var span_fin_label = document.getElementById ("span_fin_label");
+		var span_fin = document.getElementById ("span_fin");
+		var fin_input = document.getElementById ("id_fin");
+		
+		if (checkbox.checked == true) {
+			inicio_label.innerHTML = "Día inicial:";
+			help_text.innerHTML = "Fecha de inicio de los días festivos";
+			span_fin_label.style.display = "inline";
+			span_fin.style.display = "inline";
+		} else {
+			inicio_label.innerHTML = "Día:";
+			help_text.innerHTML = "Fecha del día festivo";
+			span_fin_label.style.display = "none";
+			span_fin.style.display = "none";
+			fin_input.value = "";
+		}
+	}
+	
+	var checkbox = document.getElementById ("id_check");
+
+	checkbox.onchange = on_change_check;
+	on_change_check ();
+// ]]>
+</script>
+{/literal}{/block}

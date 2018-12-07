@@ -45,6 +45,16 @@ class Pato_Calendario extends Gatuf_Model {
 			       'blank' => false,
 			       'size' => 1,
 			),
+			'inicio' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Date',
+			       'blank' => false,
+			),
+			'fin' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Date',
+			       'blank' => false,
+			),
 		);
 		
 		$this->default_order = 'clave DESC';

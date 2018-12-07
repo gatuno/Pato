@@ -1,0 +1,16 @@
+{extends 'pato/base.html'}
+{block body}
+<p><strong>Clave</strong>: {$calendario.clave}</p>
+<p><strong>Descripción</strong>: {$calendario.descripcion}</p>
+{if $form.errors}
+	<div class="errors">
+	<p>El formulario contiene algunos errores:</p>
+	</div>
+{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Guardar configuraciones" /></td></tr>
+	</table>
+</form>
+{/block}

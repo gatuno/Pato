@@ -21,6 +21,24 @@ class Pato_Form_Calendario_Agregar extends Gatuf_Form {
 					'choices' => $choices_c,
 				),
 		));
+		
+		$this->fields['inicio'] = new Gatuf_Form_Field_Date (
+			array (
+				'required' => true,
+				'label' => 'Fecha de inicio',
+				'initial' => '',
+				'help_text' => 'Se utiliza como auxiliar para la planeación académica y otros',
+				'widget' => 'Gatuf_Form_Widget_DateJSInput',
+		));
+		
+		$this->fields['fin'] = new Gatuf_Form_Field_Date (
+			array (
+				'required' => true,
+				'label' => 'Fecha de fin',
+				'initial' => '',
+				'help_text' => 'Se utiliza como auxiliar para la planeación académica y otros',
+				'widget' => 'Gatuf_Form_Widget_DateJSInput',
+		));
 	}
 	
 	public function clean () {
@@ -31,6 +49,17 @@ class Pato_Form_Calendario_Agregar extends Gatuf_Form {
 		
 		if ($l > 0) {
 			throw new Gatuf_Form_Invalid ('Ya existe otro calendario con la misma clave');
+		}
+		
+		$inicio = $this->cleaned_data ['inicio'];
+		$fin = $this->cleaned_data ['fin'];
+		
+		/* FIXME: Esto será inecesario cuando el Gatuf entregue las fechas como datetime objects */
+		$inicio = date_create_from_format ('d/m/Y', $inicio);
+		$fin = date_create_from_format ('d/m/Y', $fin);
+		
+		if ($inicio > $fin) {
+			throw new Gatuf_Form_Invalid ('La fecha de inicio del calendario es posterior a la fecha de fin');
 		}
 		
 		return $this->cleaned_data;
