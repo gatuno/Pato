@@ -150,6 +150,52 @@ class Pato_Views_Usuario {
 		                                         $request);
 	}
 	
+	public $emailChange_precond = array ('Gatuf_Precondition::loginRequired');
+	public function emailChange ($request, $match) {
+		$extra = array();
+		$usuario = $extra['usuario'] = $request->user;
+		
+		if ($request->user->force_mail_change == false) {
+			if($usuario->type == 'a'){
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->login));
+			} else {
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
+			}
+			
+			return new Gatuf_HTTP_Response_Redirect ($success_url);
+		}
+		
+		if (!empty($request->REQUEST['_redirect_after'])) {
+			$success_url = $request->REQUEST['_redirect_after'];
+		} else {
+			if($usuario->type == 'a'){
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->login));
+			} else {
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
+			}
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Usuario_Email ($request->POST, $extra);
+			
+			if ($form->isValid()) {
+				$usuario = $form->save ();
+				
+				$usuario->setMessage (1, 'Correcto actualizado correctamente');
+				
+				return new Gatuf_HTTP_Response_Redirect ($success_url);
+			}
+		} else {
+			$form = new Pato_Form_Usuario_Email (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/user/cambiar-email.html',
+		                                         array ('page_title' => 'Cambiar correo',
+		                                                'form' => $form,
+		                                                '_redirect_after' => $success_url),
+		                                         $request);
+	}
+	
 	public $passwordReset_precond = array ('Gatuf_Precondition::adminRequired');
 	public function passwordReset ($request, $match) {
 		$sql = new Gatuf_SQL ('login=%s', $match[1]);

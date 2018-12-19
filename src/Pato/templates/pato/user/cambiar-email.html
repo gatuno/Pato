@@ -1,0 +1,12 @@
+{extends 'pato/base.html'}
+{block body}
+<p>El sistema ha detectado que utilizas el correo electrónico de otro alumno, por lo tanto debes cambiar tu correo electrónico. Por favor utiliza tu propio correo.</p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<input type="hidden" name="_redirect_after" value="{$_redirect_after}" />
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Actualizar" /></td></tr>
+	</table>
+</form>
+{/block}

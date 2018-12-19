@@ -75,6 +75,12 @@ class Pato_User extends Gatuf_Model {
 			       'size' => 1,
 			       'default' => 'a'
 			),
+			'force_mail_change' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'default' => false,
+			       'blank' => true,
+			),
 		);
 		$this->_a['idx'] = array (
 			'login_idx' =>
