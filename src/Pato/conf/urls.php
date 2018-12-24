@@ -576,6 +576,71 @@ $ctl[] = array (
 	)
 );
 
+/* Planeación */
+$ctl[] = array (
+	'regex' => '#^/planeacion/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'index',
+	'params' => 'myself',
+	'name' => 'planeacion_propia',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/materia/([\w-]+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'verMateria',
+	'params' => 'myself',
+	'name' => 'planeacion_materia_propia',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'index',
+	'params' => 'other',
+	'name' => 'planeacion_otros',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/(\d+)/materia/([\w-]+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'verMateria',
+	'params' => 'other',
+	'name' => 'planeacion_materia_otros',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/agregar/unidad/([\w-]+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'agregarUnidad',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/seleccionar/unidad/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'seleccionarUnidad',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/agregar/tema/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'agregarTema',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/eliminar/tema/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'borrarTema',
+);
+
 /* Los salones */
 $ctl[] = array (
 	'regex' => '#^/salon/(\d+)/update/$#',

@@ -1,13 +1,12 @@
-{extends 'pato/seccion/base.html'}
-{block body_seccion}
-<p>Sección del profesor <a href="{url 'Pato_Views_Maestro::verMaestro', array ($seccion.maestro)}">{$seccion.get_maestro}</a></p>
-{if $suplente}<p>Profesor Suplente <a href="{url 'Pato_Views_Maestro::verMaestro', array ($suplente.codigo)}">{$suplente}</a></p>{/if}
-<h2>Nueva unidad de aprendizaje para la asignatura</h2>
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Ahora escriba el tema de la unidad <strong>{$unidad.nombre}</strong> sobre la materia <strong>{$materia.descripcion}</strong></p>
 {if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
 <form method="post" action=".">
 	<table>
 		{$form.render_table}
-		<tr><td>&nbsp;</td><td><input type="submit" value="Nueva unidad de aprendizaje programada" /></td></tr>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Nuevo tema" /></td></tr>
 	</table>
 </form>
 {/block}

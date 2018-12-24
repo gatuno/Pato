@@ -1,0 +1,23 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+{if $form_sel}
+<p>Para continuar con su planeación académica sobre la materia <strong>{$materia.descripcion}</strong>, puede seleccionar una unidad de aprendizaje ya existente</p>
+<form method="get" action="{url 'Pato_Views_Planeacion::seleccionarUnidad'}">
+	<table>
+		{$form_sel.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Seleccionar unidad" /></td></tr>
+	</table>
+</form>
+<h3>O cree ahora una nueva unidad de aprendizaje</h3>
+{else}
+<p>Para continuar con su planeación académica sobre la materia <strong>{$materia.descripcion}</strong>, debe crear una unidad de apredizaje nueva</p>
+{/if}
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>{/if}
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Nueva unidad de aprendizaje" /></td></tr>
+	</table>
+</form>
+{/block}

@@ -1,0 +1,24 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+{if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
+{if $myself}
+<p>Usted puede armar la planeación por de sus materias. La planeación se realiza una vez por materia diferente que imparta, independiente de la cantidad de grupos que imparta. El seguimiento se realiza por grupo.</p>
+{else}
+<p>Usted está viendo la planeación del profesor {$maestro.nombre} {$maestro.apellido}</p>
+{/if}
+<table>
+	<thead>
+		<tr><th>Materia</th><th>Cantidad de temas planeados</th><th>Última fecha planeada</th><th></th></tr>
+	</thead>
+	<tbody>{foreach $materias as $m}
+		<tr><td>{$m->descripcion} ({if $m->cant_grupos == 1}1 grupo{else}{$m->cant_grupos} grupos{/if})</td><td colspan="2"></td><td>
+		{if $myself}
+		<a href="{url 'planeacion_materia_propia', $m->clave}">Abrir planeación</a>
+		{else}
+		<a href="{url 'planeacion_materia_otros', array ($maestro->codigo, $m->clave)}">Abrir planeación</a>
+		{/if}
+		</td></tr>
+	{/foreach}</tbody>
+</table>
+{/block}

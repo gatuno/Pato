@@ -71,8 +71,9 @@ class Pato_Calendario extends Gatuf_Model {
 			                 'Pato_Seccion',
 			                 'Pato_Evaluacion_Respuesta',
 			                 'Pato_Solicitud_Suficiencia',
-			                 'Pato_Asignatura_Planeacion',
-			                 'Pato_Asignatura_Seguimiento'
+			                 'Pato_Planeacion_Seguimiento',
+			                 'Pato_Planeacion_Tema',
+			                 'Pato_Planeacion_Unidad'
 			                 );
 			
 			$GLOBALS['CAL_ACTIVO'] = $this->clave;

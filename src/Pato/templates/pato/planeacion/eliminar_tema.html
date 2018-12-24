@@ -1,0 +1,8 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Usted va a borar el tema <strong>{$tema.tema}</strong>, de la unidad <strong>{$unidad.nombre}</strong> sobre la materia <strong>{$materia.descripcion}</strong></p>
+<form method="post" action=".">
+	<p><input type="submit" value="Sí, borrar el tema" /> | <a href="{url 'planeacion_materia_propia', $materia->clave}">Cancelar</a></p>
+</form>
+{/block}

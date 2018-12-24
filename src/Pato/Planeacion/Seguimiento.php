@@ -1,10 +1,10 @@
 <?php
 
-class Pato_Asignatura_Seguimiento extends Gatuf_Model {
+class Pato_Planeacion_Seguimiento extends Gatuf_Model {
 	public $_model = __CLASS__;
 	
 	function init () {
-		$this->_a['table'] = 'asig_seguimiento';
+		$this->_a['table'] = 'planeacion_seguimiento';
 		$this->_a['model'] = __CLASS__;
 		$this->primary_key = 'id';
 		
@@ -14,18 +14,23 @@ class Pato_Asignatura_Seguimiento extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Sequence',
 			       'blank' => false,
 			),
-			'plan' =>
+			'tema' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
-			       'model' => 'Pato_Asignatura_Planeacion',
+			       'model' => 'Pato_Planeacion_Tema',
 			       'blank' => false,
 			),
-			'realizada' =>
+			'inicio' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Date',
 			       'blank' => false,
 			),
-			'resultado' =>
+			'fin' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Date',
+			       'blank' => false,
+			),
+			'cumplimiento' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Boolean',
 			       'blank' => false,
@@ -37,11 +42,10 @@ class Pato_Asignatura_Seguimiento extends Gatuf_Model {
 			),
 			'evidencia' =>
 			array (
-			       'type' => 'Gatuf_DB_Field_Varchar',
+			       'type' => 'Gatuf_DB_Field_Text',
 			       'blank' => false,
-			       'size' => 300,
 			),
-			'notas' =>
+			'observaciones' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Text',
 			       'blank' => false,

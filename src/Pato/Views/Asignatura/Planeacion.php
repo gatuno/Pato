@@ -12,7 +12,12 @@ class Pato_Views_Asignatura_Planeacion {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$es_el_dueno = ($request->user->type == 'm' && ($seccion->maestro == $request->user->login || $seccion->suplente == $request->user->login));
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
+		return Gatuf_Shortcuts_RenderToResponse ('pato/asignatura/cerrado.html',
+		                                         array ('page_title' => $titulo,
+		                                                'seccion' => $seccion),
+		                                         $request);
+		/*$es_el_dueno = ($request->user->type == 'm' && ($seccion->maestro == $request->user->login || $seccion->suplente == $request->user->login));
 		
 		if (!$es_el_dueno && !$request->user->isCoord ()) {
 			throw new Gatuf_HTTP_Error404();
@@ -24,14 +29,14 @@ class Pato_Views_Asignatura_Planeacion {
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		$abierto = $gconf->getVal ('planeacion_asignatura_'.$request->calendario->clave, false);
-		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
+		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/asignatura/planeacion/ver.html',
 		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'es_el_dueno' => $es_el_dueno,
 		                                                'abierto' => $abierto,
 		                                                'planes' => $planes),
-		                                         $request);
+		                                         $request);*/
 	}
 	
 	public $agregarPlan_precond = array ('Gatuf_Precondition::loginRequired');
@@ -42,7 +47,13 @@ class Pato_Views_Asignatura_Planeacion {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$es_el_dueno = ($request->user->type == 'm' && ($seccion->maestro == $request->user->login || $seccion->suplente == $request->user->login));
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
+		return Gatuf_Shortcuts_RenderToResponse ('pato/asignatura/cerrado.html',
+		                                         array ('page_title' => $titulo,
+		                                                'seccion' => $seccion),
+		                                         $request);
+		
+		/*$es_el_dueno = ($request->user->type == 'm' && ($seccion->maestro == $request->user->login || $seccion->suplente == $request->user->login));
 		
 		if (!$es_el_dueno) {
 			throw new Gatuf_HTTP_Error404();
@@ -78,7 +89,7 @@ class Pato_Views_Asignatura_Planeacion {
 		                                         array ('page_title' => $titulo,
 		                                                'seccion' => $seccion,
 		                                                'form' => $form),
-		                                         $request);
+		                                         $request);*/
 	}
 	
 	public $seguimiento_precond = array ('Gatuf_Precondition::loginRequired');
@@ -89,7 +100,12 @@ class Pato_Views_Asignatura_Planeacion {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$plan = new Pato_Asignatura_Planeacion ();
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
+		return Gatuf_Shortcuts_RenderToResponse ('pato/asignatura/cerrado.html',
+		                                         array ('page_title' => $titulo,
+		                                                'seccion' => $seccion),
+		                                         $request);
+		/*$plan = new Pato_Asignatura_Planeacion ();
 		
 		if (false === ($plan->get($match[2]))) {
 			throw new Gatuf_HTTP_Error404();
@@ -134,6 +150,6 @@ class Pato_Views_Asignatura_Planeacion {
 		                                                'seccion' => $seccion,
 		                                                'plan' => $plan,
 		                                                'form' => $form),
-		                                         $request);
+		                                         $request);*/
 	}
 }

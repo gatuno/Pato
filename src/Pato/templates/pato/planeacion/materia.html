@@ -1,0 +1,33 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+{if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
+{if $myself}
+	<p>Planeación para la materia <strong>{$materia.descripcion}</strong>.</p>
+{else}
+	<p>Planeación para la materia <strong>{$materia.descripcion}</strong> del profesor {$maestro.nombre} {$maestro.apellido}.</p>
+{/if}
+{if count ($unidades) == 0}
+	<p>No hay unidades o temas planeados</p>
+	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::agregarUnidad', $materia->clave}">crear una unidad de aprendizaje y temas</a> para su planeación</p>{/if}
+{else}
+	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::agregarUnidad', $materia->clave}">crear una unidad de aprendizaje y temas</a> para su planeación</p>{/if}
+	{foreach $unidades as $unidad}<h2>{$unidad.nombre}</h2>
+	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::seleccionarUnidad', array (), array ('unidad' => $unidad.id)}">crear un tema</a> dentro de esta unidad</p>{/if}
+	<p>TODO: Poner aquí el resultado de la unidad de forma abreviado.</p>
+	{if count ($temas[$unidad.id]) == 0}
+	<p>No hay temas para esta unidad de aprendizaje.</p>
+	{else}
+	<table>
+		<thead>
+			<tr><th>Fecha</th><th>Tema</th><th>Estrategia</th><th>Evidencia</th><th></th></tr>
+		</thead>
+		<tbody>{foreach $temas[$unidad.id] as $tema}
+			<tr><td>{$tema.inicio|dateSimple:'%e/%b/%Y'} al {$tema.fin|dateSimple:'%e/%b/%Y'}</td><td>{$tema.tema}</td><td>...</td><td>...</td>
+			{if $myself}<td><a href="{url 'Pato_Views_Planeacion::borrarTema', $tema.id}">Borrar tema</a></td>{/if}
+			</tr>
+		{/foreach}</tbody>
+	</table>
+	{/if}{/foreach}
+{/if}
+{/block}

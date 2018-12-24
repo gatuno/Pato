@@ -85,6 +85,11 @@ class Pato_Seccion extends Gatuf_Model {
 				'from' => $this->_con->dbname.'.'.$this->_con->pfx.'secciones_view',
 				'props' => array ('materia_desc', 'maestro_nombre', 'maestro_apellido'),
 			),
+			'mats_cant' => array (
+				'select' => 'materia, COUNT(*) as cant_grupos',
+				'group' => 'materia',
+				'props' => array ('cant_grupos'),
+			),
 		);
 	}
 	

@@ -1,10 +1,10 @@
 <?php
 
-class Pato_Asignatura_Planeacion extends Gatuf_Model {
+class Pato_Planeacion_Unidad extends Gatuf_Model {
 	public $_model = __CLASS__;
 	
 	function init () {
-		$this->_a['table'] = 'asig_planeacion';
+		$this->_a['table'] = 'planeacion_unidad';
 		$this->_a['model'] = __CLASS__;
 		$this->primary_key = 'id';
 		
@@ -14,39 +14,29 @@ class Pato_Asignatura_Planeacion extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Sequence',
 			       'blank' => false,
 			),
-			'nrc' =>
+			'materia' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
-			       'model' => 'Pato_Seccion',
+			       'model' => 'Pato_Materia',
 			       'blank' => false,
 			),
-			'programada' =>
+			'maestro' =>
 			array (
-			       'type' => 'Gatuf_DB_Field_Date',
+			       'type' => 'Gatuf_DB_Field_Foreignkey',
+			       'model' => 'Pato_Maestro',
 			       'blank' => false,
 			),
-			'unidad' =>
+			'nombre' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Varchar',
-			       'blank' => false,
 			       'size' => 300,
+			       'blank' => false,
 			),
 			'resultado' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Varchar',
-			       'blank' => false,
 			       'size' => 300,
-			),
-			'estrategia' =>
-			array (
-			       'type' => 'Gatuf_DB_Field_Text',
 			       'blank' => false,
-			),
-			'evidencia' =>
-			array (
-			       'type' => 'Gatuf_DB_Field_Varchar',
-			       'blank' => false,
-			       'size' => 300,
 			),
 		);
 		
@@ -56,15 +46,5 @@ class Pato_Asignatura_Planeacion extends Gatuf_Model {
 	
 	function setCalpfx ($calpfx) {
 		$this->_con = Pato_Calendario_getDBForCal ($calpfx);
-	}
-	
-	function getSeguimiento () {
-		$segs = $this->get_pato_asignatura_seguimiento_list ();
-		
-		if (count ($segs) == 0) {
-			return null;
-		} else {
-			return $segs[0];
-		}
 	}
 }
