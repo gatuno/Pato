@@ -641,6 +641,13 @@ $ctl[] = array (
 	'method' => 'borrarTema',
 );
 
+$ctl[] = array (
+	'regex' => '#^/planeacion/seguimiento/(\d+)/nrc/(\d+)/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion',
+	'method' => 'seguimiento',
+);
+
 /* Los salones */
 $ctl[] = array (
 	'regex' => '#^/salon/(\d+)/update/$#',

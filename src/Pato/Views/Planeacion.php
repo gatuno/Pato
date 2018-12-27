@@ -71,9 +71,18 @@ class Pato_Views_Planeacion {
 		$sql = new Gatuf_SQL ('materia=%s AND maestro=%s', array ($materia->clave, $maestro->codigo));
 		$unidades = Gatuf::factory ('Pato_Planeacion_Unidad')->getList (array ('filter' => $sql->gen ()));
 		
+		$seguimientos = array ();
 		$temas = array ();
 		foreach ($unidades as $unidad) {
 			$temas[$unidad->id] = $unidad->get_temas_list ();
+			
+			foreach ($temas[$unidad->id] as $tema) {
+				$seguimientos[$tema->id] = array ();
+				$segs = $tema->get_seguimientos_list ();
+				foreach ($segs as $s) {
+					$seguimientos[$tema->id][$s->nrc] = $s;
+				}
+			}
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/planeacion/materia.html',
@@ -82,7 +91,8 @@ class Pato_Views_Planeacion {
 		                                                 'secciones' => $secciones,
 		                                                 'unidades' => $unidades,
 		                                                 'temas' => $temas,
-		                                                 'maestro' => $maestro),
+		                                                 'maestro' => $maestro,
+		                                                 'seguimientos' => $seguimientos),
 		                                          $request);
 	}
 	
@@ -203,6 +213,14 @@ class Pato_Views_Planeacion {
 		
 		$materia = $unidad->get_materia ();
 		
+		$segs = $tema->get_seguimientos_list (array ('count' => true));
+		
+		if ($segs > 0) {
+			/* TODO: Poner mensaje aquí */
+			$url = Gatuf_HTTP_URL_urlForView ('planeacion_materia_propia', array ($materia->clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
 		if ($request->method == 'POST') {
 			$tema->delete ();
 			
@@ -215,6 +233,62 @@ class Pato_Views_Planeacion {
 		                                                 'materia' => $materia,
 		                                                 'unidad' => $unidad,
 		                                                 'tema' => $tema),
+		                                          $request);
+	}
+	
+	public $seguimiento_precond = array ('Pato_Precondition::maestroRequired');
+	public function seguimiento ($request, $match) {
+		$tema = new Pato_Planeacion_Tema ();
+		
+		if (false === ($tema->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$unidad = $tema->get_unidad ();
+		
+		if ($unidad->maestro != $request->user->extra->codigo) {
+			return new Gatuf_HTTP_Response_Forbidden ($request);
+		}
+		
+		$nrc = new Pato_Seccion ();
+		
+		if (false === ($nrc->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($nrc->maestro != $unidad->maestro) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		/* Revisar si ya existe un seguimiento */
+		$sql = new Gatuf_SQL ('nrc=%s AND tema=%s', array ($nrc->nrc, $tema->id));
+		$segs = Gatuf::factory ('Pato_Planeacion_Seguimiento')->getList (array ('filter' => $sql->gen (), 'count' => true));
+		
+		if ($segs > 0) {
+			$url = Gatuf_HTTP_URL_urlForView ('planeacion_materia_propia', array ($unidad->materia));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Planeacion_AgregarSeguimiento ($request->POST, array ('tema' => $tema, 'seccion' => $nrc));
+			
+			if ($form->isValid()) {
+				$seguimiento = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('planeacion_materia_propia', array ($nrc->materia));
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Planeacion_AgregarSeguimiento (null, array ('tema' => $tema, 'seccion' => $nrc));
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/planeacion/agregar_seguimiento.html',
+		                                          array ('page_title' => 'Planeación - Realizar seguimiento',
+		                                                 'materia' => $unidad->get_materia(),
+		                                                 'unidad' => $unidad,
+		                                                 'tema' => $tema,
+		                                                 'seccion' => $nrc,
+		                                                 'form' => $form),
 		                                          $request);
 	}
 }

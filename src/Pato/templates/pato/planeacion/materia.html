@@ -20,11 +20,17 @@
 	{else}
 	<table>
 		<thead>
-			<tr><th>Fecha</th><th>Tema</th><th>Estrategia</th><th>Evidencia</th><th></th></tr>
+			<tr><th rowspan="2">Fecha</th><th rowspan="2">Tema</th><th rowspan="2">Estrategia</th><th rowspan="2">Evidencia</th>{if $myself}<th rowspan="2">Borrar tema</th>{/if}<th colspan="{$secciones|count}">Seguimientos</th></tr>
+			<tr>{foreach $secciones as $sec}<th>{$sec.seccion}</th>{/foreach}</tr>
 		</thead>
 		<tbody>{foreach $temas[$unidad.id] as $tema}
 			<tr><td>{$tema.inicio|dateSimple:'%e/%b/%Y'} al {$tema.fin|dateSimple:'%e/%b/%Y'}</td><td>{$tema.tema}</td><td>...</td><td>...</td>
-			{if $myself}<td><a href="{url 'Pato_Views_Planeacion::borrarTema', $tema.id}">Borrar tema</a></td>{/if}
+			{if $myself}<td>{if count ($seguimientos[$tema.id]) == 0}<a href="{url 'Pato_Views_Planeacion::borrarTema', $tema.id}"><img class="icon" src="{media '/img/new/trash.png'}" alt="Borrar planeación" /></a>{else}-{/if}</td>{/if}
+			{foreach $secciones as $sec}
+			<td>{if $myself}{if !isset ($seguimientos[$tema.id][$sec.nrc])}
+			<a href="{url 'Pato_Views_Planeacion::seguimiento', array ($tema.id, $sec.nrc)}"><img class ="icon" src="{media '/img/new/document_edit.png'}" alt="Hacer seguimiento" /></a>{else}<img class="icon" src="{media '/img/new/document_done.png'}" alt="Seguimiento hecho" />{/if}{else}
+			{if isset ($seguimientos[$tema.id][$sec.nrc])}<img class="icon" src="{media '/img/new/check.png'}" alt="Seguimiento completo" />{else}<img class="icon" src="{media '/img/new/check.png'}" alt="Seguimiento completo" />{/if}{/if}</td>
+			{/foreach}
 			</tr>
 		{/foreach}</tbody>
 	</table>

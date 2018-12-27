@@ -25,7 +25,7 @@ $m['Pato_Log_Kardex'] = array ('relate_to' => array ('Pato_Kardex', 'Pato_User')
 
 $m['Pato_Planeacion_Unidad'] = array ('relate_to' => array ('Pato_Materia', 'Pato_Maestro'));
 $m['Pato_Planeacion_Tema'] = array ('relate_to' => array ('Pato_Planeacion_Unidad'));
-$m['Pato_Planeacion_Seguimiento'] = array ('relate_to' => array ('Pato_Planeacion_Tema'));
+$m['Pato_Planeacion_Seguimiento'] = array ('relate_to' => array ('Pato_Planeacion_Tema', 'Pato_Seccion'));
 
 $m['Pato_Aviso'] = array ('relate_to_many' => array ('Pato_User'));
 

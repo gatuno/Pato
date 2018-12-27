@@ -39,7 +39,7 @@ class Pato_Form_Planeacion_AgregarTema extends Gatuf_Form {
 		
 		$this->fields['estrategia'] = new Gatuf_Form_Field_Varchar (
 			array (
-				'required' => false,
+				'required' => true,
 				'label' => 'Estrategia de enseñanza-aprendizaje',
 				'initial' => '',
 				'help_text' => 'Escriba la estrategia enseñanza-aprendizaje (centrada en el alumno)',

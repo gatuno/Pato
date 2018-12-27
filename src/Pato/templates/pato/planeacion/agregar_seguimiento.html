@@ -1,0 +1,205 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block extrahead}{literal}
+<style type="text/css">
+.input_realizacion {
+	position: absolute !important;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	width: 1px;
+	border: 0;
+	overflow: hidden;
+}
+
+.label_realizacion {
+	display: inline-block;
+	width: 60px;
+	background-color: #e4e4e4;
+	color: rgba(0, 0, 0, 0.6);
+	text-align: center;
+	text-shadow: none;
+	padding: 6px 14px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+	-webkit-transition: all 0.1s ease-in-out;
+	-moz-transition:    all 0.1s ease-in-out;
+	-ms-transition:     all 0.1s ease-in-out;
+	-o-transition:      all 0.1s ease-in-out;
+	transition:         all 0.1s ease-in-out;
+}
+
+.label_realizacion:hover {
+	cursor: pointer;
+}
+
+.input_realizacion:checked + label {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+#id_realizacion_0.input_realizacion:checked + label {
+	background-color: #A5DC86;
+}
+
+#id_realizacion_1.input_realizacion:checked + label {
+	background-color: #ff4d4d;
+}
+
+.label_realizacion:first-of-type {
+	border-radius: 4px 0 0 4px;
+}
+
+.label_realizacion:last-of-type {
+	border-radius: 0 4px 4px 0;
+}
+
+</style>{/literal}
+<link rel="stylesheet" media="all" type="text/css" href="{media}/css/smoothness/jquery-ui-1.8.16.custom.css" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+{/block}
+{block body}
+<p>Usted está realizando el seguimiento del tema <strong>{$tema.tema}</strong>, de la materia <strong>{$materia.descripcion}</strong> en el grupo <strong>sección {$seccion.seccion} (NRC: {$seccion.nrc})</strong></p>
+{if $form.errors}<div class="errors"><p>El formulario contiene algunos errores:</p></div>
+{if $form.get_top_errors}{$form.render_top_errors}{/if}{/if}
+<form method="post" action=".">
+	<h3>¿Se cumplió con el resultado de aprendizaje?</h3>
+	<p>{if $form.f.realizacion.errors}{$form.f.realizacion.fieldErrors}<br />{/if}
+	{$form.f.realizacion|safe}<br />
+	<span class="helptext">{$form.f.realizacion.help_text}</span>
+	</p>
+	<p id="p_realizacion"></p>
+	
+	<table id="form_otros">
+	<script type="text/javascript">
+		var tabla = document.getElementById ('form_otros');
+		
+		tabla.style.display = 'none';
+	</script>
+		<tr>
+			<th><strong>{$form.f.inicio.labelTag}:</strong></th>
+			<td>{if $form.f.inicio.errors}{$form.f.inicio.fieldErrors}{/if}
+			{$form.f.inicio|safe}<p id="static_inicio" style="display:none"></p>
+			<span class="helptext" id="help_inicio">{$form.f.inicio.help_text}</span>
+			</td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.fin.labelTag}:</strong></th>
+			<td>{if $form.f.fin.errors}{$form.f.fin.fieldErrors}{/if}
+			{$form.f.fin|safe}<p id="static_fin" style="display:none"></p>
+			<span class="helptext" id="help_fin">{$form.f.fin.help_text}</span>
+			</td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.estrategia.labelTag}:</strong></th>
+			<td>{if $form.f.estrategia.errors}{$form.f.estrategia.fieldErrors}{/if}
+			{$form.f.estrategia|safe}<p id="static_estrategia" style="display:none"></p>
+			<span class="helptext" id="help_estrategia">{$form.f.estrategia.help_text}</span>
+			</td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.evidencia.labelTag}:</strong></th>
+			<td>{if $form.f.evidencia.errors}{$form.f.evidencia.fieldErrors}{/if}
+			{$form.f.evidencia|safe}<p id="static_evidencia" style="display:none"></p>
+			<span class="helptext" id="help_evidencia">{$form.f.evidencia.help_text}</span>
+			</td>
+		</tr>
+		<tr>
+			<th><strong>{$form.f.observaciones.labelTag}:</strong></th>
+			<td>{if $form.f.observaciones.errors}{$form.f.observaciones.fieldErrors}{/if}
+			{$form.f.observaciones|safe}<br />
+			<span class="helptext">{$form.f.observaciones.help_text}</span>
+			</td>
+		</tr>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Realizar seguimiento" /></td></tr>
+	</table>
+</form>
+{/block}
+{block javascript}
+<script type="text/javascript">
+	var inicio_text = "{$tema.inicio|dateSimple:'%d/%m/%Y'}";
+	var fin_text = "{$tema.fin|dateSimple:'%d/%m/%Y'}";
+	var estrategia_text = "{$tema.estrategia}";
+	var evidencia_text = "{$tema.evidencia}";
+	
+	{literal}
+	function on_change_yes_no () {
+		var yes_radio = document.getElementById ('id_realizacion_0');
+		var no_radio = document.getElementById ('id_realizacion_1');
+		
+		var whole_form = document.getElementById ('form_otros');
+		
+		var inicio_input = document.getElementById ('id_inicio');
+		var fin_input = document.getElementById ('id_fin');
+		var estrategia_input = document.getElementById ('id_estrategia');
+		var evidencia_input = document.getElementById ('id_evidencia');
+		
+		var inicio_div = document.getElementById ('static_inicio');
+		var fin_div = document.getElementById ('static_fin');
+		var estrategia_div = document.getElementById ('static_estrategia');
+		var evidencia_div = document.getElementById ('static_evidencia');
+		
+		var inicio_help = document.getElementById ('help_inicio');
+		var fin_help = document.getElementById ('help_fin');
+		var estrategia_help = document.getElementById ('help_estrategia');
+		var evidencia_help = document.getElementById ('help_evidencia');
+		
+		if (yes_radio.checked) {
+			whole_form.style.display = 'block';
+			
+			/* Ocultar todos los inputs y help text */
+			inicio_input.style.display = 'none';
+			fin_input.style.display = 'none';
+			estrategia_input.style.display = 'none';
+			evidencia_input.style.display = 'none';
+			
+			inicio_help.style.display = 'none';
+			fin_help.style.display = 'none';
+			estrategia_help.style.display = 'none';
+			evidencia_help.style.display = 'none';
+			
+			inicio_div.style.display = 'block';
+			fin_div.style.display = 'block';
+			estrategia_div.style.display = 'block';
+			evidencia_div.style.display = 'block';
+		} else if (no_radio.checked) {
+			whole_form.style.display = 'block';
+			
+			inicio_input.style.display = 'block';
+			fin_input.style.display = 'block';
+			estrategia_input.style.display = 'block';
+			evidencia_input.style.display = 'block';
+			
+			inicio_help.style.display = 'inline';
+			fin_help.style.display = 'inline';
+			estrategia_help.style.display = 'inline';
+			evidencia_help.style.display = 'inline';
+			
+			inicio_div.style.display = 'none';
+			fin_div.style.display = 'none';
+			estrategia_div.style.display = 'none';
+			evidencia_div.style.display = 'none';
+		}
+	}
+	
+	var yes_no_1 = document.getElementById ('id_realizacion_0');
+	var yes_no_2 = document.getElementById ('id_realizacion_1');
+	
+	yes_no_1.onchange = on_change_yes_no;
+	yes_no_2.onchange = on_change_yes_no;
+	
+	var inicio_div = document.getElementById ('static_inicio');
+	var fin_div = document.getElementById ('static_fin');
+	var estrategia_div = document.getElementById ('static_estrategia');
+	var evidencia_div = document.getElementById ('static_evidencia');
+	inicio_div.innerHTML = inicio_text;
+	fin_div.innerHTML = fin_text;
+	estrategia_div.innerHTML = estrategia_text;
+	evidencia_div.innerHTML = evidencia_text;
+	
+	on_change_yes_no ();
+	
+	{/literal}
+</script>
+{/block}

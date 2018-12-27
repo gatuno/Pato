@@ -19,6 +19,13 @@ class Pato_Planeacion_Seguimiento extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'model' => 'Pato_Planeacion_Tema',
 			       'blank' => false,
+			       'relate_name' => 'seguimientos',
+			),
+			'nrc' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Foreignkey',
+			       'blank' => false,
+			       'model' => 'Pato_Seccion',
 			),
 			'inicio' =>
 			array (
