@@ -10,7 +10,11 @@ class Pato_Views_Planeacion {
 			$maestro = $request->user->extra;
 		} else {
 			$maestro = new Pato_Maestro ();
-			/* FIXME: Revisar aquí si tiene el permiso para revisar las planeaciones de otros profesores */
+			
+			if (!$request->user->hasPerm ('Patricia.ver-planeacion')) {
+				return new Gatuf_HTTP_Response_Forbidden ($request);
+			}
+			
 			if (false === ($maestro->get ($match[1]))) {
 				throw new Gatuf_HTTP_Error404();
 			}
@@ -44,7 +48,11 @@ class Pato_Views_Planeacion {
 			}
 		} else {
 			$maestro = new Pato_Maestro ();
-			/* FIXME: Revisar aquí si tiene el permiso para revisar las planeaciones de otros profesores */
+			
+			if (!$request->user->hasPerm ('Patricia.ver-planeacion')) {
+				return new Gatuf_HTTP_Response_Forbidden ($request);
+			}
+			
 			if (false === ($maestro->get ($match[1]))) {
 				throw new Gatuf_HTTP_Error404();
 			}

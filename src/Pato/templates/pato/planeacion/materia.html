@@ -10,15 +10,14 @@
 {block body}
 {if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
 {if $myself}
-	<p>Planeación para la materia <strong>{$materia.descripcion}</strong>.</p>
+	<p>Planeación para la materia <strong>{$materia.descripcion}</strong>. Recuerde, la planeación se realiza una vez por cada materia diferente, el seguimiento se realiza por grupo</p>
 {else}
 	<p>Planeación para la materia <strong>{$materia.descripcion}</strong> del profesor {$maestro.nombre} {$maestro.apellido}.</p>
 {/if}
+{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::agregarUnidad', $materia->clave}">crear una unidad de aprendizaje y temas</a> para su planeación</p>{/if}
 {if count ($unidades) == 0}
 	<p>No hay unidades o temas planeados</p>
-	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::agregarUnidad', $materia->clave}">crear una unidad de aprendizaje y temas</a> para su planeación</p>{/if}
 {else}
-	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::agregarUnidad', $materia->clave}">crear una unidad de aprendizaje y temas</a> para su planeación</p>{/if}
 	{foreach $unidades as $unidad}<h2>{$unidad.nombre}</h2>
 	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::seleccionarUnidad', array (), array ('unidad' => $unidad.id)}">crear un tema</a> dentro de esta unidad</p>{/if}
 	<p>Resultado de aprendizaje: {$unidad.resultado}</p>

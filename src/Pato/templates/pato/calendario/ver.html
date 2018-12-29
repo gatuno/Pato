@@ -34,10 +34,5 @@
 	<p>Las suficiencias están <strong>desactivadas</strong> para este calendario.</p>
 {/if}
 
-{if $configs['planeacion']}
-	<p>Se permite la planeación por parte de los profesores para este calendario. Los profesores pueden dar de alta su planeación en el sistema.</p>
-{else}
-	<p>La planeación en este calendario está <strong>desactivada</strong>.</p>
-{/if}
 <form method="get" action="{url 'Pato_Views_Calendario::configurar', $calendario.clave}"><input type="submit" value="Cambiar configuraciones del calendario" /></form>
 {/block}

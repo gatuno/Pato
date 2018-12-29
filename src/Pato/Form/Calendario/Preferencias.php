@@ -17,16 +17,6 @@ class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
 				'initial' => $abierto,
 				'help_text' => 'Indica si los alumnos pueden o no solicitar un trámite de suficiencia'
 		));
-		
-		$abierto = $gconf->getVal ('planeacion_asignatura_'.$this->cal->clave, false);
-		
-		$this->fields['planeacion_asig'] = new Gatuf_Form_Field_Boolean (
-			array (
-				'required' => true,
-				'label' => 'Planeacion de las asignaturas',
-				'initial' => $abierto,
-				'help_text' => 'Indica si los profesores pueden programar la planeación de la asignatura',
-		));
 	}
 	
 	public function save ($commit = true) {
@@ -39,13 +29,5 @@ class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
 			$sufi = false;
 		}
 		$gconf->setVal ('suficiencias_abierta_'.$this->cal->clave, $sufi);
-		
-		if ($this->cleaned_data['planeacion_asig']) {
-			$eval = true;
-		} else {
-			$eval = false;
-		}
-		
-		$gconf->setVal ('planeacion_asignatura_'.$this->cal->clave, $eval);
 	}
 }

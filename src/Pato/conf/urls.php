@@ -555,24 +555,6 @@ $ctl[] = array (
 			'model' => 'Pato_Views_Seccion',
 			'method' => 'cerrarAKardex',
 		),
-		array (
-			'regex' => '#^(\d+)/planeacion/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Asignatura_Planeacion',
-			'method' => 'ver',
-		),
-		array (
-			'regex' => '#^(\d+)/planeacion/add/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Asignatura_Planeacion',
-			'method' => 'agregarPlan',
-		),
-		array (
-			'regex' => '#^(\d+)/planeacion/(\d+)/seguimiento/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Asignatura_Planeacion',
-			'method' => 'seguimiento',
-		),
 	)
 );
 
@@ -587,65 +569,64 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/planeacion/materia/([\w-]+)/$#',
+	'regex' => '#^/planeacion/#',
 	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'verMateria',
-	'params' => 'myself',
-	'name' => 'planeacion_materia_propia',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'index',
-	'params' => 'other',
-	'name' => 'planeacion_otros',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/(\d+)/materia/([\w-]+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'verMateria',
-	'params' => 'other',
-	'name' => 'planeacion_materia_otros',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/agregar/unidad/([\w-]+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'agregarUnidad',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/seleccionar/unidad/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'seleccionarUnidad',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/agregar/tema/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'agregarTema',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/eliminar/tema/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'borrarTema',
-);
-
-$ctl[] = array (
-	'regex' => '#^/planeacion/seguimiento/(\d+)/nrc/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Planeacion',
-	'method' => 'seguimiento',
+	'sub' => array (
+		array (
+			'regex' => '#^materia/([\w-]+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'verMateria',
+			'params' => 'myself',
+			'name' => 'planeacion_materia_propia',
+		),
+		array (
+			'regex' => '#^(\d+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'index',
+			'params' => 'other',
+			'name' => 'planeacion_otros',
+		),
+		array (
+			'regex' => '#^(\d+)/materia/([\w-]+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'verMateria',
+			'params' => 'other',
+			'name' => 'planeacion_materia_otros',
+		),
+		array (
+			'regex' => '#^agregar/unidad/([\w-]+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'agregarUnidad',
+		),
+		array (
+			'regex' => '#^seleccionar/unidad/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'seleccionarUnidad',
+		),
+		array (
+			'regex' => '#^agregar/tema/(\d+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'agregarTema',
+		),
+		array (
+			'regex' => '#^eliminar/tema/(\d+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'borrarTema',
+		),
+		array (
+			'regex' => '#^seguimiento/(\d+)/nrc/(\d+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion',
+			'method' => 'seguimiento',
+		),
+	)
 );
 
 /* Los salones */

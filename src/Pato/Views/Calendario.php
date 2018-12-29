@@ -110,7 +110,6 @@ class Pato_Views_Calendario {
 		/* Mostrar algunas de sus configuraciones */
 		$configs = array ();
 		$configs['suficiencias'] = $gconf->getVal ('suficiencias_abierta_'.$calendario->clave, false);
-		$configs['planeacion'] = $gconf->getVal ('planeacion_asignatura_'.$calendario->clave, false);
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/calendario/ver.html',
 		                                         array ('page_title' => 'Calendario '.$calendario->descripcion,
