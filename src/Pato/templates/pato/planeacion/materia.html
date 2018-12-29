@@ -1,5 +1,12 @@
 {extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block extrahead}
+{literal}<style type="text/css">
+.planeacion td, .planeacion th {
+	border-bottom: 1px solid #ddd;
+}
+</style>
+{/literal}{/block}
 {block body}
 {if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
 {if $myself}
@@ -14,26 +21,26 @@
 	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::agregarUnidad', $materia->clave}">crear una unidad de aprendizaje y temas</a> para su planeación</p>{/if}
 	{foreach $unidades as $unidad}<h2>{$unidad.nombre}</h2>
 	{if $myself}<p>Puede <a href="{url 'Pato_Views_Planeacion::seleccionarUnidad', array (), array ('unidad' => $unidad.id)}">crear un tema</a> dentro de esta unidad</p>{/if}
-	<p>TODO: Poner aquí el resultado de la unidad de forma abreviado.</p>
+	<p>Resultado de aprendizaje: {$unidad.resultado}</p>
 	{if count ($temas[$unidad.id]) == 0}
 	<p>No hay temas para esta unidad de aprendizaje.</p>
 	{else}
-	<table>
+	<div style="overflow-x:auto;"><table width="95%" class="planeacion">
 		<thead>
-			<tr><th rowspan="2">Fecha</th><th rowspan="2">Tema</th><th rowspan="2">Estrategia</th><th rowspan="2">Evidencia</th>{if $myself}<th rowspan="2">Borrar tema</th>{/if}<th colspan="{$secciones|count}">Seguimientos</th></tr>
-			<tr>{foreach $secciones as $sec}<th>{$sec.seccion}</th>{/foreach}</tr>
+			<tr><th rowspan="2" width="10%">Fecha</th><th rowspan="2" width="20%">Tema</th><th rowspan="2" width="20%">Estrategia</th><th rowspan="2" width="20%">Evidencia</th>{if $myself}<th rowspan="2" width="5%">Borrar tema</th>{/if}<th colspan="{$secciones|count}">Seguimientos</th></tr>
+			<tr>{foreach $secciones as $sec}<th width="3%">{$sec.seccion}</th>{/foreach}</tr>
 		</thead>
 		<tbody>{foreach $temas[$unidad.id] as $tema}
-			<tr><td>{$tema.inicio|dateSimple:'%e/%b/%Y'} al {$tema.fin|dateSimple:'%e/%b/%Y'}</td><td>{$tema.tema}</td><td>...</td><td>...</td>
-			{if $myself}<td>{if count ($seguimientos[$tema.id]) == 0}<a href="{url 'Pato_Views_Planeacion::borrarTema', $tema.id}"><img class="icon" src="{media '/img/new/trash.png'}" alt="Borrar planeación" /></a>{else}-{/if}</td>{/if}
+			<tr><td>{$tema.inicio|dateSimple:'%e/%b/%Y'} al {$tema.fin|dateSimple:'%e/%b/%Y'}</td><td>{$tema.tema}</td><td width="20%">{$tema.estrategia}</td><td>{$tema.evidencia}</td>
+			{if $myself}<td style="text-align: center;">{if count ($seguimientos[$tema.id]) == 0}<a href="{url 'Pato_Views_Planeacion::borrarTema', $tema.id}"><img class="icon" src="{media '/img/new/trash.png'}" alt="Borrar planeación" /></a>{else}-{/if}</td>{/if}
 			{foreach $secciones as $sec}
-			<td>{if $myself}{if !isset ($seguimientos[$tema.id][$sec.nrc])}
+			<td style="text-align: center;">{if $myself}{if !isset ($seguimientos[$tema.id][$sec.nrc])}
 			<a href="{url 'Pato_Views_Planeacion::seguimiento', array ($tema.id, $sec.nrc)}"><img class ="icon" src="{media '/img/new/document_edit.png'}" alt="Hacer seguimiento" /></a>{else}<img class="icon" src="{media '/img/new/document_done.png'}" alt="Seguimiento hecho" />{/if}{else}
 			{if isset ($seguimientos[$tema.id][$sec.nrc])}<img class="icon" src="{media '/img/new/check.png'}" alt="Seguimiento completo" />{else}<img class="icon" src="{media '/img/new/check.png'}" alt="Seguimiento completo" />{/if}{/if}</td>
 			{/foreach}
 			</tr>
 		{/foreach}</tbody>
-	</table>
+	</table></div>
 	{/if}{/foreach}
 {/if}
 {/block}
