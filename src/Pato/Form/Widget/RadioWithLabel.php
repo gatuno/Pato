@@ -67,7 +67,7 @@ class Pato_Form_Widget_RadioWithLabel extends Gatuf_Form_Widget {
 			}
 			$check_attrs = $this->buildAttrs(array('name' => $name, 'type' => 'radio'), $final_attrs);
 			$rendered = new Gatuf_Template_SafeString('<input'.Gatuf_Form_Widget_Attrs($check_attrs).' />', true);
-			$label = sprintf ('<label for="%s"%s>%s</label>', $final_attrs['id'], $label_class, htmlspecialchars($option_label, ENT_COMPAT, 'UTF-8'));
+			$label = sprintf ('<label for="%s" %s>%s</label>', $final_attrs['id'], $label_class, htmlspecialchars($option_label, ENT_COMPAT, 'UTF-8'));
 			$label = new Gatuf_Template_SafeString ($label, true);
 			$output[] = sprintf('%s%s', $rendered, $label);
 			$i++;

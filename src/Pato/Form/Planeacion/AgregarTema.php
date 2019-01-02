@@ -71,7 +71,7 @@ class Pato_Form_Planeacion_AgregarTema extends Gatuf_Form {
 		
 		$tema_model->_a['views']['all'] = array ('join' => 'LEFT JOIN '.$unidad_tabla.' ON unidad='.$unidad_tabla.'.id');
 		
-		$sql = new Gatuf_SQL ($unidad_tabla.'.materia=%s', $this->unidad->materia);
+		$sql = new Gatuf_SQL ('materia=%s AND maestro=%s', array ($this->unidad->materia, $this->unidad->maestro));
 		$temas = $tema_model->getList (array ('filter' => $sql->gen (), 'view' => 'all', 'order' => 'fin DESC', 'nb' => 1));
 		
 		$inicio = $this->cleaned_data ['inicio'];

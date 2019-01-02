@@ -19,19 +19,40 @@ class Pato_Views_Planeacion {
 				throw new Gatuf_HTTP_Error404();
 			}
 		}
+		
+		$tema_model = new Pato_Planeacion_Tema ();
+		$unidad_model = new Pato_Planeacion_Unidad ();
+		
+		$u_tabla = $unidad_model->getSqlTable ();
+		$t_tabla = $tema_model->getSqlTable ();
+		
+		$tema_model->_a['views']['por_mm'] = array ('join' => 'LEFT JOIN '.$u_tabla.' ON unidad='.$u_tabla.'.id');
 		$secciones = $maestro->get_primario_list (array ('view' => 'mats_cant'));
 		
 		$materias = array ();
-		$cants = array ();
+		$totals = array ();
 		foreach ($secciones as $s) {
 			$m = $s->get_materia ();
+			
+			$sql_mm = new Gatuf_SQL ('materia=%s AND maestro=%s', array ($m->clave, $maestro->codigo));
 			$m->cant_grupos = $s->cant_grupos;
+			$temas = $tema_model->getList (array ('filter' => $sql_mm->gen (), 'count' => true, 'view' => 'por_mm'));
+			$ultimo_tema = $tema_model->getList (array ('filter' => $sql_mm->gen (), 'nb' => 1, 'order' => 'fin DESC', 'view' => 'por_mm'));
+			
+			$totals[$m->clave] = array ('temas' => $temas);
+			if (count ($ultimo_tema) != 0) {
+				$totals[$m->clave]['last_date'] = $ultimo_tema[0]->fin;
+			} else {
+				$totals[$m->clave]['last_date'] = null;
+			}
+			
 			$materias[] = $m;
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/planeacion/index.html',
 		                                          array ('page_title' => 'Planeación',
 		                                                 'materias' => $materias,
+		                                                 'totales' => $totals,
 		                                                 'maestro' => $maestro),
 		                                          $request);
 	}

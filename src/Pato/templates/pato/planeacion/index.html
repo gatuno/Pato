@@ -3,7 +3,7 @@
 {block body}
 {if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
 {if $myself}
-<p>Usted puede armar la planeación por de sus materias. La planeación se realiza una vez por materia diferente que imparta, independiente de la cantidad de grupos que imparta. El seguimiento se realiza por grupo.</p>
+<p>Usted puede armar la planeación de sus materias. La planeación se realiza una vez por materia, independiente de la cantidad de grupos que imparta. El seguimiento se realiza por grupo.</p>
 {else}
 <p>Usted está viendo la planeación del profesor {$maestro.nombre} {$maestro.apellido}</p>
 {/if}
@@ -12,11 +12,11 @@
 		<tr><th>Materia</th><th>Cantidad de temas planeados</th><th>Última fecha planeada</th><th></th></tr>
 	</thead>
 	<tbody>{foreach $materias as $m}
-		<tr><td>{$m->descripcion} ({if $m->cant_grupos == 1}1 grupo{else}{$m->cant_grupos} grupos{/if})</td><td colspan="2"></td><td>
+		<tr><td>{$m->descripcion} ({if $m->cant_grupos == 1}1 grupo{else}{$m->cant_grupos} grupos{/if})</td><td style="text-align: center;">{$totales[$m.clave]['temas']}</td><td>{if $totales[$m.clave]['last_date']}{$totales[$m.clave]['last_date']|dateSimple:'%e/%b/%Y'}{else}No hay temas{/if}</td><td>
 		{if $myself}
 		<a href="{url 'planeacion_materia_propia', $m->clave}">Abrir planeación</a>
 		{else}
-		<a href="{url 'planeacion_materia_otros', array ($maestro->codigo, $m->clave)}">Abrir planeación</a>
+		<a href="{url 'planeacion_materia_otros', array ($maestro->codigo, $m->clave)}">Ver planeación</a>
 		{/if}
 		</td></tr>
 	{/foreach}</tbody>

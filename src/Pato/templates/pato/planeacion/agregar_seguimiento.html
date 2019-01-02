@@ -120,8 +120,8 @@
 <script type="text/javascript">
 	var inicio_text = "{$tema.inicio|dateSimple:'%d/%m/%Y'}";
 	var fin_text = "{$tema.fin|dateSimple:'%d/%m/%Y'}";
-	var estrategia_text = "{$tema.estrategia}";
-	var evidencia_text = "{$tema.evidencia}";
+	var estrategia_text = {$tema.estrategia|json};
+	var evidencia_text = {$tema.evidencia|json};
 	
 	{literal}
 	function on_change_yes_no () {
