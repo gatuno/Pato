@@ -569,6 +569,32 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/planeacion/reportes/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Planeacion_Reportes',
+	'method' => 'index',
+);
+
+$ctl[] = array (
+	'regex' => '#^/planeacion/reportes/#',
+	'base' => $base,
+	'sub' => array (
+		array (
+			'regex' => '#^profesor/(\d+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion_Reportes',
+			'method' => 'reportePorMaestro',
+		),
+		array (
+			'regex' => '#^materia/([\w-]+)/$#',
+			'base' => '',
+			'model' => 'Pato_Views_Planeacion_Reportes',
+			'method' => 'reportePorMateria',
+		),
+	)
+);
+
+$ctl[] = array (
 	'regex' => '#^/planeacion/#',
 	'base' => $base,
 	'sub' => array (

@@ -1,0 +1,17 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block body}
+<p>Reporte general de la planeación y seguimientos de la materia {$materia.descripcion} ({$materia.clave}).</p>
+<table border="1">
+	<thead>
+		<tr><th>Profesor</th><th>Grupos de esta materia</th><th>Temas creados</th><th>Fecha del último tema planeado</th><th>Seguimientos totales</th></tr>
+	</thead>
+	<tbody>{foreach $maestros as $m}
+		{assign $max = $totales[$m.codigo]['temas'] * $m.cant_grupos}
+		<tr><td>{$m.nombre} {$m.apellido}</td><td style="text-align: center;">{$m.cant_grupos}</td>
+		<td style="text-align: center;">{$totales[$m.codigo]['temas']}</td>
+		<td style="text-align: center;">{if $totales[$m.codigo]['last_date']}{$totales[$m.codigo]['last_date']|dateSimple:'%e/%b/%Y'}{else}No hay temas{/if}</td><td style="text-align: center;">{$totales[$m.codigo]['seguimientos']}/{$max}</td>
+		</tr>{/foreach}
+	</tbody>
+</table>
+{/block}

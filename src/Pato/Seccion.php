@@ -90,6 +90,11 @@ class Pato_Seccion extends Gatuf_Model {
 				'group' => 'materia',
 				'props' => array ('cant_grupos'),
 			),
+			'profs_cant' => array (
+				'select' => 'maestro, COUNT(*) as cant_grupos',
+				'group' => 'maestro',
+				'props' => array ('cant_grupos'),
+			),
 		);
 	}
 	

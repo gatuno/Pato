@@ -1,0 +1,31 @@
+{extends 'pato/base.html'}
+{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
+{block extrahead}
+{literal}<style type="text/css">
+td.grupo, th.grupo {
+	border-right: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+}
+</style>
+{/literal}{/block}
+{block body}
+<p>Reporte general de la planeación y seguimientos del profesor {$maestro.nombre} {$maestro.apellido}.</p>
+{foreach $materias as $m}
+<h2>{$m.descripcion}</h2>
+<p>El profesor tiene {$secciones[$m.clave]|count} grupo(s).</p>
+<table>
+	<thead>
+		<tr><th rowspan="2">Materia</th><th rowspan="2">Unidades creadas</th><th rowspan="2">Temas creados</th><th rowspan="2">Fecha del último tema planeado</th><th rowspan="2">Seguimientos totales</th><th colspan="{$secciones[$m.clave]|count}">Seguimientos por grupo</th></tr>
+		<tr>{foreach $secciones[$m.clave] as $sec}<th class="grupo">{$sec.seccion}</th>{/foreach}</tr>
+	</thead>
+	<tbody>
+		{assign $max = $totales[$m.clave]['temas'] * count ($secciones[$m.clave])}
+		<tr><td>{$m.descripcion}</td>
+		<td style="text-align: center;">{$totales[$m.clave]['unidades']}</td><td style="text-align: center;">{$totales[$m.clave]['temas']}</td><td style="text-align: center;">{if $totales[$m.clave]['last_date']}{$totales[$m.clave]['last_date']|dateSimple:'%e/%b/%Y'}{else}No hay temas{/if}</td><td style="text-align: center;">{$totales[$m.clave]['seguimientos']}/{$max}</td>
+		{foreach $secciones[$m.clave] as $sec}<td style="text-align: center;" class="grupo">{$totales[$m.clave]['seg_sec'][$sec.nrc]}/{$totales[$m.clave]['temas']}</td>{/foreach}
+		</tr>
+	</tbody>
+</table>
+<hr />
+{/foreach}
+{/block}
