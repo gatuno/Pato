@@ -14,7 +14,7 @@
 		<table class="topmenu-table"><tr>
 			<td>
 				<ul class="nav">
-					<li class="general"><a href="{url 'Pato_Views::index'}">Académico</a>
+					<li class="general"><a href="{url 'Pato_Views_Index::index'}">Académico</a>
 						<ul>
 							<li><a href="{url 'Pato_Views_Alumno::index'}">Alumnos</a></li>
 							<li><a href="{url 'Pato_Views_Maestro::index'}">Profesores</a></li>
@@ -52,16 +52,16 @@
 				<div class="userdiv">
 				{if !$user.isAnonymous()}
 					<p class="user"><img src="http://www.gravatar.com/avatar/{$user.email|md5}.jpg?s=30" alt=" "/>
-					{if $user.type == 'm'}<a href="{url 'Pato_Views_Maestro::verMaestro', array($user.login)}"><strong>{$user.extra.nombre} {$user.extra.apellido}</strong></a>{/if}
-					{if $user.type == 'a'}<a href="{url 'Pato_Views_Alumno::verPerfil', array($user.login)}"><strong>{$user.extra.nombre} {$user.extra.apellido}</strong></a>{/if}</p>
-					<p class="logout"><a href="{url 'Pato_Views::logout'}">&nbsp;<img class="icon" src="{media '/img/application-exit.png'}" alt="Salir" />Salir</a></p>
-				{else}<p class="login"><a href="{url 'Pato_Views::login', array (), array ('_redirect_after' => $uri)}">Iniciar sesión</a></p>{/if}
+					{if $user.get_type() == 'm'}<a href="{url 'Pato_Views_Maestro::verMaestro', array($user.codigo)}"><strong>{$user.nombre} {$user.apellido}</strong></a>{/if}
+					{if $user.get_type() == 'a'}<a href="{url 'Pato_Views_Alumno::verPerfil', array($user.codigo)}"><strong>{$user.nombre} {$user.apellido}</strong></a>{/if}</p>
+					<p class="logout"><a href="{url 'Pato_Views_Login::logout'}">&nbsp;<img class="icon" src="{media '/img/application-exit.png'}" alt="Salir" />Salir</a></p>
+				{else}<p class="login"><a href="{url 'Pato_Views_Login::login', array (), array ('_redirect_after' => $uri)}">Iniciar sesión</a></p>{/if}
 				</div>
 			</td>
 		</tr></table>
 	</div>
 	{block extratopbody}{/block}
-	{if $user and $user.id}{getmsgs $user}{/if}
+	{patomsgs $user}
 	<h1 class="titulo">{$page_title}</h1>
 	<div class="content-div">
 		{block body}{/block}

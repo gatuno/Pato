@@ -42,7 +42,7 @@ class Pato_Views_Calendario {
 				$cal = $form->save ();
 				
 				$request->session->setData ('CAL_ACTIVO', $cal->clave);
-				Gatuf_Log::info (sprintf ('El calendario %s fué creado por el usuario %s (%s)', $cal->clave, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El calendario %s fué creado por el usuario %s', $cal->clave, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', $cal->clave);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -137,7 +137,7 @@ class Pato_Views_Calendario {
 				$form->save ();
 				
 				$request->user->setMessage (1, 'Preferencias del calendario guardadas');
-				Gatuf_Log::info (sprintf ('Ajustes en el calendario %s fueron efectuados por el usuario %s (%s)', $calendario->clave, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('Ajustes en el calendario %s fueron efectuados por el usuario %s', $calendario->clave, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', $calendario->clave);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -167,6 +167,7 @@ class Pato_Views_Calendario {
 			$gconf->setApp ('Patricia');
 			$gconf->setVal ('calendario_activo', $calendario->clave);
 			
+			Gatuf_Log::info (sprintf ('El calendario actual fué cambiado a %s por el usuario %s', $calendario->clave, $request->user->codigo));
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', $calendario->clave);
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
@@ -192,6 +193,7 @@ class Pato_Views_Calendario {
 			$gconf->setApp ('Patricia');
 			$gconf->setVal ('calendario_siguiente', $calendario->clave);
 			
+			Gatuf_Log::info (sprintf ('El calendario siguiente fué cambiado a %s por el usuario %s', $calendario->clave, $request->user->codigo));
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', $calendario->clave);
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);

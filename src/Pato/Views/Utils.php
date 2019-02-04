@@ -97,7 +97,7 @@ class Pato_Views_Utils {
 					}
 					
 					$alumno->delAssoc ($seccion);
-					Gatuf_Log::info (sprintf ('El usuario %s (%s) ha desmatriculado al alumno %s del NRC %s', $request->user->login, $request->user->id, $alumno->codigo, $seccion->nrc));
+					Gatuf_Log::info (sprintf ('El usuario %s ha desmatriculado al alumno %s del NRC %s', $request->user->codigo, $alumno->codigo, $seccion->nrc));
 					$request->user->setMessage (1, 'El alumno '.$alumno->codigo.' fué desmatriculado del nrc '.$seccion->nrc);
 				}
 				
@@ -119,7 +119,7 @@ class Pato_Views_Utils {
 					if ($resp !== true) {
 						$request->user->setMessage (2, 'El alumno ('.$alumno->codigo.') no se pudo matricular en el NRC '.$seccion->nrc.' por la siguiente razón: '.$resp);
 					} else {
-						Gatuf_Log::info (sprintf ('El usuario %s (%s) ha matriculado al alumno %s en el NRC %s', $request->user->login, $request->user->id, $alumno->codigo, $seccion->nrc));
+						Gatuf_Log::info (sprintf ('El usuario %s ha matriculado al alumno %s en el NRC %s', $request->user->codigo, $alumno->codigo, $seccion->nrc));
 						$request->user->setMessage (1, 'Alumno '.$alumno->codigo.' matriculado en el NRC '.$seccion->nrc);
 					}
 				}

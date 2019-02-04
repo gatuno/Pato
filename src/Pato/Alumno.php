@@ -3,6 +3,8 @@
 class Pato_Alumno extends Gatuf_Model {
 	/* Manejador de la tabla Alumnos */
 	public $_model = __CLASS__;
+	public $session_key = '_GATUF_Gatuf_User_auth';
+	public $administrator = false; /* FIXME: QUITAR ESTO */
 	
 	function init() {
 		$this->_a['table'] = 'alumnos';
@@ -32,8 +34,33 @@ class Pato_Alumno extends Gatuf_Model {
 			array (
 			       'type' => 'Gatuf_DB_Field_Char',
 			       'blank' => false,
+			       'default' => 'M',
 			       'size' => 1,
-			       'default' => 'M'
+			),
+			'email' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Email',
+			       'blank' => false,
+			),
+			'password' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Password',
+			       'blank' => false,
+			       'size' => 150,
+			),
+			'active' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'default' => true,
+			       'blank' => true,
+			),
+			'last_login' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Datetime',
+			       'blank' => true,
+			       'editable' => false,
+			       'is_null' => true,
+			       'default' => null,
 			),
 		);
 		
@@ -41,28 +68,72 @@ class Pato_Alumno extends Gatuf_Model {
 	}
 	
 	function postSave ($create = false) {
-		if ($create) {
-			/* Crear el usuario correspondiente */
-			$user = new Pato_User ();
-			$user->login = $this->codigo;
-			$user->type = 'a'; /* Alumno */
-			$user->administrator = false;
-			$user->password = Gatuf_Utils::getPassword (8);
-			if (isset ($this->_data['email'])) {
-				$user->email = $this->email;
-				/* TODO: Mandar el correo de bienvenida con la contraseña */
-			} else {
-				$user->email = '';
-			}
-			
-			$user->create ();
-			$this->user = $user;
+		
+	}
+	
+	function setPassword ($password) {
+		$salt = Gatuf_Utils::getRandomString(5);
+		$this->password = 'sha1:'.$salt.':'.sha1($salt.$password);
+		return true;
+	}
+	
+	function checkPassword ($password) {
+		if ($this->password == '') {
+			return false;
+		}
+		list ($algo, $salt, $hash) = explode(':', $this->password);
+		if ($hash == $algo($salt.$password)) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
-	function getUser () {
-		$sql = new Gatuf_SQL ('login=%s', $this->codigo);
-		$this->user = Gatuf::factory ('Pato_User')->getOne (array ('filter' => $sql->gen ()));
+	function isAnonymous () {
+		return ('' === $this->codigo);
+	}
+	
+	function getAllPermissions ($force=false) {
+		return array ();
+	}
+	
+	function hasPerm ($perm, $obj = null) {
+		return false;
+	}
+	
+	function hasAppPerms ($app) {
+		return false;
+	}
+	
+	function setMessage ($type, $message) {
+		if ($this->isAnonymous ()) {
+			return false;
+		}
+		
+		$m = new Pato_MessageA ();
+		$m->message = $message;
+		$m->type = $type;
+		$m->user = $this;
+		
+		return $m->create ();
+	}
+	
+	function getAndDeleteMessages () {
+		if ($this->isAnonymous ()) {
+			return false;
+		}
+		$messages = new ArrayObject ();
+		$ms = $this->get_messages_list ();
+		foreach ($ms as $m) {
+			$messages[] = array ('message' => $m->message, 'type' => $m->type);
+			$m->delete ();
+		}
+		
+		return $messages;
+	}
+	
+	function get_type () {
+		return 'a';
 	}
 	
 	public function displaylinkedcodigo ($extra=null) {

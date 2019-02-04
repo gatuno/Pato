@@ -111,7 +111,7 @@ class Pato_Views_Estatus {
 			$estatus->create ();
 			
 			/* Poner en el log del sistema */
-			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Licencia. Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Licencia. Movimiento por %s', $alumno->codigo, $request->user->codigo));
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' está de licencia');
 			/* Redirigir al estatus del alumno */
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::kardex', $alumno->codigo);
@@ -233,7 +233,7 @@ class Pato_Views_Estatus {
 			$ins->egreso = $calendario_actual;
 			$ins->update ();
 			
-			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Baja Voluntaria. Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Baja Voluntaria. Movimiento por %s', $alumno->codigo, $request->user->codigo));
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha sido dado de baja. Causa: Baja Voluntaria (BV).');
 			
 			/* Redirigir al estatus del alumno */
@@ -346,7 +346,7 @@ class Pato_Views_Estatus {
 				$estatus->create ();
 				
 				/* Registrar en el log del sistema */
-				Gatuf_Log::info (sprintf ('El alumno %s cambió de carrera. Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El alumno %s cambió de carrera. Movimiento por %s', $alumno->codigo, $request->user->codigo));
 				$request->user->setMessage (1, 'El alumno ha sido movido satisfactoriamente a la nueva carrera');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::cambioCarrera');
@@ -517,7 +517,7 @@ class Pato_Views_Estatus {
 			//$ins->egreso = $calendario_actual;
 			//$ins->update ();
 			
-			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Baja Administrativa (B6). Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Baja Administrativa (B6). Movimiento por %s', $alumno->codigo, $request->user->codigo));
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha sido dado de baja. Causa: Baja Administrativa (B6).');
 			
 			/* Redirigir al estatus del alumno */
@@ -599,7 +599,7 @@ class Pato_Views_Estatus {
 			//$ins->egreso = $calendario_actual;
 			//$ins->update ();
 			
-			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Activo (AC). Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+			Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Activo (AC). Movimiento por %s', $alumno->codigo, $request->user->codigo));
 			$request->user->setMessage (1, 'El alumno '.((string) $alumno).' ha regresado de la muerte administrativa. Estatus: Activo (AC)');
 			
 			/* Redirigir al estatus del alumno */
@@ -691,7 +691,7 @@ class Pato_Views_Estatus {
 				$estatus->estatus = new Pato_Estatus ('AC');
 				$estatus->create ();
 				
-				Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Activo (AC). Movimiento por %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El alumno %s cambió su estatus a Activo (AC). Movimiento por %s', $alumno->codigo, $request->user->codigo));
 				$request->user->setMessage (1, 'Se ha recibido documentos del alumno '.((string) $alumno).' . Estatus: Activo (AC)');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::recibirDocumentosReporte', $alumno->codigo);

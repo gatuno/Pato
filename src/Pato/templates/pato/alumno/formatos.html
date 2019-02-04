@@ -1,7 +1,8 @@
 {extends 'pato/alumno/base.html'}
 {block body_alumno}
+{aperm 'imprimir_boleta', $user, 'Patricia.imprimir_boleta_alumno'}
 <p>Los siguientes formatos están disponibles:</p>
 <ul>
-	<li><a href="{url 'Pato_Views_Alumno::boleta', array ($alumno.codigo, 1)}">Boleta calificaciones</a></li>
+	{if $imprimir_boleta}<li><a href="{url 'Pato_Views_Alumno::boleta', array ($alumno.codigo, 1)}">Boleta calificaciones</a></li>{/if}
 </ul>
 {/block}

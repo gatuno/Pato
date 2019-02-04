@@ -1,6 +1,6 @@
 {extends 'pato/base.html'}
 {block body}
-<form method="post" action="{url 'Pato_Views::login'}">
+<form method="post" action="{url 'Pato_Views_Login::login'}">
 <input type="hidden" name="_redirect_after" value="{$_redirect_after}" />
 {if $error}
 <p>{$error}</p>
@@ -11,7 +11,7 @@
 <p><label for="id_password">Mi contraseña es:</label><input type="password" name="password" id="id_password" /></p>
 <p><input type="submit" value="Ingresar" /></p>
 </form>
-<p>¿Ha olvidado su contraseña?, Pruebe a <a href="{url 'Pato_Views::passwordRecoveryAsk'}">recuperarla</a></p>
+<p>¿Ha olvidado su contraseña?, Pruebe a <a href="{url 'Pato_Views_Login::passwordRecoveryAsk'}">recuperarla</a></p>
 {/block}
 {block javascript}
 <script type="text/javascript">

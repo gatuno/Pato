@@ -1,8 +1,10 @@
 {extends 'pato/alumno/base.html'}
 {block body_alumno}
 <h2>Agenda para el calendario {$calendario.descripcion}</h2>
+{aperm 'admin_agenda', $user, 'Patricia.admin_agenda'}
+{alumnoself 'alumno_self', $user, $alumno}
 {if $agenda}
-	{if $user.administrator}
+	{if $admin_agenda}
 		{if $inscripcion != null}
 		<p><a href="{url 'Pato_Views_Agenda::cambiarAgenda', $alumno.codigo}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Cambiar" />Ajustar agenda</a> | <a href="{url 'Pato_Views_Agenda::eliminarAgenda', $alumno.codigo}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Eliminar" />Eliminar agenda</a></p>
 		{else}
@@ -11,9 +13,9 @@
 	{/if}
 	<p>La agenda del alumno permite el registro de materias para el {$calendario.clave}</p>
 	<p>Programada para el día {$agenda.inicio|date:"%d/%m/%Y %H:%M"} al {$agenda.fin|date:"%d/%m/%Y %H:%M"}</p>
-	{if $abierta && $agenda.alumno == $user.login}<p>Pasar al <a href="{url 'Pato_Views_Agenda::registro', $alumno.codigo}">registro de materias</a></p>{/if}
+	{if $abierta && $alumno_self}<p>Pasar al <a href="{url 'Pato_Views_Agenda::registro', $alumno.codigo}">registro de materias</a></p>{/if}
 {else}
-	{if $user.administrator}
+	{if $admin_agenda}
 		{if $inscripcion != null && $estatus.isActivo()}
 		<p><a href="{url 'Pato_Views_Agenda::crearAgenda', $alumno.codigo}"><img class="icon" src="{media '/img/list-add.png'}" alt="Crear" />Crear agenda para el alumno</a></p>
 		{else}

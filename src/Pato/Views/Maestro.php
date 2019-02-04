@@ -118,7 +118,7 @@ class Pato_Views_Maestro {
 			if ($form->isValid()) {
 				$maestro = $form->save ();
 				
-				Gatuf_Log::info (sprintf ('El maestro %s ha sido creado por el usuario %s (%s)', $maestro->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El maestro %s ha sido creado por el usuario %s', $maestro->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($maestro->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -149,7 +149,7 @@ class Pato_Views_Maestro {
 			if ($form->isValid()) {
 				$maestro = $form->save ();
 				
-				Gatuf_Log::info (sprintf ('El maestro %s ha sido actualizado por el usuario %s (%s)', $maestro->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El maestro %s ha sido actualizado por el usuario %s', $maestro->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($maestro->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

@@ -3,16 +3,17 @@
 <ul style="list-style-type: none;" class="do-not-print">
 <li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verPerfil', array ($alumno.codigo)}">Perfil</a></li>
 {aperm 'ver_kardex', $user, 'Patricia.kardex_alumno'}{aperm 'ver_boleta', $user, 'Patricia.boleta_alumno'}{aperm 'ver_horario', $user, 'Patricia.horario_alumno'}
-{if $ver_kardex || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>{/if}
-{if $ver_boleta || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verCalificaciones', array ($alumno.codigo)}">Calificaciones</a></li>{/if}
-{if $ver_horario || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verHorario', array ($alumno.codigo)}">Horario</a></li>{/if}
-{if $user.administrator || $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Agenda::agenda', array ($alumno.codigo)}">Agenda</a></li>{/if}
-{if $user.login == $alumno.codigo}<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar contraseña</a></li>{/if}
-{if $user.administrator}<!-- Actualizar con el permiso correspondiente -->
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verFormatos', array ($alumno.codigo)}">Formatos</a></li>
-<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::actualizarAlumno', array ($alumno.codigo)}">Actualizar</a></li>
-<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordReset', array ($alumno.codigo)}">Resetear contraseña</a></li>
-{/if}
+{aperm 'imprimir_boleta', $user, 'Patricia.imprimir_boleta_alumno'}{aperm 'editar_alumno', $user, 'Patricia.editar_alumno'}{aperm 'reset_pass', $user, 'Patricia.reset_password'}
+{aperm 'admin_agenda', $user, 'Patricia.admin_agenda'}
+{alumnoself 'alumno_self', $user, $alumno}
+{if $ver_kardex || $alumno_self}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::kardex', array ($alumno.codigo)}">Historial académico</a></li>{/if}
+{if $ver_boleta || $alumno_self}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verCalificaciones', array ($alumno.codigo)}">Calificaciones</a></li>{/if}
+{if $ver_horario || $alumno_self}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verHorario', array ($alumno.codigo)}">Horario</a></li>{/if}
+{if $admin_agenda || $alumno_self}<li style="display: inline;"><a href="{url 'Pato_Views_Agenda::agenda', array ($alumno.codigo)}">Agenda</a></li>{/if}
+{if $alumno_self}<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange', array ($alumno.codigo)}">Cambiar contraseña</a></li>{/if}
+{if $imprimir_boleta}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::verFormatos', array ($alumno.codigo)}">Formatos</a></li>{/if}
+{if $editar_alumno}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::actualizarAlumno', array ($alumno.codigo)}">Actualizar</a></li>{/if}
+{if $reset_pass}<li style="display: inline;"><a href="{url 'Pato_Views_Alumno::passwordReset', array ($alumno.codigo)}">Resetear contraseña</a></li>{/if}
 </ul>
 {block body_alumno}{/block}
 {/block}

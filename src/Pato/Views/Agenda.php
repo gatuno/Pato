@@ -12,10 +12,9 @@ class Pato_Views_Agenda {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator) {
-			if ($request->user->login != $alumno->codigo) {
-				throw new Gatuf_HTTP_Error404 ();
-			}
+		$res = Pato_Precondition::selfAlumnoOrHasPerm ($request, $alumno, 'Patricia.admin_agenda');
+		if (true !== $res) {
+			return $res;
 		}
 		
 		$gconf = new Gatuf_GSetting ();
@@ -57,7 +56,7 @@ class Pato_Views_Agenda {
 		                                         $request);
 	}
 	
-	public $crearAgenda_precond = array ('Gatuf_Precondition::adminRequired');
+	public $crearAgenda_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_agenda'));
 	public function crearAgenda ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -96,7 +95,7 @@ class Pato_Views_Agenda {
 			
 			if ($form->isValid ()) {
 				$agenda = $form->save ();
-				Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido creada por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido creada por el usuario %s', $alumno->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -113,7 +112,7 @@ class Pato_Views_Agenda {
 		                                         $request);
 	}
 	
-	public $cambiarAgenda_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiarAgenda_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_agenda'));
 	public function cambiarAgenda ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -152,7 +151,7 @@ class Pato_Views_Agenda {
 			
 			if ($form->isValid ()) {
 				$agenda = $form->save ();
-				Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido actualizada por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido actualizada por el usuario %s', $alumno->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -169,7 +168,7 @@ class Pato_Views_Agenda {
 		                                         $request);
 	}
 	
-	public $eliminarAgenda_precond = array ('Gatuf_Precondition::adminRequired');
+	public $eliminarAgenda_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_agenda'));
 	public function eliminarAgenda ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -190,7 +189,7 @@ class Pato_Views_Agenda {
 		
 		$list[0]->delete ();
 		
-		Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido eliminada por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+		Gatuf_Log::info (sprintf ('La agenda para el alumno %s ha sido eliminada por el usuario %s', $alumno->codigo, $request->user->codigo));
 		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Agenda::agenda', $alumno->codigo);
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
@@ -203,8 +202,10 @@ class Pato_Views_Agenda {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if ($request->user->type != 'a' || $request->user->login != $alumno->codigo) {
-			throw new Gatuf_HTTP_Error404 ();
+		$res = Pato_Precondition::selfAlumno ($request, $alumno);
+		
+		if (true !== $res) {
+			return $res;
 		}
 		
 		$ins = $alumno->get_current_inscripcion ();
@@ -222,6 +223,7 @@ class Pato_Views_Agenda {
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
+		/* FIXME: revisar esto */
 		if (!Pato_Views_Evaluacion_Profesor::checar_si_evaluo($alumno)) {
 			/* Obligarlo a aplicar la evaluación a profesores primero */
 			
@@ -308,8 +310,10 @@ class Pato_Views_Agenda {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if ($request->user->type != 'a' || $request->user->login != $alumno->codigo) {
-			throw new Gatuf_HTTP_Error404 ();
+		$res = Pato_Precondition::selfAlumno ($request, $alumno);
+		
+		if (true !== $res) {
+			return $res;
 		}
 		
 		$ins = $alumno->get_current_inscripcion ();

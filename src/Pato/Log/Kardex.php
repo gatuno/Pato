@@ -18,7 +18,7 @@ class Pato_Log_Kardex extends Gatuf_Model {
 			array (
 			       'type' => 'Gatuf_DB_Field_Foreignkey',
 			       'blank' => false,
-			       'model' => 'Pato_User',
+			       'model' => 'Pato_Maestro',
 			),
 			'kardex' =>
 			array (

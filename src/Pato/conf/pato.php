@@ -111,20 +111,25 @@ $cfg['bounce_email'] = 'pato@upzmg.edu.mx';
 # -----------------------
 
 $cfg['middleware_classes'] = array(
-	'Gatuf_Middleware_Session',
+	'Pato_Middleware_Session',
 	'Pato_Middleware_Calendario',
 	'Pato_Middleware_Password',
 	'Pato_Middleware_Aviso',
 );
 
-$cfg['gatuf_custom_user'] = 'Pato_User';
+$cfg['gatuf_custom_user'] = 'Pato_Maestro';
 
 /*$cfg['template_tags'] = array ('coordperm' => 'Calif_Template_CoordPerm',
 	'jefeperm' => 'Calif_Template_JefePerm');*/
 
 $cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin', 'CP', 'Admision');
 
-$cfg['template_tags'] = array ('matcoord' => 'Pato_Template_Tag_MateriaCoord');
+$cfg['template_tags'] = array (
+	'matcoord' => 'Pato_Template_Tag_MateriaCoord',
+	'patomsgs' => 'Pato_Template_Tag_Messages',
+	'alumnoself' => 'Pato_Template_Tag_AlumnoSelf',
+	'maestroself' => 'Pato_Template_Tag_MaestroSelf',
+);
 
 $cfg['gatuf_log_file'] = '/home/www/patricia.upzmg.edu.mx/pato.log';
 Gatuf_Log::$level = Gatuf_Log::ALL;
@@ -134,5 +139,6 @@ Gatuf_Log::$level = Gatuf_Log::ALL;
 # -------------------------
 
 $cfg['buscar-edificios'] = array ();
+$cfg['blocked_passwords'] = array ('1', '12', '123', '1234', '12345', '123456', '1234567', '12345678', '123456789', '1234567890', 'qwerty', 'abc123', '123123', '1234567890', '11111', '111111', '1111', '111', '11', 'password', 'qwerty123', 'password1', 'qwertyuiop');
 
 return $cfg;

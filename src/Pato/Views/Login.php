@@ -3,11 +3,7 @@
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
-class Pato_Views {
-	function index ($request, $match) {
-		return Gatuf_Shortcuts_RenderToResponse ('pato/index.html', array ('page_title' => 'Portada'), $request);
-	}
-	
+class Pato_Views_Login {
 	function login ($request, $match, $success_url = '', $extra_context=array()) {
 		if (!empty($request->REQUEST['_redirect_after'])) {
 			$success_url = $request->REQUEST['_redirect_after'];
@@ -17,7 +13,7 @@ class Pato_Views {
 		
 		$error = '';
 		if ($request->method == 'POST') {
-			foreach (Gatuf::config ('auth_backends', array ('Gatuf_Auth_ModelBackend')) as $backend) {
+			foreach (array ('Pato_Auth_MaestroBackend', 'Pato_Auth_AlumnoBackend') as $backend) {
 				$user = call_user_func (array ($backend, 'authenticate'), $request->POST);
 				if ($user !== false) {
 					break;
@@ -32,7 +28,7 @@ class Pato_Views {
 				} else {
 					$request->user = $user;
 					$request->session->clear ();
-					$request->session->setData('login_time', gmdate('Y-m-d H:i:s'));
+					//$request->session->setData('login_time', gmdate('Y-m-d H:i:s'));
 					$user->last_login = gmdate('Y-m-d H:i:s');
 					$user->update ();
 					$request->session->deleteTestCookie ();
@@ -52,11 +48,9 @@ class Pato_Views {
 	
 	function logout ($request, $match) {
 		$success_url = Gatuf::config ('after_logout_page', '/');
-		$user_model = Gatuf::config('gatuf_custom_user','Gatuf_User');
 		
-		$request->user = new $user_model ();
+		$request->user = new Pato_EmptyUser ();
 		$request->session->clear ();
-		$request->session->setData ('logout_time', gmdate('Y-m-d H:i:s'));
 		if (0 !== strpos ($success_url, 'http')) {
 			$murl = new Gatuf_HTTP_URL ();
 			$success_url = Gatuf::config('pato_base').$murl->generate($success_url);
@@ -69,13 +63,14 @@ class Pato_Views {
 		$title = 'Recuperar contraseña';
 		
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_Password ($request->POST);
+			$form = new Pato_Form_Login_PasswordRecovery ($request->POST);
 			if ($form->isValid ()) {
-				$url = $form->save ();
+				$form->save ();
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Login::passwordRecoverWait');
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Pato_Form_Password ();
+			$form = new Pato_Form_Login_PasswordRecovery ();
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/user/recuperarcontra-ask.html',
@@ -84,16 +79,24 @@ class Pato_Views {
 		                                         $request);
 	}
 	
+	function passwordRecoverWait ($request, $match) {
+		$form = new Pato_Form_Login_PasswordInputKey ();
+		return Gatuf_Shortcuts_RenderToResponse ('pato/user/recuperarcontra-wait.html',
+		                                         array ('page_title' => 'Recuperar contraseña',
+		                                         'form' => $form),
+		                                         $request);
+	}
+	
 	function passwordRecoveryInputCode ($request, $match) {
 		$title = 'Recuperar contraseña';
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_PasswordInputKey($request->POST);
+			$form = new Pato_Form_Login_PasswordInputKey($request->POST);
 			if ($form->isValid ()) {
 				$url = $form->save ();
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-		 	$form = new Pato_Form_PasswordInputKey ();
+		 	$form = new Pato_Form_Login_PasswordInputKey ();
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/user/recuperarcontra-codigo.html',
@@ -106,16 +109,22 @@ class Pato_Views {
 		$title = 'Recuperar contraseña';
 		$key = $match[1];
 		
-		$email_id = Pato_Form_PasswordInputKey::checkKeyHash($key);
-		if (false == $email_id) {
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views::passwordRecoveryInputCode');
+		$recover_data = Pato_Form_Login_PasswordInputKey::checkKeyHash($key);
+		if (false == $recover_data) {
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Login::passwordRecoveryInputCode');
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
-		$user = new Pato_User ($email_id[1]);
-		$extra = array ('key' => $key,
-		                'user' => $user);
+		
+		try {
+			$new_user = Pato_Form_Login_PasswordInputKey::getKeyUser ($recover_data);
+		} catch (Gatuf_Form_Invalid $e) {
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Login::passwordRecoveryInputCode');
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$extra = array ('key' => $key);
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_PasswordReset($request->POST, $extra);
+			$form = new Pato_Form_Login_PasswordReset($request->POST, $extra);
 			if ($form->isValid()) {
 				$user = $form->save();
 				$request->user = $user;
@@ -125,15 +134,15 @@ class Pato_Views {
 				$user->update ();
 				/* Establecer un mensaje */
 				$request->user->setMessage(1, 'Bienvenido de nuevo');
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views::index');
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Index::index');
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Pato_Form_PasswordReset (null, $extra);
+			$form = new Pato_Form_Login_PasswordReset (null, $extra);
 		}
 		return Gatuf_Shortcuts_RenderToResponse ('pato/user/recuperarcontra.html',
 		                                         array ('page_title' => $title,
-		                                         'new_user' => $user,
+		                                         'new_user' => $new_user,
 		                                         'form' => $form),
 		                                         $request);
 	}

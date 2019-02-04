@@ -44,7 +44,7 @@ class Pato_Views_Carrera {
 			if ($form->isValid()) {
 				$carrera = $form->save();
 				
-				Gatuf_Log::info (sprintf ('La carrera %s ha sido creada por el usuario %s (%s)', $carrera->clave, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('La carrera %s ha sido creada por el usuario %s', $carrera->clave, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView('Pato_Views_Carrera::verCarrera', $carrera->clave);
 				return new Gatuf_HTTP_Response_Redirect($url);
 			}
@@ -78,7 +78,7 @@ class Pato_Views_Carrera {
 			if ($form->isValid()) {
 				$carrera = $form->save ();
 				
-				Gatuf_Log::info (sprintf ('La carrera %s ha sido actualizada por el usuario %s (%s)', $carrera->clave, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('La carrera %s ha sido actualizada por el usuario %s', $carrera->clave, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView('Pato_Views_Carrera::verCarrera', $carrera->clave);
 				return new Gatuf_HTTP_Response_Redirect($url);
 			}

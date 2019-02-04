@@ -33,7 +33,7 @@ class Pato_Views_Alumno {
                                                  $request);
 	}
 	
-	public $agregarAlumno_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarAlumno_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.crear_alumno'));
 	public function agregarAlumno ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Alumno_Agregar ($request->POST);
@@ -41,7 +41,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid()) {
 				$alumno = $form->save ();
 				
-				Gatuf_Log::info (sprintf ('El alumno %s fue creado a petición del usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El alumno %s fue creado a petición del usuario %s', $alumno->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -55,32 +55,38 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
-	
-	/*public function verAlumno ($request, $match) {
+	public $passwordReset_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reset_password'));
+	public function passwordReset ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$alumno->getUser ();
+		$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/ver-alumno.html',
-		                                         array('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
-		                                               'alumno' => $alumno),
-                                                 $request);
-	}*/
+		if (!$alumno->active) {
+			$request->user->setMessage (3, 'No se puede reestablecer la contrase del alumno porque se encuentra inactivo');
+			return new Gatuf_HTTP_Response_Redirect ($url_af);
+		}
+		
+		Pato_Form_Login_PasswordRecovery::send_code ($alumno);
+		
+		$request->user->setMessage (1, sprintf ('Se ha enviado un correo a "%s" para resetear la contraseña. Expira en 12 horas', $alumno->email));
+		return new Gatuf_HTTP_Response_Redirect ($url_af);
+	}
 	
 	public $verCalificaciones_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verCalificaciones ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
-		if (false === ($alumno->get ($match[1] ) ) ) {
+		if (false === ($alumno->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if (!$request->user->hasPerm ('Patricia.boleta_alumno') && $request->user->login != $alumno->codigo) {
-			return new Gatuf_HTTP_Response_Forbidden($request);
+		$res = Pato_Precondition::selfAlumnoOrHasPerm ($request, $alumno, 'Patricia.boleta_alumno');
+		if (true !== $res) {
+			return $res;
 		}
 		
 		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
@@ -133,8 +139,9 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if (!$request->user->hasPerm ('Patricia.horario_alumno') && $request->user->login != $alumno->codigo) {
-			return new Gatuf_HTTP_Response_Forbidden($request);
+		$res = Pato_Precondition::selfAlumnoOrHasPerm ($request, $alumno, 'Patricia.horario_alumno');
+		if (true !== $res) {
+			return $res;
 		}
 		
 		$secciones = $alumno->get_grupos_list(array ('view' => 'paginador'));
@@ -174,7 +181,7 @@ class Pato_Views_Alumno {
                                                  $request);
 	}
 	
-	public $actualizarAlumno_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarAlumno_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.editar_alumno'));
 	public function actualizarAlumno ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -182,7 +189,6 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$alumno->getUser ();
 		$extra = array ('alumno' => $alumno);
 		
 		if ($request->method == 'POST') {
@@ -191,7 +197,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid()) {
 				$alumno = $form->save ();
 				
-				Gatuf_Log::info (sprintf ('Los datos del alumno %s fueron actualizados por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('Los datos del alumno %s fueron actualizados por el usuario %s', $alumno->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -229,7 +235,7 @@ class Pato_Views_Alumno {
 		return new Gatuf_HTTP_Response_Json ($response);
 	}
 	
-	public $verFormatos_precond = array ('Gatuf_Precondition::adminRequired');
+	public $verFormatos_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.imprimir_boleta_alumno')));
 	public function verFormatos ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -243,7 +249,7 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
-	public $boleta_precond = array ('Gatuf_Precondition::adminRequired');
+	public $boleta_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.imprimir_boleta_alumno'));
 	public function boleta ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -276,8 +282,9 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->hasPerm ('Patricia.kardex_alumno') && $request->user->login != $alumno->codigo) {
-			return new Gatuf_HTTP_Response_Forbidden($request);
+		$res = Pato_Precondition::selfAlumnoOrHasPerm ($request, $alumno, 'Patricia.kardex_alumno');
+		if (true !== $res) {
+			return $res;
 		}
 		
 		/* Presentar el kardex organizado por carreras */
@@ -304,8 +311,9 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->hasPerm ('Patricia.kardex_alumno') && $request->user->login != $alumno->codigo) {
-			return new Gatuf_HTTP_Response_Forbidden($request);
+		$res = Pato_Precondition::selfAlumnoOrHasPerm ($request, $alumno, 'Patricia.kardex_alumno');
+		if (true !== $res) {
+			return $res;
 		}
 		
 		$inscripcion = new Pato_Inscripcion ();
@@ -355,6 +363,7 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
+	public $verPerfil_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verPerfil ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -362,7 +371,6 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$alumno->getUser ();
 		setlocale (LC_TIME, 'es_MX');
 		/* Recuperar el perfil del alumno */
 		$perfiles = $alumno->get_pato_perfilalumno_list();
@@ -384,7 +392,7 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
-	public $editarPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.editar_perfil_alumno'));
+	public $editarPerfil_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.editar_alumno'));
 	public function editarPerfil ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -413,7 +421,7 @@ class Pato_Views_Alumno {
 			if ($form->isValid ()) {
 				$form->save ();
 				
-				Gatuf_Log::info (sprintf ('El perfil del alumno %s fué actualizado por el usuario %s (%s)', $alumno->codigo, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El perfil del alumno %s fué actualizado por el usuario %s', $alumno->codigo, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', $alumno->codigo);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
@@ -428,4 +436,5 @@ class Pato_Views_Alumno {
 		                                                'form' => $form),
 		                                         $request);
 	}
+	
 }

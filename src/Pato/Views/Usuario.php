@@ -122,10 +122,10 @@ class Pato_Views_Usuario {
 		if (!empty($request->REQUEST['_redirect_after'])) {
 			$success_url = $request->REQUEST['_redirect_after'];
 		} else {
-			if($usuario->type == 'a'){
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->login));
+			if (get_class ($usuario) == 'Pato_Alumno'){
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->codigo));
 			} else {
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->codigo));
 			}
 		}
 		
@@ -136,7 +136,6 @@ class Pato_Views_Usuario {
 				$usuario = $form->save ();
 				
 				$usuario->setMessage (1, 'Contraseña cambiada correctamente');
-				
 				return new Gatuf_HTTP_Response_Redirect ($success_url);
 			}
 		} else {
@@ -156,10 +155,10 @@ class Pato_Views_Usuario {
 		$usuario = $extra['usuario'] = $request->user;
 		
 		if ($request->user->force_mail_change == false) {
-			if($usuario->type == 'a'){
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->login));
+			if(get_class ($usuario) == 'Pato_Alumno'){
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->codigo));
 			} else {
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->codigo));
 			}
 			
 			return new Gatuf_HTTP_Response_Redirect ($success_url);
@@ -169,9 +168,9 @@ class Pato_Views_Usuario {
 			$success_url = $request->REQUEST['_redirect_after'];
 		} else {
 			if($usuario->type == 'a'){
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->login));
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($usuario->codigo));
 			} else {
-				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->login));
+				$success_url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($usuario->codigo));
 			}
 		}
 		

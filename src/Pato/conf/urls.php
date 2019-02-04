@@ -15,14 +15,14 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/$#',
 	'base' => $base,
-	'model' => 'Pato_Views',
+	'model' => 'Pato_Views_Index',
 	'method' => 'index',
 );
 
 $ctl[] = array (
 	'regex' => '#^/login/$#',
 	'base' => $base,
-	'model' => 'Pato_Views',
+	'model' => 'Pato_Views_Login',
 	'method' => 'login',
 	'name' => 'login_view'
 );
@@ -30,7 +30,7 @@ $ctl[] = array (
 $ctl[] = array (
 	'regex' => '#^/logout/$#',
 	'base' => $base,
-	'model' => 'Pato_Views',
+	'model' => 'Pato_Views_Login',
 	'method' => 'logout',
 );
 
@@ -101,23 +101,30 @@ $ctl[] = array (
 
 /* Recuperación de contraseñas */
 $ctl[] = array (
-	'regex' => '#^/password/$#',
+	'regex' => '#^/password/recovery/$#',
 	'base' => $base,
-	'model' => 'Pato_Views',
+	'model' => 'Pato_Views_Login',
 	'method' => 'passwordRecoveryAsk',
+);
+
+$ctl[] = array (
+	'regex' => '#^/password/recovery/done/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Login',
+	'method' => 'passwordRecoverWait',
 );
 
 $ctl[] = array (
 	'regex' => '#^/password/ik/$#',
 	'base' => $base,
-	'model' => 'Pato_Views',
+	'model' => 'Pato_Views_Login',
 	'method' => 'passwordRecoveryInputCode',
 );
 
 $ctl[] = array (
 	'regex' => '#^/password/k/(.*)/$#',
 	'base' => $base,
-	'model' => 'Pato_Views',
+	'model' => 'Pato_Views_Login',
 	'method' => 'passwordRecovery',
 );
 
@@ -126,13 +133,6 @@ $ctl[] = array(
 	'base' => $base,
 	'model' => 'Pato_Views_Usuario',
 	'method' => 'passwordChange',
-);
-
-$ctl[] = array(
-	'regex' => '#^/password/reset/(.*)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Usuario',
-	'method' => 'passwordReset',
 );
 
 $ctl[] = array (
@@ -305,6 +305,12 @@ $ctl[] = array(
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
 			'method' => 'editarPerfil',
+		),
+		array (
+			'regex' => '#^(\w\d{7})/password/reset/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'passwordReset'
 		),
 	)
 );

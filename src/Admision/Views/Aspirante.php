@@ -376,7 +376,7 @@ class Admision_Views_Aspirante {
 				$form->save ();
 				
 				$request->user->setMessage (1, 'Datos actualizados');
-				Gatuf_Log::info (sprintf ('El usuario %s (%s) actualizó la información del aspirante %s', $request->user->login, $request->user->id, $aspirante->id));
+				Gatuf_Log::info (sprintf ('El usuario %s actualizó la información del aspirante %s', $request->user->codigo, $aspirante->id));
 				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

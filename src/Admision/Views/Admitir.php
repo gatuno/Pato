@@ -65,7 +65,7 @@ class Admision_Views_Admitir {
 			if ($form->isValid ()) {
 				$form->save ();
 				
-				Gatuf_Log::info (sprintf ('El usuario %s (%s) admitió alumnos de la carrera %s', $request->user->login, $request->user->id, $cupo_carrera->carrera));
+				Gatuf_Log::info (sprintf ('El usuario %s admitió alumnos de la carrera %s', $request->user->codigo, $cupo_carrera->carrera));
 				$request->user->setMessage (1, 'Sus selecciones han sido guardadas');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Admitir::admitir', $cupo_carrera->convocatoria);

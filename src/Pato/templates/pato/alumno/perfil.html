@@ -1,13 +1,14 @@
 {extends 'pato/alumno/base.html'}
 {block body_alumno}
-{aperm 'editar_perfil', $user, 'Patricia.editar_perfil_alumno'}
+{aperm 'editar_perfil', $user, 'Patricia.editar_alumno'}{aperm 'ver_perfil', $user, 'Patricia.ver_perfil_alumno'}
 {if $editar_perfil}<p><a href="{url 'Pato_Views_Alumno::editarPerfil', $alumno.codigo}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Actualizar" />Actualizar perfil</a>{/if}
 <table class="form">
 	<tr>
 	<th style="text-align: right">
-		{if $user.login == $alumno.codigo}<a href="http://gravatar.com/emails/" title="Cambie su imagen en gravatar.com">
-		{else}<a href="http://www.gravatar.com/avatar/{$alumno.user.email|md5}.jpg?s=400">{/if}
-		<img src="http://www.gravatar.com/avatar/{$alumno.user.email|md5}.jpg?s=128" alt=" " /></a>
+		{alumnoself 'alumno_self', $user, $alumno}
+		{if $alumno_self}<a href="http://gravatar.com/emails/" title="Cambie su imagen en gravatar.com">
+		{else}<a href="http://www.gravatar.com/avatar/{$alumno.email|md5}.jpg?s=400">{/if}
+		<img src="http://www.gravatar.com/avatar/{$alumno.email|md5}.jpg?s=128" alt=" " /></a>
 	</th>
 		<td>{$alumno.apellido} {$alumno.nombre}</td>
 	</tr>
@@ -15,7 +16,6 @@
 		<th>Código:</th>
 		<td>{$alumno.codigo}</td>
 	</tr>
-	{aperm 'ver_perfil', $user, 'Patricia.ver_perfil_alumno'}
 	{if $ver_perfil}
 	<tr>
 		<th>Fecha nacimiento:</th>

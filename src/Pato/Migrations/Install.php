@@ -5,6 +5,7 @@ function Pato_Migrations_Install_setup ($params=null) {
 	                 'Pato_Aviso',
 	                 'Pato_Calendario',
 	                 'Pato_Carrera',
+	                 'Pato_DiaFestivo',
 	                 'Pato_Edificio',
 	                 'Pato_Estatus',
 	                 'Pato_Evaluacion',
@@ -12,8 +13,9 @@ function Pato_Migrations_Install_setup ($params=null) {
 	                 'Pato_Inscripcion',
 	                 'Pato_InscripcionEstatus',
 	                 'Pato_Kardex',
-	                 'Pato_Maestro',
+	                 //'Pato_Maestro', -> Gatuf lo crea
 	                 'Pato_Materia',
+	                 'Pato_MessageA',
 	                 'Pato_Salon',
 	                 'Pato_PerfilAlumno',
 	                 );
@@ -35,6 +37,7 @@ function Pato_Migrations_Install_teardown ($params=null) {
 	                 'Pato_Aviso',
 	                 'Pato_Calendario',
 	                 'Pato_Carrera',
+	                 'Pato_DiaFestivo',
 	                 'Pato_Edificio',
 	                 'Pato_Estatus',
 	                 'Pato_Evaluacion',
@@ -42,8 +45,9 @@ function Pato_Migrations_Install_teardown ($params=null) {
 	                 'Pato_Inscripcion',
 	                 'Pato_InscripcionEstatus',
 	                 'Pato_Kardex',
-	                 'Pato_Maestro',
+	                 //'Pato_Maestro', -> Gatuf lo crea
 	                 'Pato_Materia',
+	                 'Pato_MessageA',
 	                 'Pato_Salon',
 	                 'Pato_PerfilAlumno',
 	                 );

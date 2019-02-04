@@ -53,7 +53,12 @@ class Pato_Form_Usuario_Password extends Gatuf_Form {
 			throw new Gatuf_Form_Invalid ('La nueva contraseña no coincide en ambos campos');
 		}
 		
-		$bloqueadas = array ($this->user->login, '1', '12', '123', '1234', '12345', '123456', '1234567', '12345678', '123456789', 'qwerty', 'abc123', '123123', '1234567890', '11111', '111111', '1111', '111', '11');
+		if (strlen ($nueva) < 6) {
+			throw new Gatuf_Form_Invalid ('Su nueva contraseña debe contener al menos 6 caracteres');
+		}
+		
+		$bloqueadas = Gatuf::config ('blocked_passwords', array ());
+		$bloqueadas[] = $this->user->codigo;
 		
 		if (in_array ($nueva, $bloqueadas)) {
 			$this->cleaned_data['nueva'] = '';

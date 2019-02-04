@@ -20,7 +20,7 @@ class Pato_Views_DiaFestivo {
 			if ($form->isValid ()) {
 				$dia = $form->save ();
 				
-				//Gatuf_Log::info (sprintf ('La materia %s ha sido creada por el usuario %s (%s)', $materia->clave, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('El día festivo %s ha sido creado en el calendario por el usuario %s', $dia->descripcion, $calendario->clave, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calendario::ver', array ($calendario->clave));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

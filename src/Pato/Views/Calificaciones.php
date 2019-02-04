@@ -143,7 +143,7 @@ class Pato_Views_Calificaciones {
 				$kardex = $form->save ();
 				
 				$request->user->setMessage (1, 'Calificación en Kardex creada correctamente para el alumno '.$kardex->alumno.' en la materia '.$kardex->materia);
-				Gatuf_Log::info (sprintf ('Se levantó una calificación directa en Kardex al alumno %s (Kardex ID: %s), por el usuario %s (%s)', $kardex->alumno, $kardex->id, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('Se levantó una calificación directa en Kardex al alumno %s (Kardex ID: %s), por el usuario %s', $kardex->alumno, $kardex->id, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Calificaciones::levantarKardex', array (), array ('materia' => $kardex->materia, 'gpe' => $kardex->gpe), false);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}

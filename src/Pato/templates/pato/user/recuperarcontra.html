@@ -9,7 +9,7 @@
 <form method="post" action=".">
 	<table class="form" summary="">
 		<tr><th><strong>Login:</strong></th>
-		<td>{$new_user.login}</td></tr>
+		<td>{$new_user.codigo}</td></tr>
 		<tr><th><strong>Email:</strong></th>
 		<td>{$new_user.email}</td></tr>
 		<tr><th><strong>{$form.f.password.labelTag}:</strong></th>
@@ -18,7 +18,7 @@
 		<tr><th><strong>{$form.f.password2.labelTag}:</strong></th>
 		<td>{if $form.f.password2.errors}{$form.f.password2.fieldErrors}{/if}
 		{$form.f.password2|unsafe}</td></tr>
-		<tr><td>&nbsp;</td><td><input type="submit" value="Establecer tu contraseña" /></td></tr>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Establecer su contraseña" /></td></tr>
 	</table>{$form.f.key|unsafe}
 </form>
 {/block}

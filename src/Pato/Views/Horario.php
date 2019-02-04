@@ -59,7 +59,7 @@ class Pato_Views_Horario {
 				$seccion->cupo = $min;
 				$seccion->update ();
 				
-				Gatuf_Log::info (sprintf ('La hora %s fué agregada al NRC %s por el usuario %s (%s)', $horario->id, $seccion->nrc, $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('La hora (%s, %s) fué agregada al NRC %s por el usuario %s', $horario->id, $horario->hash (), $seccion->nrc, $request->user->codigo));
 				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', array ($horario->nrc));
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -122,7 +122,7 @@ class Pato_Views_Horario {
 		
 		if ($request->method == 'POST') {
 			/* Adelante, eliminar esta hora */
-			Gatuf_Log::info (sprintf ('La hora (%s, %s) ha sido eliminada del NRC %s por el usuario %s (%s)', $hora->id, $hora->hash(), $hora->nrc, $request->user->login, $request->user->id));
+			Gatuf_Log::info (sprintf ('La hora (%s, %s) ha sido eliminada del NRC %s por el usuario %s', $hora->id, $hora->hash(), $hora->nrc, $request->user->codigo));
 			$hora->delete ();
 			
 			/* Actualizar el mínimo cupo disponible */
@@ -203,7 +203,7 @@ class Pato_Views_Horario {
 			if ($form->isValid ()) {
 				Gatuf_Log::info (sprintf ('La hora (%s, %s) del NRC %s va a ser actualizada', $hora->id, $hora->hash(), $hora->nrc));
 				$horario = $form->save ();
-				Gatuf_Log::info (sprintf ('A: %s, por el usuario %s (%s)', $horario->hash(), $request->user->login, $request->user->id));
+				Gatuf_Log::info (sprintf ('A: %s, por el usuario %s', $horario->hash(), $request->user->codigo));
 				
 				/* Actualizar el mínimo cupo disponible */
 				$min = $horario->get_salon ()->cupo;

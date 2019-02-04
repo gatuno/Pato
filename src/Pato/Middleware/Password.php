@@ -21,21 +21,17 @@ class Pato_Middleware_Password {
 		}
 		
 		/* Si la contraseña del alumno o profesor es igual a su nombre de usuario, es obligatorio que la cambie */
-		if ($request->user->checkPassword ($request->user->login)) {
-			$request->user->setMessage (2, 'Tu contraseña es insegura, por motivos seguridad es obligatorio cambiarla');
-			
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange', array (), array ('_redirect_after' => $request->uri));
-			
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
+		$bloqueadas = Gatuf::config ('blocked_passwords', array ());
+		$bloqueadas[] = $request->user->codigo;
 		
-		/* Si la contraseña del alumno o profesor es igual a 12345, es obligatorio que la cambie */
-		if ($request->user->checkPassword ('12345') || $request->user->checkPassword ('123') || $request->user->checkPassword ('1234') || $request->user->checkPassword ('123456') || $request->user->checkPassword ('1234567') || $request->user->checkPassword ('12345678') || $request->user->checkPassword ('123456789')) {
-			$request->user->setMessage (2, 'Tu contraseña es insegura, por motivos seguridad es obligatorio cambiarla');
+		foreach ($bloqueadas as $bloq) {
+			if ($request->user->checkPassword ($bloq)) {
+				$request->user->setMessage (2, 'Su contraseña es insegura, por motivos seguridad es obligatorio cambiarla');
 			
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange', array (), array ('_redirect_after' => $request->uri));
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Usuario::passwordChange', array (), array ('_redirect_after' => $request->uri));
 			
-			return new Gatuf_HTTP_Response_Redirect ($url);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
 		}
 		
 		return false;

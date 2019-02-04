@@ -4,10 +4,12 @@
 <ul style="list-style-type: none;" class="do-not-print">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
 {matcoord 'puede_editar', $user, $seccion.get_materia()}
-{if $user.administrator || $user.login == $seccion.maestro || $puede_editar}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
+{assign $maestro = $seccion.get_maestro()}
+{maestroself 'maestro_self', $user, $maestro}
+{if $user.administrator || $maestro_self || $puede_editar}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verFormatos', array ($seccion.nrc)}">Formatos</a></li>
 {aperm 'ver_planeacion', $user, 'Patricia.ver-planeacion'}
-{if ($user.type == 'm' && $seccion.maestro == $user.login) || $ver_planeacion}
+{if $maestro_self || $ver_planeacion}
 <li style="display: inline;"><a href="{url 'planeacion_materia_propia', array ($seccion.materia)}">Planeación</a></li>
 {/if}
 {if $puede_editar}

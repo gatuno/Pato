@@ -1,0 +1,10 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Un código de verificación ha sido enviado, por favor revise su correo. Tome en cuenta que el correo puede tardar entre 5 y 10 minutos en llegar. Si ya recibió el código de verificación, por favor ingreselo en la siguiente caja de texto:
+<form method="post" action="{url 'Pato_Views_Login::passwordRecoveryInputCode'}">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td><td><input type="submit" value="Recuperar mi contraseña" /></td></tr>
+	</table>
+</form>
+{/block}
