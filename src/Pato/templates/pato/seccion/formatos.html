@@ -1,12 +1,13 @@
 {extends 'pato/seccion/base.html'}
 {block body_seccion}
 <p>Los siguientes formatos están disponibles:</p>
+{aperm 'matricular', $user, 'Patricia.matricular_alumnos'}{aperm 'horario_alumno', $user, 'Patricia.horario_alumno'}{aperm 'imprimir_acta', $user, 'Patricia.imprimir_acta'}
+{maestroself 'maestro_self', $user, $seccion.get_maestro ()}
+{if $seccion.suplente != null}{maestroself 'suplente_self', $user, $seccion.get_suplente ()}{else}{assign $suplente_self = false}{/if}
 <ul>
-	{if $user.administrator}
+	{if $imprimir_acta}
 	{foreach $gpe as $pe}{if $pe.matchSeccion ($seccion.seccion)}<li><a href="{url 'Pato_Views_Seccion::actaCalificaciones', array ($seccion.nrc, $pe.id)}">Acta de calificaciones de {$pe.descripcion}</a></li>{/if}{/foreach}
-	<li>Operaciones administrativas peligrosas. No mueva esto si no sabe lo que está a punto de hacer:
-	<ul>{foreach $gpe as $pe}{if $pe.matchSeccion ($seccion.seccion)}<li><a href="{url 'Pato_Views_Seccion::cerrarAKardex', array ($seccion.nrc, $pe.id)}">Cerrar a Kardex para {$pe.descripcion}</a></li>{/if}{/foreach}</ul></li>
 	{/if}
-	{if $user.administrator || $user.login == $seccion.maestro}<li><a href="{url 'Pato_Views_Seccion::listaAsistencia', $seccion.nrc}">Lista de asistencias</a></li>{/if}
+	{if $matricular || $horario_alumno || $maestro_self || $suplente_self}<li><a href="{url 'Pato_Views_Seccion::listaAsistencia', $seccion.nrc}">Lista de asistencias</a></li>{/if}
 </ul>
 {/block}

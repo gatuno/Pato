@@ -1,16 +1,14 @@
 <?php
 
 class Pato_Form_Seccion_Agregar extends Gatuf_Form {
-	private $user;
 	public function initFields($extra=array()) {
-		$this->user = $extra['user'];
-		
 		$materia = '';
 		if (isset ($extra['materia'])) $materia = $extra['materia'];
 		
 		$choices = array ();
+		
+		/* FIXME: Agregar opción con todas las carreras */
 		foreach (Gatuf::factory ('Pato_Carrera')->getList () as $car) {
-			if (!$this->user->hasPerm ('Patricia.coordinador.'.$car->clave)) continue;
 			$choices[$car->descripcion] = array ();
 			foreach ($car->get_materias_list () as $m) {
 				$choices[$car->descripcion][$m->clave . ' - ' . $m->descripcion] = $m->clave;

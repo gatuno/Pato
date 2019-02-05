@@ -200,30 +200,6 @@ class Pato_Maestro extends Gatuf_Model {
 		return $messages;
 	}
 	
-	/*
-	 * TODO: Revisar esto
-	function isCoord () {
-		if (!$this->active) return false;
-		if ($this->administrator) return true;
-		
-		$perms = $this->getAllPermissions ();
-		
-		$coords = preg_grep ('/Patricia.coordinador.*-/', $perms);
-		
-		if (count ($coords) > 0) return true;
-		return false;
-	}
-	
-	function returnCoord () {
-		if (!$this->active) return false;
-		
-		$perms = $this->getAllPermissions ();
-		
-		$coords = preg_grep ('/Patricia.coordinador.*-/', $perms);
-		
-		return $coords;
-	}*/
-	
 	function get_type () {
 		return 'm';
 	}

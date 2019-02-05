@@ -490,6 +490,12 @@ $ctl[] = array (
 			'method' => 'verFormatos',
 		),
 		array (
+			'regex' => '#^(\d+)/operaciones/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Seccion',
+			'method' => 'verOperaciones',
+		),
+		array (
 			'regex' => '#^(\d+)/formato/acta_calif/(\d+)/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Seccion',

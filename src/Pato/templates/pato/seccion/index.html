@@ -1,7 +1,8 @@
 {extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
-{if $user.isCoord()}
+{aperm 'add1', $user, 'Patricia.editar_secciones_vacio'}{aperm 'add2', $user, 'Patricia.admin_secciones'}
+{if $add1 || $add2}
 <p><a href="{url 'Pato_Views_Seccion::agregarNrc'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar seccion" />Agregar una nueva sección</a></p>
 {/if}
 {$paginador.render}

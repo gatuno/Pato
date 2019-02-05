@@ -1,8 +1,7 @@
 {extends 'pato/base.html'}
 {block body}
-{if $user.administrator}
-<p><a href="{url 'Pato_Views_Carrera::agregarCarrera'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Crear carrera" />Agregar nueva carrera</a></p>
-{/if}
+{aperm 'admin_carrera', $user, 'Patricia.admin_carrera'}
+{if $admin_carrera}<p><a href="{url 'Pato_Views_Carrera::agregarCarrera'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Crear carrera" />Agregar nueva carrera</a></p>{/if}
 {if count ($carreras) != 0}
 	<ol>
 	{foreach $carreras as $carrera}

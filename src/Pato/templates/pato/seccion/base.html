@@ -3,19 +3,21 @@
 {block body}
 <ul style="list-style-type: none;" class="do-not-print">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
-{matcoord 'puede_editar', $user, $seccion.get_materia()}
-{assign $maestro = $seccion.get_maestro()}
-{maestroself 'maestro_self', $user, $maestro}
-{if $user.administrator || $maestro_self || $puede_editar}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
+{aperm 'matricular', $user, 'Patricia.matricular_alumnos'}{aperm 'horario_alumno', $user, 'Patricia.horario_alumno'}{aperm 'editar_seccion_vacio', $user, 'Patricia.editar_secciones_vacio'}{aperm 'admin_secciones', $user, 'Patricia.admin_secciones'}{aperm 'cerrar_kardex', $user, 'Patricia.cerrar_kardex'}{aperm 'ver_planeacion', $user, 'Patricia.ver-planeacion'}
+{maestroself 'maestro_self', $user, $seccion.get_maestro ()}
+{if $seccion.suplente != null}{maestroself 'suplente_self', $user, $seccion.get_suplente ()}{else}{assign $suplente_self = false}{/if}
+{if $matricular || $horario_alumno || $maestro_self || $suplente_self}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verFormatos', array ($seccion.nrc)}">Formatos</a></li>
-{aperm 'ver_planeacion', $user, 'Patricia.ver-planeacion'}
+{if $cerrar_kardex}
+<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verOperaciones', array ($seccion.nrc)}">Comandos</a></li>
+{/if}
 {if $maestro_self || $ver_planeacion}
 <li style="display: inline;"><a href="{url 'planeacion_materia_propia', array ($seccion.materia)}">Planeación</a></li>
 {/if}
-{if $puede_editar}
+{if $editar_seccion_vacio || $admin_secciones}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)}">Actualizar</a></li>
 {/if}
-{if $user.administrator}
+{if $admin_secciones || ($editar_seccion_vacio && count ($seccion.get_alumnos_list ()) == 0)}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::eliminarNrc', array ($seccion.nrc)}">Eliminar</a></li>
 {/if}
 </ul>

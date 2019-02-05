@@ -4,6 +4,7 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Seccion {
+	public $index_precond = array ('Gatuf_Precondition::loginRequired');
 	public function index ($request, $match) {
 		$seccion = new Pato_Seccion ();
 
@@ -35,7 +36,8 @@ class Pato_Views_Seccion {
 		                                                 'page_title' => 'Secciones'),
 		                                          $request);
 	}
-
+	
+	public $verNrc_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verNrc ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -62,29 +64,10 @@ class Pato_Views_Seccion {
 		                                          $request);
 	}
 	
-	public $agregarNrc_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $agregarNrc_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.editar_secciones_vacio', 'Patricia.admin_secciones')));
 	public function agregarNrc ($request, $match) {
-		$extra = array ('user' => $request->user);
-		
-		if (!$request->user->administrator) {
-			/* Si es un coordinador, sólo puede crear secciones en el calendario siguiente */
-			$gconf = new Gatuf_GSetting ();
-			$gconf->setApp ('Patricia');
-			$sig = $gconf->getVal ('calendario_siguiente', null);
-			
-			if ($request->calendario->clave != $sig) {
-				$request->user->setMessage (3, 'No se pueden crear secciones en calendarios pasados');
-				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
-				
-				return new Gatuf_HTTP_Response_Redirect ($url);
-			}
-			
-			/* TODO: Revisar la otra configuración que cierra la creación de NRCS */
-		}
-		
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_Seccion_Agregar ($request->POST, $extra);
+			$form = new Pato_Form_Seccion_Agregar ($request->POST);
 			
 			if ($form->isValid()) {
 				$seccion = $form->save ();
@@ -102,7 +85,7 @@ class Pato_Views_Seccion {
 					$extra['materia'] = $materia->clave;
 				}
 			}
-			$form = new Pato_Form_Seccion_Agregar (null, $extra);
+			$form = new Pato_Form_Seccion_Agregar (null);
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/agregar-seccion.html',
@@ -111,46 +94,12 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $actualizarNrc_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $actualizarNrc_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.editar_secciones_vacio', 'Patricia.admin_secciones')));
 	public function actualizarNrc ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
-		}
-		
-		if (!$request->user->administrator) {
-			/* Si es un coordinador, sólo puede crear secciones en el calendario siguiente */
-			$gconf = new Gatuf_GSetting ();
-			$gconf->setApp ('Patricia');
-			$sig = $gconf->getVal ('calendario_siguiente', null);
-			
-			if ($request->calendario->clave != $sig) {
-				$request->user->setMessage (3, 'No se pueden modificar secciones en calendarios pasados');
-				
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::index');
-				
-				return new Gatuf_HTTP_Response_Redirect ($url);
-			}
-			
-			/* TODO: Revisar la otra configuración que cierra la creación de NRCS */
-		}
-		
-		/* Revisar que tenga permisos de edición sobre la materia de esta sección */
-		$carreras = $seccion->get_materia ()->get_carreras_list ();
-		
-		$found = $request->user->administrator;
-		foreach ($carreras as $carrera) {
-			if ($request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
-				$found = true;
-				break;
-			}
-		}
-		
-		if (!$found) {
-			$request->user->setMessage (3, 'Usted no puede editar esta sección por falta de permisos');
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verNrc', $seccion->nrc);
-			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$extra = array ('seccion' => $seccion);
@@ -177,12 +126,23 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $eliminarNrc_precond = array ('Gatuf_Precondition::adminRequired');
+	public $eliminarNrc_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.editar_secciones_vacio', 'Patricia.admin_secciones')));
 	public function eliminarNrc ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$has_alumnos = false;
+		$cant_alumnos = $seccion->get_alumnos_list (array ('count' => true));
+		if ($cant_alumnos > 0) {
+			$has_alumnos = true;
+		}
+		
+		/* Si la sección tiene alumnos, no puede eliminar esta sección si no tiene el permiso adecuado */
+		if ($has_alumnos && !$request->user->hasPerm ('Patricia.admin_secciones')) {
+			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
 		if ($request->method == 'POST') {
@@ -209,8 +169,9 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$es_el_dueno = ($request->user->type == 'm' && ($seccion->maestro == $request->user->login || $seccion->suplente == $request->user->login));
-		if (!$request->user->hasPerm ('Patricia.horario_alumno') && !$es_el_dueno) {
+		$es_el_dueno = (get_class ($request->user) == 'Pato_Maestro' && ($seccion->maestro == $request->user->codigo || $seccion->suplente == $request->user->codigo));
+		
+		if (!($request->user->hasPerm ('Patricia.horario_alumno') || $request->user->hasPerm ('Patricia.matricular_alumnos')) && !$es_el_dueno) {
 			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
@@ -255,6 +216,7 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
+	public $verFormatos_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verFormatos ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -272,7 +234,25 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $cerrarAKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public $verOperaciones_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.cerrar_kardex'));
+	public function verOperaciones ($request, $match) {
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$gpe = Gatuf::factory ('Pato_GPE')->getList ();
+		
+		$titulo = sprintf ("Sección %s - %s %s", $seccion->nrc, $seccion->get_materia()->descripcion, $seccion->seccion);
+		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/operaciones.html',
+		                                         array ('page_title' => $titulo,
+		                                                'gpe' => $gpe,
+		                                                'seccion' => $seccion),
+		                                         $request);
+	}
+	
+	public $cerrarAKardex_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.cerrar_kardex'));
 	public function cerrarAKardex ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -286,7 +266,7 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verFormatos', $seccion->nrc);
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verOperaciones', $seccion->nrc);
 		
 		$found = false;
 		
@@ -376,7 +356,7 @@ class Pato_Views_Seccion {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
-	public $actaCalificaciones_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actaCalificaciones_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.imprimir_acta'));
 	public function actaCalificaciones ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -426,7 +406,7 @@ class Pato_Views_Seccion {
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
 	
-	public $listaAsistencia_precond = array ('Pato_Precondition::maestroRequired');
+	public $listaAsistencia_precond = array ('Gatuf_Precondition::loginRequired');
 	public function listaAsistencia ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		
@@ -434,8 +414,10 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if (!$request->user->administrator && $request->user->login != $seccion->maestro) {
-			throw new Gatuf_HTTP_Error404 ();
+		$es_el_dueno = (get_class ($request->user) == 'Pato_Maestro' && ($seccion->maestro == $request->user->codigo || $seccion->suplente == $request->user->codigo));
+		
+		if (!($request->user->hasPerm ('Patricia.matricular_alumnos') || $request->user->hasPerm ('Patricia.horario_alumno')) && !$es_el_dueno) {
+			return new Gatuf_HTTP_Response_Forbidden($request);
 		}
 		
 		$pdf = new Pato_PDF_Seccion_Asistencia ('L', 'mm', 'Letter');
@@ -450,12 +432,8 @@ class Pato_Views_Seccion {
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
 	
-	public $evaluar_precond = array ('Gatuf_Precondition::loginRequired');
+	public $evaluar_precond = array ('Pato_Precondition::maestroRequired');
 	public function evaluar ($request, $match) {
-		if ($request->user->type != 'm') {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get ($match[1]))) {
@@ -468,24 +446,16 @@ class Pato_Views_Seccion {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$es_el_dueno = ($seccion->maestro == $request->user->codigo || $seccion->suplente == $request->user->codigo);
+		
 		/* Si la forma de evaluación es subida por el profesor, sólo permitirle a él (o a su suplente) subir calificaciones */
 		if ($eval->maestro) {
-			if ($seccion->suplente) {
-				if ($request->user->login != $seccion->suplente) {
-					$request->user->setMessage (3, 'Usted no puede subir calificaciones. Hay un suplente asignado a esta sección');
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
-					return new Gatuf_HTTP_Response_Redirect ($url);
-				}
-			} else {
-				if ($request->user->login != $seccion->maestro) {
-					throw new Gatuf_HTTP_Error404 ();
-				}
+			if (!$es_el_dueno) {
+				throw new Gatuf_HTTP_Error404 ();
 			}
-		} else {
-			/* En caso contrario, sólo un administrador u otros pueden subir */
-			if (!$request->user->administrator) {
-				throw new Gatuf_HTTP_Error404();
-			}
+		} else if (!$request->user->hasPerm ('Patricia.subir_evaluaciones')) {
+			/* En caso contrario, sólo un administrador alguien con el permiso de subir calificaciones */
+			throw new Gatuf_HTTP_Error404();
 		}
 		
 		/* Revisar que el porcentaje exista para esta materia */
@@ -566,28 +536,18 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $evaluarAsistencias_precond = array ('Gatuf_Precondition::loginRequired');
+	public $evaluarAsistencias_precond = array ('Pato_Precondition::maestroRequired');
 	public function evaluarAsistencias ($request, $match) {
-		if ($request->user->type != 'm') {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		if ($seccion->suplente) {
-			if ($request->user->login != $seccion->suplente) {
-				$request->user->setMessage (3, 'Usted no puede subir asistencias. Hay un suplente asignado a esta sección');
-				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Seccion::verAlumnos', $seccion->nrc);
-				return new Gatuf_HTTP_Response_Redirect ($url);
-			}
-		} else {
-			if ($request->user->login != $seccion->maestro) {
-				throw new Gatuf_HTTP_Error404 ();
-			}
+		$es_el_dueno = ($seccion->maestro == $request->user->codigo || $seccion->suplente == $request->user->codigo);
+		
+		if (!$es_el_dueno) {
+			throw new Gatuf_HTTP_Error404 ();
 		}
 		
 		$extra = array ('seccion' => $seccion);
@@ -613,7 +573,7 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $matricular_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matricular_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.matricular_alumnos'));
 	public function matricular ($request, $match){
 		$seccion =  new Pato_Seccion ();
 		if (false === ($seccion->get($match[1]))) {
@@ -651,7 +611,7 @@ class Pato_Views_Seccion {
 		                                         $request);
 	}
 	
-	public $desmatricular_precond = array ('Gatuf_Precondition::adminRequired');
+	public $desmatricular_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.matricular_alumnos'));
 	public function desmatricular ($request, $match) {
 		$seccion = new Pato_Seccion ();
 		

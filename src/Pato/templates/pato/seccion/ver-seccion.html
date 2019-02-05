@@ -4,7 +4,7 @@
 <p>Cupo: {$seccion.cupo}</p>
 {if $suplente}<p>Profesor Suplente <a href="{url 'Pato_Views_Maestro::verMaestro', array ($suplente.codigo)}">{$suplente}</a></p>{/if}
 <h2>Horarios de la sección</h2>
-{matcoord 'puede_editar', $user, $materia}
+{assign $puede_editar = ($admin_secciones || ($editar_seccion_vacio && count ($seccion.get_alumnos_list ()) == 0))}
 {if $puede_editar}
 <p>Puede <a href="{url 'Pato_Views_Horario::agregarHora', array ($seccion.nrc)}">agregar una nueva hora</a> a esta sección</p>
 {/if}

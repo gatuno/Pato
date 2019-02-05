@@ -3,14 +3,15 @@
 {block body_materia}
 <p>Las siguientes formas de evaluación aplican para esta materia:</p>
 {regroup $evals, 'grupo', 'por_grupo'}
+{aperm 'editar_evals', $user, 'Patricia.admin_materia_evals'}
 {foreach $por_grupo as $gpe}
 <h3>Modalidad {$gpe.list[0].get_grupo}</h3>
-{if $user.administrator && count ($porcentajes[$gpe.grouper]) != count ($gpe.list)}
+{if $editar_evals && count ($porcentajes[$gpe.grouper]) != count ($gpe.list)}
 <p>Usted puede <a href="{url 'Pato_Views_Materia::agregarEval', array ($materia.clave, $gpe.grouper)}">agregar una nueva</a> forma de evaluación a esta modalidad</p>
 {/if}
 {if count ($porcentajes[$gpe.grouper]) != 0}
 	<ul>{foreach $porcentajes[$gpe.grouper] as $por}
-		<li>{$por.get_evaluacion} => {$por.porcentaje}{if $user.administrator} <a href="{url 'Pato_Views_Materia::editarEval', array ($materia.clave, $por.evaluacion)}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Editar" /></a><a href="{url 'Pato_Views_Materia::eliminarEval', array ($materia.clave, $por.evaluacion)}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Eliminar" /></a>{/if}</li>
+		<li>{$por.get_evaluacion} => {$por.porcentaje}{if $editar_evals} <a href="{url 'Pato_Views_Materia::editarEval', array ($materia.clave, $por.evaluacion)}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Editar" /></a><a href="{url 'Pato_Views_Materia::eliminarEval', array ($materia.clave, $por.evaluacion)}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Eliminar" /></a>{/if}</li>
 	{/foreach}</ul>
 {else}
 	<p>No hay formas de evaluación registradas para esta modalidad</p>

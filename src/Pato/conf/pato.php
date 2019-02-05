@@ -125,7 +125,6 @@ $cfg['gatuf_custom_user'] = 'Pato_Maestro';
 $cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin', 'CP', 'Admision');
 
 $cfg['template_tags'] = array (
-	'matcoord' => 'Pato_Template_Tag_MateriaCoord',
 	'patomsgs' => 'Pato_Template_Tag_Messages',
 	'alumnoself' => 'Pato_Template_Tag_AlumnoSelf',
 	'maestroself' => 'Pato_Template_Tag_MaestroSelf',

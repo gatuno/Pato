@@ -32,27 +32,6 @@ class Pato_Carrera extends Gatuf_Model {
 		$this->default_order = 'clave ASC, descripcion ASC';
 	}
 	
-	function postSave ($create=false) {
-		if ($create) {
-			$permiso = new Gatuf_Permission ();
-			$permiso->name = 'Coordinador de '.$this->clave;
-			$permiso->code_name = 'coordinador.'.$this->clave;
-			$permiso->description = 'Permite alterar y crear secciones de la carrera "'.$this->descripcion.'"';
-			$permiso->application = 'Patricia';
-		
-			$permiso->create ();
-		}
-	}
-	
-	function preDelete () {
-		$sql = Gatuf_SQL ('code_name=%s AND application=%s', array ('coordinador.'.$this->clave, 'Patricia'));
-		$permiso = Gatuf::factory ('Gatuf_Permission')->getList (array ('filter' => $sql->gen ()));
-		
-		foreach ($permiso as $p) {
-			$p->delete ();
-		}
-	}
-	
 	function __toString () {
 		return $this->descripcion.' ('.$this->clave.')';
 	}

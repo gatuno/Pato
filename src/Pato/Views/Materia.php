@@ -3,6 +3,7 @@
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Materia {
+	public $index_precond = array ('Gatuf_Precondition::loginRequired');
 	public function index ($request, $match) {
 		/* Listar las materias aquí */
 		$filtro = array();
@@ -76,6 +77,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
+	public $eliminarFiltro_precond = array ('Gatuf_Precondition::loginRequired');
 	public function eliminarFiltro($request, $match){
 		if($match[1] == 'c') $request->session->setData('filtro_materia_carrera',null);
 		
@@ -84,6 +86,7 @@ class Pato_Views_Materia {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
+	public $porCarrera_precond = array ('Gatuf_Precondition::loginRequired');
 	public function porCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
@@ -97,6 +100,7 @@ class Pato_Views_Materia {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
+	public $verMateria_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verMateria ($request, $match) {
 		$materia = new Pato_Materia ();
 		
@@ -110,12 +114,15 @@ class Pato_Views_Materia {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
+		$carreras_count = Gatuf::factory ('Pato_Carrera')->getList (array ('count' => true));
 		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/ver-materia.html',
 		                                         array('page_title' => (string) $materia,
-		                                               'materia' => $materia),
+		                                               'materia' => $materia,
+		                                               'carreras_count' => $carreras_count),
 		                                         $request);
 	}
 	
+	public $verHoras_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verHoras ($request, $match) {
 		$materia = new Pato_Materia ();
 		
@@ -200,7 +207,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public $agregarACarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarACarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.asociar_carrera_materia'));
 	public function agregarACarrera ($request, $match) {
 		$materia = new Pato_Materia();
 		
@@ -240,7 +247,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public $eliminarDeCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $eliminarDeCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.asociar_carrera_materia'));
 	public function eliminarDeCarrera ($request, $match) {
 		$materia = new Pato_Materia ();
 		
@@ -278,13 +285,13 @@ class Pato_Views_Materia {
 		
 		/* Presentar la confirmación de eliminación */
 		return Gatuf_Shortcuts_RenderToResponse ('pato/materia/eliminar-carrera.html',
-		                                         array ('page_title' => 'Eliminar materia de una carrera',
+		                                         array ('page_title' => 'Desasociar materia de una carrera',
 		                                                'materia' => $materia,
 		                                                'carrera' => $carrera),
 		                                         $request);
 	}
 	
-	public $agregarMateria_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarMateria_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia'));
 	public function agregarMateria ($request, $match) {
 		$extra = array ();
 		$extra['user'] = $request->user;
@@ -308,7 +315,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public $actualizarMateria_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarMateria_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia'));
 	public function actualizarMateria ($request, $match) {
 		$materia = new Pato_Materia ();
 		if (false === ($materia->get ($match[1]))) {
@@ -350,6 +357,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
+	public $verEvals_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verEvals ($request, $match) {
 		$materia = new Pato_Materia ();
 		if (false === ($materia->get ($match[1]))) {
@@ -375,7 +383,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public $agregarEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarEval_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia_evals'));
 	public function agregarEval ($request, $match) {
 		$materia = new Pato_Materia ();
 		if (false === ($materia->get ($match[1]))) {
@@ -427,7 +435,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public $eliminarEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public $eliminarEval_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia_evals'));
 	public function eliminarEval ($request, $match) {
 		$materia = new Pato_Materia ();
 		if (false === ($materia->get ($match[1]))) {
@@ -473,7 +481,7 @@ class Pato_Views_Materia {
 		                                         $request);
 	}
 	
-	public $editarEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public $editarEval_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia_evals'));
 	public function editarEval ($request, $match) {
 		$materia = new Pato_Materia ();
 		if (false === ($materia->get ($match[1]))) {

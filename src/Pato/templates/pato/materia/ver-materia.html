@@ -1,11 +1,13 @@
 {extends 'pato/materia/base.html'}
 {block body_materia}
 <h2>Detalles</h2>
+{aperm 'asociar', $user, 'Patricia.asociar_carrera_materia'}
 <p>Créditos: {$materia.creditos}</p>
-{if count ($materia.get_carreras_list) != 0}
-	<p>La materia es tomada por: {foreach $materia.get_carreras_list as $carrera}<a href="{url 'Pato_Views_Materia::porCarrera', array ($carrera.clave)}"><abbr title="{$carrera.descripcion}">{$carrera.clave}</abbr></a>{if $user.administrator} <a href="{url 'Pato_Views_Materia::eliminarDeCarrera', array ($materia.clave, $carrera.clave)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar filtro" /></a>{/if} | {/foreach}</p>
+{assign $carreras_assoc = $materia.get_carreras_list}
+{if count ($carreras_assoc) != 0}
+	<p>La materia es tomada por: {foreach $carreras_assoc as $carrera}<a href="{url 'Pato_Views_Materia::porCarrera', array ($carrera.clave)}"><abbr title="{$carrera.descripcion}">{$carrera.clave}</abbr></a>{if $asociar} <a href="{url 'Pato_Views_Materia::eliminarDeCarrera', array ($materia.clave, $carrera.clave)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar filtro" /></a>{/if} | {/foreach}</p>
 {else}
 	<p>La materia no es tomada por alguna carrera</p>
 {/if}
-{if $user.administrator}<p>Puede <a href="{url 'Pato_Views_Materia::agregarACarrera', array ($materia.clave)}">agregar una nueva carrera</a> a esta materia</p>{/if}
+{if $asociar}{if count ($carreras_assoc) < $carreras_count}<p>Puede <a href="{url 'Pato_Views_Materia::agregarACarrera', array ($materia.clave)}">asociar</a> esta materia con una carrera</p>{else}La materia ya está asociada a todas las carreras{/if}{/if}
 {/block}

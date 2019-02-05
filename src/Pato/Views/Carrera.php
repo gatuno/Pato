@@ -37,7 +37,7 @@ class Pato_Views_Carrera {
 		                                         $request);
 	}
 	
-	public $agregarCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_carrera'));
 	public function agregarCarrera ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Carrera_Agregar($request->POST);
@@ -58,7 +58,7 @@ class Pato_Views_Carrera {
 		                                         $request);
 	}
 	
-	public $actualizarCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_carrera'));
 	public function actualizarCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		if (false === ($carrera->get ($match[1]))) {

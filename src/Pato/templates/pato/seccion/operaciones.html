@@ -1,0 +1,11 @@
+{extends 'pato/seccion/base.html'}
+{block body_seccion}
+<p>Los siguientes comandos sobre esta sección están disponibles:</p>
+{aperm 'cerrar_kardex', $user, 'Patricia.cerrar_kardex'}
+<ul>
+	{if $cerrar_kardex}
+	<li>Convertir calificaciones de boleta a Kardex. Es una operación administrativa peligrosa. No mueva esto si no sabe lo que está a punto de hacer:
+	<ul>{foreach $gpe as $pe}{if $pe.matchSeccion ($seccion.seccion)}<li><a href="{url 'Pato_Views_Seccion::cerrarAKardex', array ($seccion.nrc, $pe.id)}">Cerrar a Kardex para {$pe.descripcion}</a></li>{/if}{/foreach}</ul></li>
+	{/if}
+</ul>
+{/block}
