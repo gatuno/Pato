@@ -1,17 +1,17 @@
 {extends 'pato/maestro/base.html'}
 {block body_maestro}
 <h2>Permisos</h2>
-{if $maestro.user.administrator}
+{if $maestro.administrator}
 <p>Este usuario tiene permisos de <b>Administrador</b></p>
 {elseif count ($permisos) != 0}
 		<p>Tiene los siguientes permisos:</p>
 		<ul>{foreach $permisos as $p}
-			<li>Permiso: {$p.application} - <abbr title="{$p.description}">{$p.name}</abbr>. <a href="{url 'Pato_Views_Usuario::eliminarPermiso', array($maestro.user.id,$p.id)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar permiso" /></a></li>
+			<li>Permiso: {$p.application} - <abbr title="{$p.description}">{$p.name}</abbr>. <form style="display: inline;" method="post" action="{url 'Pato_Views_Maestro::eliminarPermiso', array ($maestro.codigo)}"><input type="hidden" value="{$p.id}" name="permiso" /><input type="submit" value="Eliminar permiso" /></form></li>
 		{/foreach}</ul>
 {/if}
 <h3>Agregar nuevo permiso</h3>
 {if $form}
-	<form method="post" action="{url 'Pato_Views_Usuario::agregarPermiso', array($maestro->user->id)}">
+	<form method="post" action="{url 'Pato_Views_Maestro::agregarPermiso', array($maestro->codigo)}">
 		<table>
 			{$form.render_table}
 			<tr><td><input type="submit" value="Agregar permiso" /></td></tr>
@@ -24,11 +24,11 @@
 {if count ($grupos) != 0} 	
 	<p>Pertence a los siguiente grupos:</p>
 	<ul>{foreach $grupos as $g}
-		<li>Grupo: <abbr title="{$g.description}">{$g.name}</abbr>. <a href="{url 'Pato_Views_Usuario::eliminarGrupo', array($maestro.user.id,$g.id)}"><img class="icon" src="{media '/img/list-remove.png'}" alt="Eliminar grupo" /></a></li>
+		<li>Grupo: <abbr title="{$g.description}">{$g.name}</abbr>. <form style="display: inline;" method="post" action="{url 'Pato_Views_Maestro::eliminarGrupo', array($maestro.codigo)}"><input type="hidden" value="{$g.id}" name="grupo" /><input type="submit" value="Eliminar grupo" /></form></li>
 	{/foreach}</ul>
 {/if}
 {if $form2}
-	<form method="post" action="{url 'Pato_Views_Usuario::agregarGrupo', array($maestro->user->id)}">
+	<form method="post" action="{url 'Pato_Views_Maestro::agregarGrupo', array($maestro->codigo)}">
 		<table>
 			{$form2.render_table}
 			<tr><td><input type="submit" value="Agregar a grupo" /></td></tr>

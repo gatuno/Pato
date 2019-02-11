@@ -1,7 +1,7 @@
 <?php
 
 class Pato_Form_Usuario_Password extends Gatuf_Form {
-	private $usuario;
+	private $user;
 	
 	public function initFields ($extra = array ()) {
 		$this->user = $extra['usuario'];

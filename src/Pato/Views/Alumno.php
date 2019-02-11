@@ -66,7 +66,7 @@ class Pato_Views_Alumno {
 		$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Alumno::verPerfil', array ($alumno->codigo));
 		
 		if (!$alumno->active) {
-			$request->user->setMessage (3, 'No se puede reestablecer la contrase del alumno porque se encuentra inactivo');
+			$request->user->setMessage (3, 'No se puede reestablecer la contraseña del alumno porque se encuentra inactivo');
 			return new Gatuf_HTTP_Response_Redirect ($url_af);
 		}
 		

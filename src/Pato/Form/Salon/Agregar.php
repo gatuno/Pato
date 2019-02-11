@@ -2,9 +2,11 @@
 
 class Pato_Form_Salon_Agregar extends Gatuf_Form {
 	public function initFields ($extra = array ()) {
+		$edificio_actual = '';
+		if (isset ($extra['edificio'])) $edificio_actual = $extra['edificio'];
+		
 		/* Preparar la lista de edificios */
 		$edificios = Gatuf::factory ('Pato_Edificio')->getList (array ('order' => array ('clave ASC')));
-		$edifiicio_actual = $extra['edificio'];
 		$choices = array ();
 		foreach ($edificios as $edificio) {
 			$choices[$edificio->clave.' - '.$edificio->descripcion] = $edificio->clave;
@@ -15,7 +17,7 @@ class Pato_Form_Salon_Agregar extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Edificio',
 				'help_text' => 'El edificio donde se encuentra en nuevo salon',
-				'initial' => $edifiicio_actual,
+				'initial' => $edificio_actual,
 				'widget_attrs' => array (
 					'choices' => $choices,
 				),

@@ -1,16 +1,20 @@
 {extends 'pato/base.html'}
 {block body}
+{maestroself 'maestro_self', $user, $maestro}
+{aperm 'admin_profesores', $user, 'Patricia.admin_profesores'}{aperm 'grant', $user, 'Patricia.grant'}
 <ul style="list-style-type: none;">
 <li style="display: inline;"><a href="{url 'Pato_Views_Maestro::verMaestro', array ($maestro.codigo)}">Perfil</a></li>
 <li style="display: inline;"><a href="{url 'Pato_Views_Maestro::verHorario', array ($maestro.codigo)}">Horario y grupos</a></li>
-{if $user.administrator}<!-- Actualizar con el permiso correspondiente -->
+{if $admin_profesores}<!-- Actualizar con el permiso correspondiente -->
 <li style="display: inline;"><a href="{url 'Pato_Views_Maestro::actualizarMaestro', array ($maestro.codigo)}">Actualizar</a></li>
+{if !$maestro_self}
+<li style="display: inline;"><a href="{url 'Pato_Views_Maestro::passwordReset', array ($maestro.codigo)}">Resetear contraseña</a></li>
+{/if}
+{/if}
+{if $grant}
 <li style="display: inline;"><a href="{url 'Pato_Views_Maestro::permisos', array ($maestro.codigo)}">Permisos</a></li>
-{if $user.login != $maestro.codigo}
-<li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordReset', array ($maestro.codigo)}">Resetear contraseña</a></li>
 {/if}
-{/if}
-{if $user.login == $maestro.codigo}
+{if $maestro_self}
 <li style="display: inline;"><a href="{url 'Pato_Views_Usuario::passwordChange'}">Cambiar Contraseña</a></li>
 {/if}
 </ul>

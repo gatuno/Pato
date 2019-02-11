@@ -1,6 +1,7 @@
 {extends 'pato/base.html'}
 {block body}
-{if $user.administrator}
+{aperm 'admin_profesores', $user, 'Patricia.admin_profesores'}
+{if $admin_profesores}
 <p><a href="{url 'Pato_Views_Maestro::agregarMaestro'}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar profesor" />Agregar un nuevo profesor</a></p>
 {/if}
 {$paginador.render}

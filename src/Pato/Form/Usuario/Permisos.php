@@ -2,7 +2,7 @@
 class Pato_Form_Usuario_Permisos extends Gatuf_Form {
 	private $user;
 	public function initFields ($extra = array ()) {
-		$this->user = $extra['user'];
+		$this->user = $extra['usuario'];
 		
 		$choices = array ();
 		foreach (Gatuf::factory ('Gatuf_Permission')->getList(array ('order' => 'application ASC, name ASC')) as $per) {
@@ -33,5 +33,7 @@ class Pato_Form_Usuario_Permisos extends Gatuf_Form {
 		if ($commit) {
 			$this->user->setAssoc ($permiso);
 		}
+		
+		return $permiso;
 	}
 }

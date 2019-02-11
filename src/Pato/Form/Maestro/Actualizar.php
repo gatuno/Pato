@@ -63,7 +63,7 @@ class Pato_Form_Maestro_Actualizar extends Gatuf_Form {
 			array (
 				'required' => true,
 				'label' => 'Correo',
-				'initial' => $this->maestro->user->email,
+				'initial' => $this->maestro->email,
 				'help_text' => 'Un correo',
 		));
 		
@@ -93,12 +93,11 @@ class Pato_Form_Maestro_Actualizar extends Gatuf_Form {
 		}
 		
 		$this->maestro->setFromFormData ($this->cleaned_data);
-		$this->maestro->user->email = $this->cleaned_data['email'];
 		
 		if ($commit) {
 			$this->maestro->update();
-			$this->maestro->user->update ();
 		}
+		
 		return $this->maestro;
 	}
 }

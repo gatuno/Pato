@@ -102,7 +102,10 @@ class Pato_Maestro extends Gatuf_Model {
 	}
 	
 	function postSave ($create = false) {
-		
+		/* TODO: Enviar el correo con la contraseña del usuario */
+		if ($create) {
+			$this->setPassword (Gatuf_Utils::getRandomString (8));
+		}
 	}
 	
 	function setPassword ($password) {

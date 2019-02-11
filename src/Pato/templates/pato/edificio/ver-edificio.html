@@ -1,9 +1,10 @@
 {extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
+{aperm 'admin_salones', $user, 'Patricia.admin_edificios_salones'}
 <p>Se muestran los horarios de todos los salones</p>
-{if $user.administrator}
-<p><a href="{url 'Pato_Views_Salon::agregarSalon', array($edificio.clave)}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar salon" />Agregar nuevo salon</a></p>
+{if $admin_salones}
+<p><a href="{url 'Pato_Views_Salon::agregarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar salon" />Agregar nuevo salon</a></p>
 {/if}
 <p><a href="{url 'Pato_Views_Salon::buscarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/edit-find.png'}" alt="Buscar salon" />Buscar un salon en este edificio</a></p>
 {if count ($salones) != 0}
@@ -13,7 +14,7 @@
 	{/foreach}</ul>
 	{foreach $salones as $salon}
 		<div id="salon_{$salon.id}">
-			<p>Este es el salón {$salon.aula}, del edificio {$edificio.descripcion}. Tiene una capacidad de {$salon.cupo}. {if $user.administrator}<a href="{url 'Pato_Views_Salon::actualizarSalon', array ($salon.id)}">Cambiar cupo</a>{/if}</p>
+			<p>Este es el salón {$salon.aula}, del edificio {$edificio.descripcion}. Tiene una capacidad de {$salon.cupo}. {if $admin_salones}<a href="{url 'Pato_Views_Salon::actualizarSalon', array ($salon.id)}">Cambiar cupo</a>{/if}</p>
 			{if $calendarios[$salon.id]}
 				{$calendarios[$salon.id].render}
 			{else}

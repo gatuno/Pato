@@ -34,6 +34,7 @@ class Pato_Views_Maestro {
 		                                         $request);
 	}
 	
+	public $verMaestro_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verMaestro ($request, $match) {
 		$maestro = new Pato_Maestro ();
 		
@@ -41,7 +42,6 @@ class Pato_Views_Maestro {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$maestro->getUser ();
 		$title = (($maestro->sexo == 'M') ? 'Profesor ':'Profesora ').$maestro->nombre.' '.$maestro->apellido;
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/maestro/ver-maestro.html',
@@ -50,6 +50,7 @@ class Pato_Views_Maestro {
 		                                         $request);
 	}
 	
+	public $verHorario_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verHorario ($request, $match) {
 		$maestro = new Pato_Maestro ();
 		
@@ -110,7 +111,7 @@ class Pato_Views_Maestro {
                                                  $request);
 	}
 	
-	public $agregarMaestro_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarMaestro_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_profesores'));
 	public function agregarMaestro ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Maestro_Agregar ($request->POST);
@@ -132,7 +133,7 @@ class Pato_Views_Maestro {
 		                                         $request);
 	}
 	
-	public $actualizarMaestro_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarMaestro_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_profesores'));
 	public function actualizarMaestro ($request, $match) {
 		$maestro = new Pato_Maestro ();
 		
@@ -140,7 +141,6 @@ class Pato_Views_Maestro {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$maestro->getUser ();
 		$extra = array ('maestro' => $maestro);
 		
 		if ($request->method == 'POST') {
@@ -162,6 +162,27 @@ class Pato_Views_Maestro {
 		                                                'maestro' => $maestro,
 		                                                'form' => $form),
 		                                         $request);
+	}
+	
+	public $passwordReset_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_profesores'));
+	public function passwordReset ($request, $match) {
+		$maestro = new Pato_Maestro ();
+		
+		if (false === $maestro->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$url_af = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::verMaestro', array ($maestro->codigo));
+		
+		if (!$maestro->active) {
+			$request->user->setMessage (3, 'No se puede reestablecer la contraseña del profesor porque se encuentra inactivo');
+			return new Gatuf_HTTP_Response_Redirect ($url_af);
+		}
+		
+		Pato_Form_Login_PasswordRecovery::send_code ($maestro);
+		
+		$request->user->setMessage (1, sprintf ('Se ha enviado un correo a "%s" para resetear la contraseña. Expira en 12 horas', $maestro->email));
+		return new Gatuf_HTTP_Response_Redirect ($url_af);
 	}
 	
 	public $buscarJSON_precond = array ('Gatuf_Precondition::loginRequired');
@@ -187,6 +208,7 @@ class Pato_Views_Maestro {
 		return new Gatuf_HTTP_Response_Json ($response);
 	}
 	
+	public $verHorarioPDF_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verHorarioPDF ($request, $match, $params = array ()) {
 		$maestro = new Pato_Maestro ();
 		
@@ -197,7 +219,7 @@ class Pato_Views_Maestro {
 		throw new Exception ('No implementado. Revisar formato de horario');
 	}
 	
-	public $permisos_precond = array ('Gatuf_Precondition::adminRequired');
+	public $permisos_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.grant'));
 	public function permisos ($request, $match) {
 		$maestro = new Pato_Maestro ();
 		
@@ -205,21 +227,20 @@ class Pato_Views_Maestro {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		$maestro->getUser ();
-		$extra = array ('user' => $maestro->user);
+		$extra = array ('usuario' => $maestro);
 		
 		$title = (($maestro->sexo == 'M') ? 'Profesor ':'Profesora ').$maestro->nombre.' '.$maestro->apellido;
 		
-		$permisos_usuario = $maestro->user->getAllPermissions();
-		if ($maestro->user->administrator || count ($permisos_usuario) == Gatuf::factory ('Gatuf_Permission')->getCount ()) {
+		$permisos_usuario = $maestro->getAllPermissions();
+		if ($maestro->administrator || count ($permisos_usuario) == Gatuf::factory ('Gatuf_Permission')->getCount ()) {
 			/* Tiene todos los permisos, no hay nada que agregar */
 			$form = null;
 		} else {
 			$form = new Pato_Form_Usuario_Permisos (null, $extra);
 		}
 		
-		$permisos_usuario = $maestro->user->get_permissions_list ();
-		$grupos = $maestro->user->get_groups_list ();
+		$permisos_usuario = $maestro->get_permissions_list ();
+		$grupos = $maestro->get_groups_list ();
 		
 		if (count ($grupos) == Gatuf::factory ('Gatuf_Group')->getCount ()) {
 			$form2 = null;
@@ -235,5 +256,97 @@ class Pato_Views_Maestro {
 		                                                'form' => $form,
 		                                                'form2' => $form2),
 		                                         $request);
+	}
+	
+	public $agregarPermiso_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.grant'));
+	public function agregarPermiso ($request, $match) {
+		$maestro = new Pato_Maestro ();
+		
+		if (false === $maestro->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$extra = array ('usuario' => $maestro);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Usuario_Permisos ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$permiso = $form->save ();
+				
+				Gatuf_Log::info (sprintf ('Se asignó el permiso %s al profesor %s. Asignación hecha por el usuario %s', $permiso->code_name, $maestro->codigo, $request->user->codigo));
+			}
+		}
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::permisos', $maestro->codigo);
+		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+
+	public $eliminarPermiso_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.grant'));
+	public function eliminarPermiso($request, $match) {
+		$maestro = new Pato_Maestro ();
+		
+		if (false === $maestro->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if ($request->method == 'POST' && isset ($request->POST['permiso'])) {
+			$permiso = new Gatuf_Permission ();
+			
+			if (false !== $permiso->get ($request->POST['permiso'])) {
+				$maestro->delAssoc($permiso);
+				
+				Gatuf_Log::info (sprintf ('Se quitó el permiso %s del profesor %s. Eliminación por el usuario %s', $permiso->code_name, $maestro->codigo, $request->user->codigo));
+			}
+		}
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::permisos', $maestro->codigo);
+		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
+	public $agregarGrupo_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.grant'));
+	public function agregarGrupo($request, $match) {
+		$maestro = new Pato_Maestro ();
+		
+		if (false === $maestro->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		$extra = array ('usuario' => $maestro);
+		
+		if ($request->method == 'POST') {
+			$form = new Pato_Form_Usuario_Grupos ($request->POST, $extra);
+			
+			if ($form->isValid ()) {
+				$grupo = $form->save ();
+				
+				Gatuf_Log::info (sprintf ('Se asignó el grupo %s al profesor %s. Asignación hecha por el usuario %s', $grupo->name, $maestro->codigo, $request->user->codigo));
+			}
+		}
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::permisos', $maestro->codigo);
+		return new Gatuf_HTTP_Response_Redirect ($url);
+	}
+	
+	public $eliminarGrupo_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.grant'));
+	public function eliminarGrupo($request, $match) {
+		$maestro = new Pato_Maestro ();
+		
+		if (false === $maestro->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if ($request->method == 'POST' && isset ($request->POST['grupo'])) {
+			$grupo = new Gatuf_Group ();
+			
+			if (false !== $grupo->get ($request->POST['grupo'])) {
+				$maestro->delAssoc($grupo);
+				
+				Gatuf_Log::info (sprintf ('Se quitó el grupo %s al profesor %s. Eliminación por el usuario %s', $grupo->name, $maestro->codigo, $request->user->codigo));
+			}
+		}
+		
+		$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Maestro::permisos', $maestro->codigo);
+		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 }

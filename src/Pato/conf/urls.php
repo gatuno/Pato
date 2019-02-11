@@ -34,7 +34,7 @@ $ctl[] = array (
 	'method' => 'logout',
 );
 
-/* Avisos */
+/* Avisos FIXME */
 $ctl[] = array (
 	'regex' => '#^/aviso/(\d+)/$#',
 	'base' => $base,
@@ -135,6 +135,7 @@ $ctl[] = array(
 	'method' => 'passwordChange',
 );
 
+/* FIXME: */
 $ctl[] = array (
 	'regex' => '#^/mail/change/$#',
 	'base' => $base,
@@ -526,18 +527,6 @@ $ctl[] = array (
 			'method' => 'actualizarHora',
 		),
 		array (
-			'regex' => '#^(\d+)/reclamar/([A-Za-z]{2,5})/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
-			'method' => 'reclamarNrc',
-		),
-		array (
-			'regex' => '#^(\d+)/liberar/$#',
-			'base' => $base,
-			'model' => 'Calif_Views_Seccion',
-			'method' => 'liberarNrc',
-		),
-		array (
 			'regex' => '#^(\d+)/matricular/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Seccion',
@@ -676,7 +665,7 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/salones/add/(.+)/$#',
+	'regex' => '#^/salones/add/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Salon',
 	'method' => 'agregarSalon',
@@ -751,7 +740,37 @@ $ctl[] = array (
 			'base' => $base,
 			'model' => 'Pato_Views_Maestro',
 			'method' => 'permisos',
-		)
+		),
+		array (
+			'regex' => '#^(\d+)/password/reset/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Maestro',
+			'method' => 'passwordReset',
+		),
+		array (
+			'regex' => '#^(\d+)/permisos/add/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Maestro',
+			'method' => 'agregarPermiso',
+		),
+		array (
+			'regex' => '#^(\d+)/permisos/del/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Maestro',
+			'method' => 'eliminarPermiso',
+		),
+		array (
+			'regex' => '#^(\d+)/grupos/add/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Maestro',
+			'method' => 'agregarGrupo',
+		),
+		array (
+			'regex' => '#^(\d+)/grupos/del/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Maestro',
+			'method' => 'eliminarGrupo',
+		),
 	)
 );
 
@@ -778,34 +797,6 @@ $ctl[] = array (
 );
 
 /* usuarios*/
-$ctl[] = array(
-	'regex' => '#^/permisos/add/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Usuario',
-	'method' => 'agregarPermiso',
-);
-
-$ctl[] = array(
-	'regex' => '#^/permisos/del/(\d+)/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Usuario',
-	'method' => 'eliminarPermiso',
-);
-
-$ctl[] = array(
-	'regex' => '#^/grupos/del/(\d+)/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Usuario',
-	'method' => 'eliminarGrupo',
-);
-
-$ctl[] = array(
-	'regex' => '#^/permisos/addGrupo/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Usuario',
-	'method' => 'agregarGrupo',
-);
-
 $ctl[] = array (
 	'regex' => '#^/preferencias/$#',
 	'base' => $base,
@@ -814,24 +805,29 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/preferencias/folio/$#',
+	'regex' => '#^/foliador/$#',
 	'base' => $base,
-	'model' => 'Pato_Views_Preferencias',
+	'model' => 'Pato_Views_Preferencias', /* TODO: Mover el foliador a su propia vista */
 	'method' => 'cambiarFolio',
 );
 
 $ctl[] = array (
-	'regex' => '#^/preferencias/folio/(\d+)/eliminar$#',
+	'regex' => '#^/foliador/#',
 	'base' => $base,
-	'model' => 'Pato_Views_Preferencias',
-	'method' => 'eliminarFolio',
-);
-
-$ctl[] = array (
-	'regex' => '#^/preferencias/folio/subir/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Preferencias',
-	'method' => 'subirFolios',
+	'sub' => array (
+		array (
+			'regex' => '#^(\d+)/eliminar/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Preferencias', /* TODO: Mover el foliador a su propia vista */
+			'method' => 'eliminarFolio',
+		),
+		array (
+			'regex' => '#^subir/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Preferencias', /* TODO: Mover el foliador a su propia vista */
+			'method' => 'subirFolios',
+		),
+	)
 );
 
 $ctl[] = array (

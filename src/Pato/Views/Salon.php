@@ -3,12 +3,11 @@
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Salon {
-	public $agregarSalon_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarSalon_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
 	public function agregarSalon ($request, $match) {
-		$extra = array ('edificio' => $match[1]);
 
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_Salon_Agregar ($request->POST, $extra);
+			$form = new Pato_Form_Salon_Agregar ($request->POST);
 
 			if ($form->isValid ()) {
 				$salon = $form->save ();
@@ -18,6 +17,13 @@ class Pato_Views_Salon {
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
+			$extra = array ();
+			if (isset ($request->REQUEST['edificio'])) {
+				$edificio = new Pato_Edificio ();
+				if (false !== ($edificio->get($request->REQUEST['edificio']))) {
+					$extra['edificio'] = $edificio->clave;
+				}
+			}
 			$form = new Pato_Form_Salon_Agregar (null, $extra);
 		}
 
@@ -27,7 +33,7 @@ class Pato_Views_Salon {
                                                  $request);
 	}
 	
-	public $actualizarSalon_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizarSalon_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
 	public function actualizarSalon ($request, $match) {
 		$salon = new Pato_Salon ();
 		
@@ -61,7 +67,8 @@ class Pato_Views_Salon {
                                                  $request);
 	}
 	
-	function buscarSalon ($request, $match) {
+	public $buscarSalon_precond = array ('Gatuf_Precondition::loginRequired');
+	public function buscarSalon ($request, $match) {
 		/* Tratar de "pre-seleccionar" los edificios */
 		$extra = array ('edificios' => null);
 		
@@ -100,7 +107,8 @@ class Pato_Views_Salon {
 		                                         $request);
 	}
 	
-	function reporteBuscados ($request, $match) {
+	public $reporteBuscados_precond = array ('Gatuf_Precondition::loginRequired');
+	public function reporteBuscados ($request, $match) {
 		Gatuf::loadFunction ('Pato_Utils_buscarSalonVacio');
 		
 		$form = new Pato_Form_Salon_BuscarSalon ($request->GET, null);
@@ -120,8 +128,8 @@ class Pato_Views_Salon {
 		}
 		return Gatuf_Shortcuts_RenderToResponse ('pato/salon/reporte-vacios.html',
 		                                         array ('page_title' => 'Salones encontrados',
-		                                         'bus_inicio' => $data['hora_inicio'],
-		                                         'bus_fin' => $data['hora_fin'],
+		                                         'bus_inicio' => $data['hora_inicio']->format ('H:i'),
+		                                         'bus_fin' => $data['hora_fin']->format ('H:i'),
 		                                         'semana' => implode (',', $semana),
 		                                         'salones' => $libres),
 		                                         $request);

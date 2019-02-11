@@ -4,21 +4,21 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Preferencias {
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.foliador', 'Patricia.falsificador_fecha')));
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/index.html',
 		                                         array ('page_title' => 'Preferencias'),
 		                                         $request);
 	}
 	
-	public $cambiaFolio_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiaFolio_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.foliador'));
 	public function cambiarFolio ($request, $match) {
 		$folio = $request->session->getData ('numero_folio', 1);
 		
 		$usados = $request->session->getData ('folios_usados', array ());
 		
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_EstablecerFolio ($request->POST, array ('numero' => $folio));
+			$form = new Pato_Form_Preferencias_EstablecerFolio ($request->POST, array ('numero' => $folio));
 			
 			if ($form->isValid ()) {
 				$folio = $form->save ();
@@ -30,7 +30,7 @@ class Pato_Views_Preferencias {
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Pato_Form_EstablecerFolio (null, array ('numero' => $folio));
+			$form = new Pato_Form_Preferencias_EstablecerFolio (null, array ('numero' => $folio));
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/folio.html',
@@ -41,7 +41,7 @@ class Pato_Views_Preferencias {
 		                                         $request);
 	}
 	
-	public $eliminarFolio_precond = array ('Gatuf_Precondition::adminRequired');
+	public $eliminarFolio_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.foliador'));
 	public function eliminarFolio ($request, $match) {
 		$usados = $request->session->getData ('folios_usados', array ());
 		
@@ -58,10 +58,10 @@ class Pato_Views_Preferencias {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
-	public $subirFolios_precond = array ('Gatuf_Precondition::adminRequired');
+	public $subirFolios_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.foliador'));
 	public function subirFolios ($request, $match) {
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_SubirFolios (array_merge ($request->POST, $request->FILES));
+			$form = new Pato_Form_Preferencias_SubirFolios (array_merge ($request->POST, $request->FILES));
 			
 			if ($form->isValid ()) {
 				$data = $form->save ();
@@ -119,7 +119,7 @@ class Pato_Views_Preferencias {
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Pato_Form_SubirFolios (null);
+			$form = new Pato_Form_Preferencias_SubirFolios (null);
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/subir-folios.html',
@@ -128,12 +128,12 @@ class Pato_Views_Preferencias {
 		                                         $request);
 	}
 	
-	public $cambiarFecha_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiarFecha_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.falsificador_fecha'));
 	public function cambiarFecha ($request, $match) {
 		$fecha = $request->session->getData ('fecha', date ('d/m/Y'));
 		
 		if ($request->method == 'POST') {
-			$form = new Pato_Form_SeleccionarFecha ($request->POST, array ('fecha' => $fecha));
+			$form = new Pato_Form_Preferencias_SeleccionarFecha ($request->POST, array ('fecha' => $fecha));
 			
 			if ($form->isValid ()) {
 				$fecha = $form->save ();
@@ -146,7 +146,7 @@ class Pato_Views_Preferencias {
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
-			$form = new Pato_Form_SeleccionarFecha (null, array ('fecha' => $fecha));
+			$form = new Pato_Form_Preferencias_SeleccionarFecha (null, array ('fecha' => $fecha));
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/preferencias/fecha.html',

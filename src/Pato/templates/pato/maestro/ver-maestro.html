@@ -1,16 +1,17 @@
 {extends 'pato/maestro/base.html'}
 {block body_maestro}
+{maestroself 'maestro_self', $user, $maestro}
 <h2>Perfil público</h2>
 <table class="form" summary="">
 	<tr>
 		<th style="text-align: right">
-		{if $user.login == $maestro.codigo}
+		{if $maestro_self}
 		<a href="http://gravatar.com/emails/" title="Cambie su imagen en gravatar.com">
 		{else}
-		<a href="http://www.gravatar.com/avatar/{$maestro.user.email|md5}.jpg?s=400">
-		{/if}<img src="http://www.gravatar.com/avatar/{$maestro.user.email|md5}.jpg?s=60" alt=" " /></a>
+		<a href="http://www.gravatar.com/avatar/{$maestro.email|md5}.jpg?s=400">
+		{/if}<img src="http://www.gravatar.com/avatar/{$maestro.email|md5}.jpg?s=60" alt=" " /></a>
 		</th>
-	{if $user.login == $maestro.codigo}
+	{if $maestro_self}
 		<td>Yo</td>
 	{else}
 		<td>{$maestro.apellido} {$maestro.nombre}</td>
@@ -33,7 +34,7 @@
 	{/if}
 	<tr>
 		<th>Última vez visto:</th>
-		<td>{$maestro.user.last_login|dateago}</td>
+		<td>{$maestro.last_login|dateago}</td>
 	</tr>
 </table>
 {/block}

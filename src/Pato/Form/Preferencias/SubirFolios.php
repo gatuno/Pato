@@ -1,9 +1,9 @@
 <?php
-function Pato_Form_SubirFolios_dontmove ($field) {
+function Pato_Form_Preferencias_SubirFolios_dontmove ($field) {
 	/* No mover el archivo */
 }
 
-class Pato_Form_SubirFolios extends Gatuf_Form {
+class Pato_Form_Preferencias_SubirFolios extends Gatuf_Form {
 	public function initFields ($extra = array ()) {
 		$choices = array ();
 		
@@ -27,7 +27,7 @@ class Pato_Form_SubirFolios extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Archivo',
 				'help_text' => 'El archivo a subir',
-				'move_function' => 'Pato_Form_SubirFolios_dontmove',
+				'move_function' => 'Pato_Form_Preferencias_SubirFolios_dontmove',
 				'move_function_params' => array(),
 				'max_size' => 10485760,
 			));

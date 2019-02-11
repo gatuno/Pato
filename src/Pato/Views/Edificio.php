@@ -3,7 +3,8 @@
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Edificio {
-	public function index($request, $match) {
+	public $index_precond = array ('Gatuf_Precondition::loginRequired');
+	public function index ($request, $match) {
 		$edificio = new Pato_Edificio ();
 		
 		$pag = new Gatuf_Paginator ($edificio);
@@ -25,12 +26,16 @@ class Pato_Views_Edificio {
 		
 		$pag->setFromRequest ($request);
 		
+		$cant_edificios = Gatuf::factory ('Pato_Edificio')->getList (array ('count' => true));
+		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/edificio/index.html',
 		                                         array('page_title' => 'Edificios',
-                                                       'paginador' => $pag),
+                                                       'paginador' => $pag,
+                                                       'cant_edificios' => $cant_edificios),
                                                  $request);
 	}
 	
+	public $verEdificio_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verEdificio ($request, $match) {
 		$edificio = new Pato_Edificio ();
 		
@@ -92,7 +97,7 @@ class Pato_Views_Edificio {
                                                  $request);
 	}
 
-	public $agregarEdificio_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarEdificio_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
 	public function agregarEdificio ($request, $match) {
 		$extra = array ();
 		if ($request->method == 'POST') {

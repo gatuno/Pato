@@ -2,7 +2,7 @@
 class Pato_Form_Usuario_Grupos extends Gatuf_Form {
 	private $user;
 	public function initFields ( $extra = array () ) {
-		$this->user = $extra['user'];
+		$this->user = $extra['usuario'];
 		
 		$groups = $this->user->get_groups_list ();
 		$ids = array ();
@@ -42,5 +42,7 @@ class Pato_Form_Usuario_Grupos extends Gatuf_Form {
 		if ($commit) {
 			$this->user->setAssoc($grupo);
 		}
+		
+		return $grupo;
 	}
 }

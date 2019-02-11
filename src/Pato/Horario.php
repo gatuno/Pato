@@ -93,10 +93,10 @@ class Pato_Horario extends Gatuf_Model {
 		
 		if (!$coincide) return false;
 		
-		$a_inicio = strtotime ($a->inicio);
-		$a_fin = strtotime ($a->fin);
-		$b_inicio = strtotime ($b->inicio);
-		$b_fin = strtotime ($b->fin);
+		$a_inicio = date_timestamp_get ($a->inicio);
+		$a_fin = date_timestamp_get ($a->fin);
+		$b_inicio = date_timestamp_get ($b->inicio);
+		$b_fin = date_timestamp_get ($b->fin);
 		
 		if ($b_inicio < $a_fin && $b_fin > $a_inicio) {
 			return true;

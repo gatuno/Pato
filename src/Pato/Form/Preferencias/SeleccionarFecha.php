@@ -1,6 +1,6 @@
 <?php
 
-class Pato_Form_SeleccionarFecha extends Gatuf_Form {
+class Pato_Form_Preferencias_SeleccionarFecha extends Gatuf_Form {
 	public function initFields ($extra = array ()) {
 		if (isset ($extra['fecha'])) $fecha = $extra['fecha'];
 		else $fecha = '';

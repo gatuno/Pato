@@ -1,6 +1,6 @@
 {extends 'pato/base.html'}
 {block body}
-<p>Suba todos sus folios de golpe, estamos de oferta. Su archivo deberá ser un CSV (Archivo separado por comas) con dos columnas: NRC y Folio. Si el archivo está correcto, será cargado sobre su sesión.</p>
+<p>Suba todos sus folios de golpe. Su archivo deberá ser un CSV (archivo separado por comas) con dos columnas: NRC y Folio. Si el archivo es válido, será cargado sobre su sesión.</p>
 {if $form.errors}
 	<div class="errors">
 	<p>El formulario contiene algunos errores:</p>
@@ -9,7 +9,7 @@
 <form method="post" action="." enctype="multipart/form-data">
 	<table>
 		{$form.render_table}
-		<tr><td>&nbsp;</td><td><input type="submit" value="Subir de golpe" /></td></tr>
+		<tr><td>&nbsp;</td><td><input type="submit" value="Subir múltiples folios" /></td></tr>
 	</table>
 </form>
 {/block}

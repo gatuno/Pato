@@ -77,15 +77,14 @@ class Pato_Views_Seccion {
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
+			$extra = array ();
 			if (isset ($request->REQUEST['materia'])) {
 				$materia = new Pato_Materia ();
-				if (false === ($materia->get($request->REQUEST['materia']))) {
-					$extra['materia'] = '';
-				} else {
+				if (false !== ($materia->get($request->REQUEST['materia']))) {
 					$extra['materia'] = $materia->clave;
 				}
 			}
-			$form = new Pato_Form_Seccion_Agregar (null);
+			$form = new Pato_Form_Seccion_Agregar (null, $extra);
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/seccion/agregar-seccion.html',

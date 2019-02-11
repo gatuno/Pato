@@ -116,6 +116,7 @@ class Pato_Form_Maestro_Agregar extends Gatuf_Form {
 		
 		$maestro = new Pato_Maestro ();
 		$maestro->setFromFormData ($this->cleaned_data);
+		$maestro->administrator = false;
 		
 		if ($commit) {
 			$maestro->create();

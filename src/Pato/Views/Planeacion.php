@@ -7,7 +7,7 @@ class Pato_Views_Planeacion {
 	public $index_precond = array ('Pato_Precondition::maestroRequired');
 	public function index ($request, $match, $which) {
 		if ($which == 'myself') {
-			$maestro = $request->user->extra;
+			$maestro = $request->user;
 		} else {
 			$maestro = new Pato_Maestro ();
 			
@@ -62,7 +62,7 @@ class Pato_Views_Planeacion {
 		$materia = new Pato_Materia ();
 		
 		if ($which == 'myself') {
-			$maestro = $request->user->extra;
+			$maestro = $request->user;
 		
 			if (false === ($materia->get($match[1]))) {
 				throw new Gatuf_HTTP_Error404();
@@ -88,7 +88,7 @@ class Pato_Views_Planeacion {
 		
 		if (count ($secciones) == 0) {
 			/* oops, el maestro no tiene grupos de esta materia. */
-			if ($maestro->codigo == $request->user->extra->codigo) {
+			if ($maestro->codigo == $request->user->codigo) {
 				$url = Gatuf_HTTP_URL_urlForView ('planeacion_propia');
 			} else {
 				$url = Gatuf_HTTP_URL_urlForView ('planeacion_otros');
@@ -129,7 +129,7 @@ class Pato_Views_Planeacion {
 	public function agregarUnidad ($request, $match) {
 		$materia = new Pato_Materia ();
 		
-		$maestro = $request->user->extra;
+		$maestro = $request->user;
 		
 		if (false === ($materia->get($match[1]))) {
 			throw new Gatuf_HTTP_Error404();
@@ -199,7 +199,7 @@ class Pato_Views_Planeacion {
 			throw new Gatuf_HTTP_Error404();
 		}
 		
-		if ($unidad->maestro != $request->user->extra->codigo) {
+		if ($unidad->maestro != $request->user->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
@@ -236,7 +236,7 @@ class Pato_Views_Planeacion {
 		
 		$unidad = $tema->get_unidad ();
 		
-		if ($unidad->maestro != $request->user->extra->codigo) {
+		if ($unidad->maestro != $request->user->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
@@ -275,7 +275,7 @@ class Pato_Views_Planeacion {
 		
 		$unidad = $tema->get_unidad ();
 		
-		if ($unidad->maestro != $request->user->extra->codigo) {
+		if ($unidad->maestro != $request->user->codigo) {
 			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
