@@ -1,8 +1,17 @@
 {extends 'pato/base.html'}
 {block body}
 <p>Aquí habrá operaciones sobre calificaciones, como hacer correcciones al Kardex, o levantar una nueva calificación</p>
+{aperm 'cerrar_kardex', $user, 'Patricia.cerrar_kardex'}
+{aperm 'corregir_kardex', $user, 'Patricia.corregir_kardex'}
+{aperm 'levantar_kardex', $user, 'Patricia.levantar_kardex'}
+{if $cerrar_kardex}
 <p><a href="{url 'Pato_Views_Calificaciones::aKardex'}">Convertir calificaciones de boleta en Kardex</a></p>
 <p><a href="{url 'Pato_Views_Calificaciones::aKardexSelectivo'}">Convertir calificaciones de boleta en Kardex - por materia</a></p>
+{/if}
+{if $levantar_kardex}
 <p><a href="{url 'Pato_Views_Calificaciones::levantarKardex'}">Levantar nueva calificación en Kardex</a></p>
+{/if}
+{if $corregir_kardex}
 <p><a href="{url 'Pato_Views_Calificaciones::correccionBuscar'}">Realizar corrección en Kardex</a></p>
+{/if}
 {/block}

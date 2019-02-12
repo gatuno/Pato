@@ -51,7 +51,12 @@ class Pato_PDF_Alumno_Boleta extends External_FPDF {
 		
 		$gy = $y + 62;
 		$suma = $sumadas = 0;
-		$sql = new Gatuf_SQL ('calendario=%s AND gpe=%s', array ($this->calendario->clave, $this->gpe->id));
+		if ($this->gpe != null) {
+			$sql = new Gatuf_SQL ('calendario=%s AND gpe=%s', array ($this->calendario->clave, $this->gpe->id));
+		} else {
+			$sql = new Gatuf_SQL ('calendario=%s', array ($this->calendario->clave));
+		}
+		
 		$kardexs = $alumno->get_kardex_list (array ('filter' => $sql->gen ()));
 		foreach ($kardexs as $kardex) {
 			$materia = $kardex->get_materia ();
@@ -113,7 +118,7 @@ class Pato_PDF_Alumno_Boleta extends External_FPDF {
 		$this->Cell (50, 6, 'Fecha: 6 de marzo de 2013', 0, 0, 'R');
 	}
 	
-	function renderBoleta ($alumno, $gpe, $calendario) {
+	function renderBoleta ($alumno, $calendario, $gpe = null) {
 		$this->gpe = $gpe;
 		$this->calendario = $calendario;
 		$this->SetFont('Times', '', 12);

@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Reportes_Alumnos {
-	public $ingreso_precond = array ('Gatuf_Precondition::adminRequired');
+	public $ingreso_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function ingreso ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Calendario_Seleccionar ($request->POST);
@@ -25,7 +25,7 @@ class Pato_Views_Reportes_Alumnos {
                                                  $request);
 	}
 	
-	public $ingresoReporte_precond = array ('Gatuf_Precondition::adminRequired');
+	public $ingresoReporte_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function ingresoReporte ($request, $match) {
 		$calendario = new Pato_Calendario ();
 		

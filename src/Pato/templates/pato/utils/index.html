@@ -1,11 +1,26 @@
 {extends 'pato/base.html'}
 {block body}
+{aperm 'boletas', $user, 'Patricia.imprimir_boleta_alumno'}
+{aperm 'matricular', $user, 'Patricia.matricular_alumnos'}
+{aperm 'agendas', $user, 'Patricia.admin_agenda'}
+{aperm 'admin_evals', $user, 'Patricia.admin_materia_evals'}
+{aperm 'codigos_postales', $user, 'Admision.agregar_codigos_postales'}
+{if $boletas}
 <p><a href="{url 'Pato_Views_Utils::loteBoletas'}">Imprimir boletas por lote y carrera</a></p>
+{/if}
+{if $matricular}
 <p><a href="{url 'Pato_Views_Utils::altasBajasMasivas'}">Altas y bajas masivas</a></p>
+{/if}
+{if $agendas}
 <p><a href="{url 'Pato_Views_Utils::generarAgendas'}">Crear o ajustar agendas de los alumnos</a></p>
+{/if}
+{if $codigos_postales}
 <p><a href="{url 'Pato_Views_Utils::agregarPostal'}">Agregar un codigo postal perdido</a></p>
+{/if}
+{if $admin_evals}
 <h2>Cosas relacionadas con las formas de evaluación</h2>
 <p><a href="{url 'Pato_Views_Utils::cambiarFechaEval'}">Cambiar fechas a toda una forma de evaluación</a></p>
 <p><a href="{url 'Pato_Views_Utils::agregarPorcentaje'}">Agregar una forma de evaluación a todas las materias</a></p>
 <p><a href="{url 'Pato_Views_Utils::cambiarPorcentaje'}">Actualizar porcentajes a toda una forma de evaluación</a></p>
+{/if}
 {/block}

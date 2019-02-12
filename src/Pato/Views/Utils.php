@@ -4,14 +4,14 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Utils {
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.imprimir_boleta_alumno', 'Patricia.matricular_alumnos', 'Patricia.admin_materia_evals', 'Patricia.admin_agenda', 'Admision.agregar_codigos_postales')));
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/index.html',
 		                                         array('page_title' => 'Utilerias varias'),
                                                  $request);
 	}
 	
-	public $loteBoletas_precond = array ('Gatuf_Precondition::adminRequired');
+	public $loteBoletas_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.imprimir_boleta_alumno'));
 	public function loteBoletas ($request, $match) {
 		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		return Gatuf_Shortcuts_RenderToResponse ('pato/utils/lote-boletas.html',
@@ -20,7 +20,7 @@ class Pato_Views_Utils {
                                                  $request);
 	}
 	
-	public $loteBoletaCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $loteBoletaCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.imprimir_boleta_alumno'));
 	public function loteBoletaCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
@@ -32,14 +32,17 @@ class Pato_Views_Utils {
 		
 		$inscripciones = $carrera->get_pato_inscripcion_list (array ('filter' => 'egreso IS NULL'));
 		
+		$calendario = new Pato_Calendario ($GLOBALS['CAL_ACTIVO']);
+		
 		foreach ($inscripciones as $ins) {
-			$estatus = $ins->get_estatus ();
+			$inscripcion_estatus = $ins->get_current_estatus ();
+			$estatus = $inscripcion_estatus->get_estatus ();
 			
 			if (!$estatus->activo) continue;
 			
 			$alumno = $ins->get_alumno ();
 			
-			$pdf->renderBoleta ($alumno);
+			$pdf->renderBoleta ($alumno, $calendario);
 		}
 		
 		$nombre = 'boletas_'.$carrera->clave.'.pdf';
@@ -48,7 +51,7 @@ class Pato_Views_Utils {
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
 	
-	public $altasBajasMasivas_precond = array ('Gatuf_Precondition::adminRequired');
+	public $altasBajasMasivas_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.matricular_alumnos'));
 	public function altasBajasMasivas ($request, $match) {
 		
 		if ($request->method == 'POST') {
@@ -137,7 +140,7 @@ class Pato_Views_Utils {
                                                  $request);
 	}
 	
-	public $cambiarFechaEval_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiarFechaEval_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia_evals'));
 	public function cambiarFechaEval ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Utils_ActualizarEval ($request->POST);
@@ -175,7 +178,7 @@ class Pato_Views_Utils {
                                                  $request);
 	}
 	
-	public $agregarPorcentaje_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarPorcentaje_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia_evals'));
 	public function agregarPorcentaje ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Utils_AgregarPorcentaje ($request->POST);
@@ -246,7 +249,7 @@ class Pato_Views_Utils {
                                                  $request);
 	}
 	
-	public $cambiarPorcentaje_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiarPorcentaje_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_materia_evals'));
 	public function cambiarPorcentaje ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Utils_CambiarPorcentaje ($request->POST);
@@ -283,7 +286,7 @@ class Pato_Views_Utils {
                                                  $request);
 	}
 	
-	public $generarAgendas_precond = array ('Gatuf_Precondition::adminRequired');
+	public $generarAgendas_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_agenda'));
 	public function generarAgendas ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Utils_Agenda ($request->POST);
@@ -359,7 +362,7 @@ class Pato_Views_Utils {
                                                  $request);
 	}
 	
-	public $agregarPostal_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarPostal_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.agregar_codigos_postales'));
 	public function agregarPostal ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Utils_AgregarPostal ($request->POST);

@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Reportes_Calificaciones {
-	public $subidaTarde_precond = array ('Gatuf_Precondition::adminRequired');
+	public $subidaTarde_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function subidaTarde ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarEvaluacion ($request->POST);
@@ -26,7 +26,7 @@ class Pato_Views_Reportes_Calificaciones {
                                                  $request);
 	}
 	
-	public $subidaTardeReporte_precond = array ('Gatuf_Precondition::adminRequired');
+	public $subidaTardeReporte_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function subidaTardeReporte ($request, $match) {
 		$eval = new Pato_Evaluacion ();
 		
@@ -75,7 +75,7 @@ class Pato_Views_Reportes_Calificaciones {
                                                  $request);
 	}
 	
-	public $indiceReprobacion_precond = array ('Gatuf_Precondition::adminRequired');
+	public $indiceReprobacion_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function indiceReprobacion ($request, $match) {
 		$sql = new Gatuf_SQL ('calendario=%s AND aprobada=0', $request->calendario->clave);
 		$kardex = new Pato_Kardex ();
@@ -104,7 +104,7 @@ class Pato_Views_Reportes_Calificaciones {
                                                  $request);
 	}
 	
-	public $indiceReprobacionODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public $indiceReprobacionODS_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function indiceReprobacionODS ($request, $match) {
 		$kardex = new Pato_Kardex ();
 		$kardex->_a['views']['simple'] = array ('group' => 'materia', 'props' => array ('m_reprobada'));
@@ -133,7 +133,7 @@ class Pato_Views_Reportes_Calificaciones {
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Indice_reprobacion-'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 	
-	public $promedioCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $promedioCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function promedioCarrera ($request, $match) {
 		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		

@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Reportes_Oferta {
-	public $matriculadosCalendario_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matriculadosCalendario_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function matriculadosCalendario ($request, $match) {
 		$calendario = $request->calendario;
 		
@@ -36,7 +36,7 @@ class Pato_Views_Reportes_Oferta {
                                                  $request);
 	}
 	
-	public $matriculadosCalendarioODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matriculadosCalendarioODS_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function matriculadosCalendarioODS ($request, $match) {
 		$calendario = $request->calendario;
 		
@@ -80,7 +80,7 @@ class Pato_Views_Reportes_Oferta {
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados-'.$calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 	
-	public $matriculadosMateriaIndex_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matriculadosMateriaIndex_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function matriculadosMateriaIndex ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Materia_Seleccionar ($request->POST);
@@ -101,7 +101,7 @@ class Pato_Views_Reportes_Oferta {
                                                  $request);
 	}
 	
-	public $matriculadosMateria_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matriculadosMateria_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function matriculadosMateria ($request, $match) {
 		$materia = new Pato_Materia ();
 		
@@ -129,7 +129,7 @@ class Pato_Views_Reportes_Oferta {
                                                  $request);
 	}
 	
-	public $matriculadosMateriaODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matriculadosMateriaODS_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function matriculadosMateriaODS ($request, $match) {
 		$materia = new Pato_Materia ();
 		
@@ -173,7 +173,7 @@ class Pato_Views_Reportes_Oferta {
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados_'.$materia->clave.'_'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 	
-	public $matriculadosMateriaTodosODS_precond = array ('Gatuf_Precondition::adminRequired');
+	public $matriculadosMateriaTodosODS_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function matriculadosMateriaTodosODS ($request, $match) {
 		$secciones = Gatuf::factory ('Pato_Seccion')->getList ();
 		
@@ -206,7 +206,7 @@ class Pato_Views_Reportes_Oferta {
 		return new Gatuf_HTTP_Response_File ($ods->nombre, 'Matriculados_'.$request->calendario->clave.'.ods', 'application/vnd.oasis.opendocument.spreadsheet', true);
 	}
 	
-	public $maestrosActivos_precond = array ('Gatuf_Precondition::adminRequired');
+	public $maestrosActivos_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function maestrosActivos ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarGPE ($request->POST);
@@ -227,7 +227,7 @@ class Pato_Views_Reportes_Oferta {
                                                  $request);
 	}
 	
-	public $maestrosActivosCalendario_precond = array ('Gatuf_Precondition::adminRequired');
+	public $maestrosActivosCalendario_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_todos'));
 	public function maestrosActivosCalendario ($request, $match) {
 		$calendario = $request->calendario;
 		$gpe = new Pato_GPE ();

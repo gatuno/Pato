@@ -264,7 +264,7 @@ class Pato_Views_Alumno {
 		
 		$pdf = new Pato_PDF_Alumno_Boleta ('P', 'mm', 'Letter');
 		
-		$pdf->renderBoleta ($alumno, $gpe, $request->calendario);
+		$pdf->renderBoleta ($alumno, $request->calendario, $gpe);
 		
 		$pdf->Close ();
 		

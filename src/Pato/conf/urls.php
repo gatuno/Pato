@@ -859,59 +859,58 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/utils/boletas-lote/$#',
+	'regex' => '#^/utils/#',
 	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'loteBoletas',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/boletas-lote/([A-Za-z]{2,5})/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'loteBoletaCarrera',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/altas-bajas/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'altasBajasMasivas',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/cambiar-fechas-eval/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'cambiarFechaEval',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/agregar-eval/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'agregarPorcentaje',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/actualizar-porcentaje/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'cambiarPorcentaje',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/generar-agendas/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'generarAgendas',
-);
-
-$ctl[] = array (
-	'regex' => '#^/utils/agregar-postal/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Utils',
-	'method' => 'agregarPostal',
+	'sub' => array (
+		array (
+			'regex' => '#^boletas-lote/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'loteBoletas',
+		),
+		array (
+			'regex' => '#^boletas-lote/([A-Za-z]{2,5})/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'loteBoletaCarrera',
+		),
+		array (
+			'regex' => '#^altas-bajas/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'altasBajasMasivas',
+		),
+		array (
+			'regex' => '#^cambiar-fechas-eval/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'cambiarFechaEval',
+		),
+		array (
+			'regex' => '#^agregar-eval/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'agregarPorcentaje',
+		),
+		array (
+			'regex' => '#^actualizar-porcentaje/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'cambiarPorcentaje',
+		),
+		array (
+			'regex' => '#^generar-agendas/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'generarAgendas',
+		),
+		array (
+			'regex' => '#^agregar-postal/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Utils',
+			'method' => 'agregarPostal',
+		),
+	)
 );
 
 $ctl[] = array (
@@ -922,38 +921,40 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/calificaciones/a-kardex/$#',
+	'regex' => '#^/calificaciones/#',
 	'base' => $base,
-	'model' => 'Pato_Views_Calificaciones',
-	'method' => 'aKardex',
-);
-
-$ctl[] = array (
-	'regex' => '#^/calificaciones/a-kardex/selectivo/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Calificaciones',
-	'method' => 'aKardexSelectivo',
-);
-
-$ctl[] = array (
-	'regex' => '#^/calificaciones/nueva-kardex/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Calificaciones',
-	'method' => 'levantarKardex',
-);
-
-$ctl[] = array (
-	'regex' => '#^/calificaciones/correccion/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Calificaciones',
-	'method' => 'correccionBuscar',
-);
-
-$ctl[] = array (
-	'regex' => '#^/calificaciones/correccion/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Calificaciones',
-	'method' => 'correccionKardex',
+	'sub' => array (
+		array (
+			'regex' => '#^a-kardex/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Calificaciones',
+			'method' => 'aKardex',
+		),
+		array (
+			'regex' => '#^a-kardex/selectivo/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Calificaciones',
+			'method' => 'aKardexSelectivo',
+		),
+		array (
+			'regex' => '#^nueva-kardex/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Calificaciones',
+			'method' => 'levantarKardex',
+		),
+		array (
+			'regex' => '#^correccion/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Calificaciones',
+			'method' => 'correccionBuscar',
+		),
+		array (
+			'regex' => '#^correccion/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Calificaciones',
+			'method' => 'correccionKardex',
+		),
+	)
 );
 
 $ctl[] = array (
@@ -964,108 +965,100 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/reportes/oferta/matriculados/calendario/$#',
+	'regex' => '#^/reportes/#',
 	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculadosCalendario',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/matriculados/calendario/ODS/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculadosCalendarioODS',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/materia/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculadosMateriaIndex',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/materia/([\w-]+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculadosMateria',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/materia/([\w-]+)/ODS/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculadosMateriaODS',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/materias/ODS/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'matriculadosMateriaTodosODS',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/maestros-activos/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'maestrosActivos',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/oferta/maestros-activos/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Oferta',
-	'method' => 'maestrosActivosCalendario',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/calificaciones/subida-tarde/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Calificaciones',
-	'method' => 'subidaTarde',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/calificaciones/subida-tarde/(\d+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Calificaciones',
-	'method' => 'subidaTardeReporte',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/calificaciones/reprobacion/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Calificaciones',
-	'method' => 'indiceReprobacion',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/calificaciones/reprobacion/ODS/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Calificaciones',
-	'method' => 'indiceReprobacionODS',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/calificaciones/promedio-carrera/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Calificaciones',
-	'method' => 'promedioCarrera',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/alumnos/ingreso/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Alumnos',
-	'method' => 'ingreso',
-);
-
-$ctl[] = array (
-	'regex' => '#^/reportes/alumnos/ingreso/(\w+)/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Reportes_Alumnos',
-	'method' => 'ingresoReporte',
+	'sub' => array (
+		array (
+			'regex' => '#^oferta/matriculados/calendario/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'matriculadosCalendario',
+		),
+		array (
+			'regex' => '#^oferta/matriculados/calendario/ODS/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'matriculadosCalendarioODS',
+		),
+		array (
+			'regex' => '#^oferta/materia/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'matriculadosMateriaIndex',
+		),
+		array (
+			'regex' => '#^oferta/materia/([\w-]+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'matriculadosMateria',
+		),
+		array (
+			'regex' => '#^oferta/materia/([\w-]+)/ODS/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'matriculadosMateriaODS',
+		),
+		array (
+			'regex' => '#^oferta/materias/ODS/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'matriculadosMateriaTodosODS',
+		),
+		array (
+			'regex' => '#^oferta/maestros-activos/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'maestrosActivos',
+		),
+		array (
+			'regex' => '#^oferta/maestros-activos/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Oferta',
+			'method' => 'maestrosActivosCalendario',
+		),
+		array (
+			'regex' => '#^calificaciones/subida-tarde/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Calificaciones',
+			'method' => 'subidaTarde',
+		),
+		array (
+			'regex' => '#^calificaciones/subida-tarde/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Calificaciones',
+			'method' => 'subidaTardeReporte',
+		),
+		array (
+			'regex' => '#^calificaciones/reprobacion/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Calificaciones',
+			'method' => 'indiceReprobacion',
+		),
+		array (
+			'regex' => '#^calificaciones/reprobacion/ODS/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Calificaciones',
+			'method' => 'indiceReprobacionODS',
+		),
+		array (
+			'regex' => '#^calificaciones/promedio-carrera/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Calificaciones',
+			'method' => 'promedioCarrera',
+		),
+		array (
+			'regex' => '#^alumnos/ingreso/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Alumnos',
+			'method' => 'ingreso',
+		),
+		array (
+			'regex' => '#^alumnos/ingreso/(\w+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Reportes_Alumnos',
+			'method' => 'ingresoReporte',
+		),
+	)
 );
 
 $ctl[] = array (

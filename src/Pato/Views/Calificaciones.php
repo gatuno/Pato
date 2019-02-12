@@ -4,14 +4,14 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Calificaciones {
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.cerrar_kardex', 'Patricia.levantar_kardex', 'Patricia.corregir_kardex')));
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/calificaciones/index.html',
 		                                         array('page_title' => 'Calificaciones'),
                                                  $request);
 	}
 	
-	public $aKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public $aKardex_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.cerrar_kardex'));
 	public function aKardex ($request, $match) {
 		$extra = array ('cal_activo' => $request->session->getData ('CAL_ACTIVO', ''));
 		
@@ -129,7 +129,7 @@ class Pato_Views_Calificaciones {
                                                  $request);
 	}
 	
-	public $levantarKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public $levantarKardex_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.levantar_kardex'));
 	public function levantarKardex ($request, $match) {
 		$extra = array ('cal_activo' => $request->session->getData ('CAL_ACTIVO', ''));
 		
@@ -157,7 +157,7 @@ class Pato_Views_Calificaciones {
                                                  $request);
 	}
 	
-	public $aKardexSelectivo_precond = array ('Gatuf_Precondition::adminRequired');
+	public $aKardexSelectivo_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.cerrar_kardex'));
 	public function aKardexSelectivo ($request, $match) {
 		$extra = array ('cal_activo' => $request->session->getData ('CAL_ACTIVO', ''));
 		
@@ -277,7 +277,7 @@ class Pato_Views_Calificaciones {
                                                  $request);
 	}
 	
-	public $correccionBuscar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $correccionBuscar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.corregir_kardex'));
 	public function correccionBuscar ($request, $match) {
 		$sql = new Gatuf_SQL ();
 		
@@ -315,7 +315,7 @@ class Pato_Views_Calificaciones {
                                                  $request);
 	}
 	
-	public $correccionKardex_precond = array ('Gatuf_Precondition::adminRequired');
+	public $correccionKardex_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.corregir_kardex'));
 	public function correccionKardex ($request, $match) {
 		$kardex = new Pato_Kardex ();
 		
