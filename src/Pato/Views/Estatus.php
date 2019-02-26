@@ -4,14 +4,14 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Estatus {
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/index.html',
 		                                         array('page_title' => 'Administración de estatus del Alumno'),
 		                                         $request);
 	}
 	
-	public $licenciaSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $licenciaSeleccionar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function licenciaSeleccionar ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
@@ -34,7 +34,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $licenciaEjecutar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $licenciaEjecutar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function licenciaEjecutar ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -131,7 +131,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaVoluntariaSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaVoluntariaSeleccionar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaVoluntariaSeleccionar ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
@@ -153,7 +153,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaVoluntariaEjecutar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaVoluntariaEjecutar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaVoluntariaEjecutar ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -255,7 +255,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $cambioCarrera_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambioCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function cambioCarrera ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
@@ -276,7 +276,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $cambioCarreraAlumno_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambioCarreraAlumno_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function cambioCarreraAlumno ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -365,7 +365,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaAcademica_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaAcademica_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaAcademica ($request, $match) {
 		/* Buscar todos los alumnos que tengan dos veces la misma materia reprobada */
 		$kardex = new Pato_Kardex ();
@@ -448,7 +448,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaAdministrativaSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaAdministrativaSeleccionar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaAdministrativaSeleccionar ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
@@ -469,7 +469,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaAdministrativaAlumno_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaAdministrativaAlumno_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaAdministrativaAlumno ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -537,7 +537,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaAdministrativaRegresarSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaAdministrativaRegresarSeleccionar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaAdministrativaRegresarSeleccionar ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
@@ -558,7 +558,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $bajaAdministrativaRegresar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $bajaAdministrativaRegresar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaAdministrativaRegresar ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -619,7 +619,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $recibirDocumentosSeleccionar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $recibirDocumentosSeleccionar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function recibirDocumentosSeleccionar ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_SeleccionarAlumno ($request->POST);
@@ -640,7 +640,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
-	public $recibirDocumentos_precond = array ('Gatuf_Precondition::adminRequired');
+	public $recibirDocumentos_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function recibirDocumentos ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -709,6 +709,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
+	public $recibirDocumentosReporte_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function recibirDocumentosReporte ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		
@@ -725,6 +726,7 @@ class Pato_Views_Estatus {
 		                                         $request);
 	}
 	
+	public $recibirDocumentosReportePDF_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function recibirDocumentosReportePDF ($request, $match) {
 		$alumno = new Pato_Alumno ();
 		

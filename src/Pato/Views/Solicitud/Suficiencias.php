@@ -12,15 +12,8 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	public $solicitudes_precond = array ('Gatuf_Precondition::loginRequired');
+	public $solicitudes_precond = array ('Pato_Precondition::alumnoRequired');
 	public function solicitudes ($request, $match) {
-		if ($request->user->type != 'a') {
-			$request->user->setMessage (3, 'Sólo los alumnos pueden solicitar suficiencias');
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Solicitud_Suficiencias::index');
-			
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
-		
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
@@ -46,13 +39,9 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	public $nueva_precond = array ('Gatuf_Precondition::loginRequired');
+	public $nueva_precond = array ('Pato_Precondition::alumnoRequired');
 	public function nueva ($request, $match) {
-		if ($request->user->type != 'a') {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$alumno = $request->user->extra;
+		$alumno = $request->user;
 		
 		$extra = array ('alumno' => $alumno);
 		
@@ -112,13 +101,9 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	public $actualizar_precond = array ('Gatuf_Precondition::loginRequired');
+	public $actualizar_precond = array ('Pato_Precondition::alumnoRequired');
 	public function actualizar ($request, $match) {
-		if ($request->user->type != 'a') {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$alumno = $request->user->extra;
+		$alumno = $request->user;
 		
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
@@ -185,13 +170,9 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	public $eliminar_precond = array ('Gatuf_Precondition::loginRequired');
+	public $eliminar_precond = array ('Pato_Precondition::alumnoRequired');
 	public function eliminar ($request, $match) {
-		if ($request->user->type != 'a') {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$alumno = $request->user->extra;
+		$alumno = $request->user;
 		
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
@@ -235,7 +216,7 @@ class Pato_Views_Solicitud_Suficiencias {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
-	public $revisarCarrera_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $revisarCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
 	public function revisarCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
@@ -277,15 +258,12 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	public $aprobarCarrera_precond = array ('Pato_Precondition::coordinadorRequired');
+	/* Pendiente, crear un nuevo permiso para aprobar suficiencias */
+	public $aprobarCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
 	public function aprobarCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
 		if ($carrera->get ($match[1]) === false) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
@@ -335,7 +313,7 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	public $crearNRCs_precond = array ('Gatuf_Precondition::adminRequired');
+	public $crearNRCs_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
 	public function crearNRCs ($request, $match) {
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');

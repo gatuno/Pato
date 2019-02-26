@@ -6,7 +6,7 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 class Pato_Views_Evaluacion_Profesor {
 	public $index_precond = array ('Gatuf_Precondition::loginRequired');
 	public function index ($request, $match) {
-		if ($request->user->type == 'a') {
+		if (get_class ($usuario) == 'Pato_Alumno') {
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Evaluacion_Profesor::listar_evals', $request->user->login);
 			
 			return new Gatuf_HTTP_Response_Redirect ($url);
@@ -17,7 +17,7 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $resultados_precond = array ('Gatuf_Precondition::loginRequired');
+	public $resultados_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.resultados_eval_profesores'));
 	public function resultados ($request, $match) {
 		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		$con_p = array ();
@@ -43,16 +43,14 @@ class Pato_Views_Evaluacion_Profesor {
 		
 		$maestro = new Pato_Maestro ();
 		foreach ($carreras as $c) {
-			if ($request->user->hasPerm ('Patricia.coordinador.'.$c->clave) || $request->user->hasPerm ('Patricia.resultados_eval_profesores')) {
-				$con_p[] = $c;
-				$maestros[$c->clave] = array ();
-				$respuesta_model->_a['views']['por_m']['where'] = sprintf ('A.carrera = %s', $s_model->_con->esc($c->clave));
-				$lista = $respuesta_model->getList (array ('view' => 'por_m'));
-				
-				foreach ($lista as $l) {
-					$maestro->get ($l->maestro);
-					$maestros[$c->clave][] = clone ($maestro);
-				}
+			$con_p[] = $c;
+			$maestros[$c->clave] = array ();
+			$respuesta_model->_a['views']['por_m']['where'] = sprintf ('A.carrera = %s', $s_model->_con->esc($c->clave));
+			$lista = $respuesta_model->getList (array ('view' => 'por_m'));
+			
+			foreach ($lista as $l) {
+				$maestro->get ($l->maestro);
+				$maestros[$c->clave][] = clone ($maestro);
 			}
 		}
 		
@@ -63,16 +61,12 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $resultadoMaestro_precond = array ('Gatuf_Precondition::loginRequired');
+	public $resultadoMaestro_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.resultados_eval_profesores'));
 	public function resultadoMaestro ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
 		if (false === ($carrera->get ($match[2]))) {
 			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave) && !$request->user->hasPerm ('Patricia.resultados_eval_profesores')) {
-			throw new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
 		$maestro = new Pato_Maestro ();
@@ -171,8 +165,9 @@ class Pato_Views_Evaluacion_Profesor {
                                                  $request);
 	}
 	
-	public $listar_evals_precond = array ('Gatuf_Precondition::loginRequired');
+	public $listar_evals_precond = array ('Pato_Precondition::alumnoRequired');
 	public function listar_evals ($request, $match) {
+		return new Gatuf_HTTP_Response ('Vista en remodelación');
 		$alumno = new Pato_Alumno ();
 		
 		if (false === ($alumno->get ($match[1]))) {
@@ -267,12 +262,8 @@ class Pato_Views_Evaluacion_Profesor {
 		return (count ($secciones) == $respuestas);
 	}
 	
-	public $evaluar_precond = array ('Gatuf_Precondition::loginRequired');
+	public $evaluar_precond = array ('Pato_Precondition::alumnoRequired');
 	public function evaluar ($request, $match) {
-		if ($request->user->type != 'a') {
-			return new Gatuf_HTTP_Response_Forbidden($request);
-		}
-		
 		$seccion = new Pato_Seccion ();
 		
 		if (false === ($seccion->get ($match[1]))) {

@@ -58,4 +58,17 @@ class Pato_Precondition {
 		
 		return new Gatuf_HTTP_Response_Forbidden ($request);
 	}
+	
+	static public function alumnoRequired ($request) {
+		$res = Gatuf_Precondition::loginRequired($request);
+		if (true !== $res) {
+			return $res;
+		}
+		
+		if (get_class ($request->user) == 'Pato_Alumno') {
+			return true;
+		}
+		
+		return new Gatuf_HTTP_Response_Forbidden ($request);
+	}
 }

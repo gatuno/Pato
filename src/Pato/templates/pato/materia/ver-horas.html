@@ -8,6 +8,7 @@
 	<p>Esta materia aún no tiene programadas horas clase.</p>
 {/if}
 <h2>Lista de secciones</h2>
-{if $user.administrator}<p>Puede <a href="{url 'Pato_Views_Seccion::agregarNrc', array (), array ('materia' => $materia.clave)}">agregar una nueva sección</a> a esta materia</p>{/if}
+{aperm 'add1', $user, 'Patricia.editar_secciones_vacio'}{aperm 'add2', $user, 'Patricia.admin_secciones'}
+{if $add1 || $add2}<p>Puede <a href="{url 'Pato_Views_Seccion::agregarNrc', array (), array ('materia' => $materia.clave)}">agregar una nueva sección</a> a esta materia</p>{/if}
 {$paginador.render}
 {/block}
