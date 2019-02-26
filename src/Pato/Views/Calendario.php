@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Calendario {
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function index ($request, $match) {
 		$calendarios = Gatuf::factory ('Pato_Calendario')->getList ();
 		
@@ -33,7 +33,7 @@ class Pato_Views_Calendario {
 		                                         $request);
 	}
 	
-	public $agregarCalendario_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarCalendario_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function agregarCalendario ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Calendario_Agregar ($request->POST);
@@ -56,6 +56,7 @@ class Pato_Views_Calendario {
 		                                         $request);
 	}
 	
+	public $cambiarCalendario_precond = array ('Gatuf_Precondition::loginRequired');
 	public function cambiarCalendario ($request, $match) {
 		if (!empty($request->REQUEST['_redirect_after'])) {
 			$success_url = $request->REQUEST['_redirect_after'];
@@ -77,7 +78,7 @@ class Pato_Views_Calendario {
 		return new Gatuf_HTTP_Response_Redirect ($success_url);
 	}
 	
-	public $ver_precond = array ('Gatuf_Precondition::adminRequired');
+	public $ver_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function ver ($request, $match) {
 		$calendario = new Pato_Calendario ();
 		
@@ -122,7 +123,7 @@ class Pato_Views_Calendario {
 		                                         $request);
 	}
 	
-	public $configurar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $configurar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function configurar ($request, $match) {
 		$calendario = new Pato_Calendario ();
 		
@@ -153,7 +154,7 @@ class Pato_Views_Calendario {
 		                                         $request);
 	}
 	
-	public $cambiarActual_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiarActual_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function cambiarActual ($request, $match) {
 		$calendario = new Pato_Calendario ();
 		
@@ -179,7 +180,7 @@ class Pato_Views_Calendario {
 		                                         $request);
 	}
 	
-	public $cambiarSiguiente_precond = array ('Gatuf_Precondition::adminRequired');
+	public $cambiarSiguiente_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function cambiarSiguiente ($request, $match) {
 		$calendario = new Pato_Calendario ();
 		

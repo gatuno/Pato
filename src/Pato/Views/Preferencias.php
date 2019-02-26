@@ -156,7 +156,7 @@ class Pato_Views_Preferencias {
 		                                         $request);
 	}
 	
-	public $terminosSuficiencias_precond = array ('Gatuf_Precondition::adminRequired');
+	public $terminosSuficiencias_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
 	public function terminosSuficiencias ($request, $match) {
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
@@ -185,7 +185,7 @@ class Pato_Views_Preferencias {
 		                                         $request);
 	}
 	
-	public $evalProf =array ('Gatuf_Precondition::adminRequired');
+	public $evalProf_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_evaluacion_profs'));
 	public function evalProf ($request, $match) {
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');

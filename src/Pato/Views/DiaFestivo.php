@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_DiaFestivo {
-	public $agregar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_calendario'));
 	public function agregar ($request, $match) {
 		$calendario = new Pato_Calendario ();
 		
