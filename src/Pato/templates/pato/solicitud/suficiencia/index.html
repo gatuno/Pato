@@ -4,10 +4,11 @@
 <p>Revise sus <a href="{url 'Pato_Views_Solicitud_Suficiencias::solicitudes'}">solicitudes de suficiencias o genere una nueva</a>. Es necesario ingresar con sus datos de alumno.</p>
 {/if}
 {aperm 'admin_suficiencias', $user, 'Patricia.admin_suficiencias'}
-{if $admin_suficiencias}
+{aperm 'auth_sufs', $user, 'Patricia.autorizar_suficiencias'}
+{if $admin_suficiencias || $auth_sufs}
 <p>Revisar la lista de solicitudes para:
 <ul>{foreach $carreras as $c}
-	{if $user.hasPerm ('Patricia.coordinador.'~$c.clave)}<li>Revisar para <a href="{url 'Pato_Views_Solicitud_Suficiencias::revisarCarrera', $c.clave}">{$c}</a></li>{/if}
+	<li>Revisar para <a href="{url 'Pato_Views_Solicitud_Suficiencias::revisarCarrera', $c.clave}">{$c}</a></li>
 {/foreach}</ul>
 {/if}
 {if $admin_suficiencias}<p><a href="{url 'Pato_Views_Solicitud_Suficiencias::crearNRCs'}">Crear NRCs de las solicitudes aprobadas</a></p>{/if}

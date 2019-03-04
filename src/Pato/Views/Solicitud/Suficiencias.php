@@ -4,6 +4,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Pato_Views_Solicitud_Suficiencias {
+	public $index_precond = array ('Gatuf_Precondition::loginRequired');
 	public function index ($request, $match) {
 		$carreras = Gatuf::factory ('Pato_Carrera')->getList ();
 		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/index.html',
@@ -216,15 +217,11 @@ class Pato_Views_Solicitud_Suficiencias {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
-	public $revisarCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
+	public $revisarCarrera_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.admin_suficiencias', 'Patricia.autorizar_suficiencias')));
 	public function revisarCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		
 		if ($carrera->get ($match[1]) === false) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		if (!$request->user->hasPerm ('Patricia.coordinador.'.$carrera->clave)) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
@@ -259,7 +256,7 @@ class Pato_Views_Solicitud_Suficiencias {
 	}
 	
 	/* Pendiente, crear un nuevo permiso para aprobar suficiencias */
-	public $aprobarCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
+	public $aprobarCarrera_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.admin_suficiencias', 'Patricia.autorizar_suficiencias')));
 	public function aprobarCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
 		

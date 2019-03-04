@@ -3,7 +3,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Admision_Views_Convocatoria {
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_convocatoria'));
 	public function index ($request, $match) {
 		/* Listar todas las convocatorias */
 		$convocatorias = Gatuf::factory ('Admision_Convocatoria')->getList ();
@@ -14,7 +14,7 @@ class Admision_Views_Convocatoria {
                                                  $request);
 	}
 	
-	public $agregar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_convocatoria'));
 	public function agregar ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Admision_Form_Convocatoria_Agregar ($request->POST);
@@ -35,7 +35,7 @@ class Admision_Views_Convocatoria {
                                                  $request);
 	}
 	
-	public $ver_precond = array ('Gatuf_Precondition::adminRequired');
+	public $ver_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_convocatoria'));
 	public function ver ($request, $match) {
 		$convocatoria = new Admision_Convocatoria ();
 		
@@ -44,15 +44,17 @@ class Admision_Views_Convocatoria {
 		}
 		
 		$cupos = $convocatoria->get_admision_cupocarrera_list ();
+		$carreras = Gatuf::factory ('Pato_Carrera')->getList (array ('count' => true));
 		
 		return Gatuf_Shortcuts_RenderToResponse ('admision/convocatoria/ver.html',
 		                                         array('page_title' => 'Convocatoria '.$convocatoria->descripcion,
 		                                               'convocatoria' => $convocatoria,
-		                                               'cupos' => $cupos),
+		                                               'cupos' => $cupos,
+		                                               'carreras' => $carreras),
                                                  $request);
 	}
 	
-	public $agregarCupo_precond = array ('Gatuf_Precondition::adminRequired');
+	public $agregarCupo_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_convocatoria'));
 	public function agregarCupo ($request, $match) {
 		$convocatoria = new Admision_Convocatoria ();
 		
@@ -67,7 +69,7 @@ class Admision_Views_Convocatoria {
 			$request->user->setMessage (2, 'No se pueden agregar más carreras a la convocatoria, ya fueron agregadas todas');
 			
 			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Convocatoria::ver', $convocatoria->id);
-			return Gatuf_HTTP_Response_Redirect ($url);
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		$extra = array ('convocatoria' => $convocatoria);

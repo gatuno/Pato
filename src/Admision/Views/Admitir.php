@@ -3,7 +3,7 @@ Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 
 class Admision_Views_Admitir {
-	public $index_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admitir_aspirantes'));
 	public function index ($request, $match) {
 		/* Elegir una convocatoria */
 		$convocatorias = Gatuf::factory ('Admision_Convocatoria')->getList ();
@@ -14,7 +14,7 @@ class Admision_Views_Admitir {
                                                  $request);
 	}
 	
-	public $admitir_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $admitir_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admitir_aspirantes'));
 	public function admitir ($request, $match) {
 		$convocatoria = new Admision_Convocatoria ();
 		
@@ -22,12 +22,7 @@ class Admision_Views_Admitir {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
-		$cupos = array ();
-		foreach ($convocatoria->get_admision_cupocarrera_list () as $cupo) {
-			if ($request->user->hasPerm ('Patricia.coordinador.'.$cupo->carrera)) {
-				$cupos[] = $cupo;
-			}
-		}
+		$cupos = $convocatoria->get_admision_cupocarrera_list ();
 		
 		return Gatuf_Shortcuts_RenderToResponse ('admision/admitir/carrera.html',
 		                                         array('page_title' => 'Admitir alumnos para la convocatoria '.$convocatoria->descripcion,
@@ -36,16 +31,12 @@ class Admision_Views_Admitir {
                                                  $request);
 	}
 	
-	public $admitirCarrera_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $admitirCarrera_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admitir_aspirantes'));
 	public function admitirCarrera ($request, $match) {
 		$cupo_carrera = new Admision_CupoCarrera ();
 		
 		if (false === ($cupo_carrera->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		if (!$request->user->hasPerm ('Patricia.coordinador.'.$cupo_carrera->carrera)) {
-			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
 		if ($cupo_carrera->procesada == true) {
@@ -65,7 +56,7 @@ class Admision_Views_Admitir {
 			if ($form->isValid ()) {
 				$form->save ();
 				
-				Gatuf_Log::info (sprintf ('El usuario %s admitió alumnos de la carrera %s', $request->user->codigo, $cupo_carrera->carrera));
+				Gatuf_Log::info (sprintf ('El usuario %s admitió alumnos de la carrera %s en la convocatoria %s', $request->user->codigo, $cupo_carrera->carrera, $cupo_carrera->convocatoria));
 				$request->user->setMessage (1, 'Sus selecciones han sido guardadas');
 				
 				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Admitir::admitir', $cupo_carrera->convocatoria);
@@ -84,18 +75,12 @@ class Admision_Views_Admitir {
                                                  $request);
 	}
 	
-	public $verAspirante_precond = array ('Pato_Precondition::coordinadorRequired');
+	public $verAspirante_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admitir_aspirantes'));
 	public function verAspirante ($request, $match) {
 		$aspirante = new Admision_Aspirante ();
 		
 		if (false === ($aspirante->get ($match[1]))) {
 			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$cupo_carrera = $aspirante->get_aspiracion ();
-		
-		if (!$request->user->hasPerm ('Patricia.coordinador.'.$cupo_carrera->carrera)) {
-			return new Gatuf_HTTP_Response_Forbidden ($request);
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('admision/admitir/ver_popup.html',
@@ -106,6 +91,7 @@ class Admision_Views_Admitir {
 	
 	public $procesar_precond = array ('Gatuf_Precondition::adminRequired');
 	public function procesar ($request, $match) {
+		return new Gatuf_HTTP_Response ('Vista en revisión');
 		$cupo_carrera = new Admision_CupoCarrera ();
 		
 		if (false === ($cupo_carrera->get ($match[1]))) {

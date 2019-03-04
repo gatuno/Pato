@@ -1,6 +1,5 @@
 {extends 'admision/base.html'}
 {block body}
-<p>¡Empiece a admitir alumnos! ¡Hoy! ¡Hoy! ¡Hoy! Nunca son suficientes alumnos</p>
 <p>Por favor seleccione un proceso de admisión:</p>
 <ul>{foreach $convocatorias as $conv}
 	<li><a href="{url 'Admision_Views_Admitir::admitir', $conv.id}">{$conv.descripcion}</a></li>

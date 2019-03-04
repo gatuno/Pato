@@ -6,6 +6,7 @@ function Admision_Migrations_Install_setup ($params=null) {
 	                 'Admision_Estadistica',
 	                 'Admision_Convocatoria',
 	                 'Admision_CupoCarrera',
+	                 'Admision_Documento',
 	                 );
 	
 	$db = Admision_DB_getDB ();
@@ -26,6 +27,7 @@ function Admision_Migrations_Install_teardown ($params=null) {
 	                 'Admision_Estadistica',
 	                 'Admision_Convocatoria',
 	                 'Admision_CupoCarrera',
+	                 'Admision_Documento',
 	                 );
 	
 	$db = Admision_DB_getDB ();

@@ -482,11 +482,11 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 	}
 	
 	public function clean_nombre () {
-		return mb_convert_case ($this->cleaned_data['nombre'], MB_CASE_TITLE);
+		return trim (mb_convert_case ($this->cleaned_data['nombre'], MB_CASE_TITLE));
 	}
 	
 	public function clean_apellido () {
-		return mb_convert_case ($this->cleaned_data['apellido'], MB_CASE_TITLE);
+		return trim (mb_convert_case ($this->cleaned_data['apellido'], MB_CASE_TITLE));
 	}
 	
 	public function clean_curp () {

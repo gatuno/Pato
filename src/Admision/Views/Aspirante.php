@@ -104,7 +104,7 @@ class Admision_Views_Aspirante {
                                                  $request);
 	}
 	
-	public $index_precond = array ('Gatuf_Precondition::adminRequired');
+	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
 	public function index ($request, $match) {
 		if ($request->method == 'POST') {
 			$form = new Admision_Form_Aspirante_Seleccionar ($request->POST);
@@ -112,7 +112,7 @@ class Admision_Views_Aspirante {
 			if ($form->isValid ()) {
 				$aspirante = $form->save ();
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::editar', $aspirante->id);
 				
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
@@ -125,7 +125,7 @@ class Admision_Views_Aspirante {
                                                  $request);
 	}
 	
-	public $buscarJSON_precond = array ('Gatuf_Precondition::adminRequired');
+	public $buscarJSON_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
 	public function buscarJSON ($request, $match) {
 		if (!isset ($request->GET['term'])) {
 			return new Gatuf_HTTP_Response_Json (array ());
@@ -152,7 +152,7 @@ class Admision_Views_Aspirante {
 		$logged = $request->session->getData ('aspirante_id', null);
 		
 		if ($logged !== null) {
-			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $logged);
+			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::dashboard');
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
@@ -164,7 +164,7 @@ class Admision_Views_Aspirante {
 				
 				$request->session->setData ('aspirante_id', $aspirante->id);
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::dashboard');
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
@@ -184,23 +184,14 @@ class Admision_Views_Aspirante {
 		return new Gatuf_HTTP_Response_Redirect ($url);
 	}
 	
-	public function ver ($request, $match) {
+	public function dashboard ($request, $match) {
 		$logged = $request->session->getData ('aspirante_id', null);
 		
 		$aspirante = new Admision_Aspirante ();
 		
-		if (false === ($aspirante->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		if (!$request->user->administrator && $logged === null) {
-			/* Redirigir al login */
-			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::continuar');
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
-		
-		if (!$request->user->administrator && $logged != $aspirante->id) {
-			/* No estás logueado con la cuenta correcta */
+		if (false === ($aspirante->get ($logged))) {
+			$request->session->setdata ('aspirante_id');
+			
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
@@ -210,53 +201,14 @@ class Admision_Views_Aspirante {
 		                                         $request);
 	}
 	
-	public $subirFoto_precond = array ('Gatuf_Precondition::adminRequired');
-	public function subirFoto ($request, $match) {
-		$aspirante = new Admision_Aspirante ();
-		
-		if (false === ($aspirante->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		$extra = array ('aspirante' => $aspirante);
-		
-		if ($request->method == 'POST') {
-			$form = new Admision_Form_Aspirante_SubirFoto (array_merge ($request->POST, $request->FILES), $extra);
-			
-			if ($form->isValid ()) {
-				$aspirante = $form->save ();
-				
-				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
-				return new Gatuf_HTTP_Response_Redirect ($url);
-			}
-		} else {
-			$form = new Admision_Form_Aspirante_SubirFoto (null, $extra);
-		}
-		
-		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/subir-foto.html',
-		                                         array ('page_title' => 'Subir foto',
-		                                                'form' => $form,
-		                                                'aspirante' => $aspirante),
-		                                         $request);
-	}
-	
-	public function verFotoMiniatura ($request, $match) {
+	public function dashboardFotoMiniatura ($request, $match) {
 		$logged = $request->session->getData ('aspirante_id', null);
 		
 		$aspirante = new Admision_Aspirante ();
 		
-		if (false === ($aspirante->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		if (!$request->user->administrator && !$request->user->isCoord() && $logged === null) {
-			/* Redirigir al login */
-			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::continuar');
-			return new Gatuf_HTTP_Response_Redirect ($url);
-		}
-		
-		if (!$request->user->administrator && !$request->user->isCoord() && $logged != $aspirante->id) {
-			/* No estás logueado con la cuenta correcta */
+		if (false === ($aspirante->get ($logged))) {
+			$request->session->setdata ('aspirante_id');
+			
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
@@ -282,7 +234,81 @@ class Admision_Views_Aspirante {
 		return new Gatuf_HTTP_Response_File ($thumbnail_filename, $name, $info[0], false);
 	}
 	
-	public $registrarPago_precond = array ('Gatuf_Precondition::adminRequired');
+	public $editar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
+	public function editar ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/editar.html',
+		                                         array ('page_title' => 'Aspirante',
+		                                                'aspirante' => $aspirante),
+		                                         $request);
+	}
+	
+	public $subirFoto_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
+	public function subirFoto ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$extra = array ('aspirante' => $aspirante);
+		
+		if ($request->method == 'POST') {
+			$form = new Admision_Form_Aspirante_SubirFoto (array_merge ($request->POST, $request->FILES), $extra);
+			
+			if ($form->isValid ()) {
+				$aspirante = $form->save ();
+				
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::editar', $aspirante->id);
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Admision_Form_Aspirante_SubirFoto (null, $extra);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('admision/aspirante/subir-foto.html',
+		                                         array ('page_title' => 'Subir foto',
+		                                                'form' => $form,
+		                                                'aspirante' => $aspirante),
+		                                         $request);
+	}
+	
+	public $verFotoMiniatura_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
+	public function verFotoMiniatura ($request, $match) {
+		$aspirante = new Admision_Aspirante ();
+		
+		if (false === ($aspirante->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$miniaturas_dir = Gatuf::config ('admision_data_upload').'/thumbnails';
+		if (!is_dir($miniaturas_dir)) {
+			if (false == @mkdir($miniaturas_dir, 0777, true)) {
+		        throw new Gatuf_Form_Invalid('An error occured when creating the thumbnails folder path.');
+		    }
+		}
+		
+		$thumbnail = new Gatuf_Image_Thumbnail ($miniaturas_dir, Gatuf::config ('admision_data_upload').'/'.$aspirante->foto);
+		$thumbnail->size = array (128, 128);
+		
+		if (!$thumbnail->exists()) {
+			$thumbnail_filename = $thumbnail->generate();
+		} else {
+			$thumbnail_filename = $thumbnail->getPath();
+		}
+		
+		$name = $thumbnail->getName ();
+		$info = Gatuf_FileUtil::getMimeType ($thumbnail_filename);
+		
+		return new Gatuf_HTTP_Response_File ($thumbnail_filename, $name, $info[0], false);
+	}
+	
+	public $registrarPago_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
 	public function registrarPago ($request, $match) {
 		$aspirante = new Admision_Aspirante ();
 		
@@ -293,7 +319,7 @@ class Admision_Views_Aspirante {
 		if ($aspirante->pago !== null) {
 			$request->user->setMessage (3, 'Este aspirante ya tiene su pago registrado');
 			
-			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+			$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::editar', $aspirante->id);
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
@@ -308,7 +334,7 @@ class Admision_Views_Aspirante {
 				
 				$request->user->setMessage (1, 'Pago del aspirante registrado');
 				
-				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::editar', $aspirante->id);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {
@@ -322,7 +348,7 @@ class Admision_Views_Aspirante {
 		                                         $request);
 	}
 	
-	public $imprimir_precond = array ('Gatuf_Precondition::adminRequired');
+	public $imprimir_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
 	public function imprimir ($request, $match) {
 		$aspirante = new Admision_Aspirante ();
 		
@@ -359,7 +385,7 @@ class Admision_Views_Aspirante {
 		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
 	}
 	
-	public $actualizar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $actualizar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admin_aspirantes'));
 	public function actualizar ($request, $match) {
 		$aspirante = new Admision_Aspirante ();
 		
@@ -377,7 +403,7 @@ class Admision_Views_Aspirante {
 				
 				$request->user->setMessage (1, 'Datos actualizados');
 				Gatuf_Log::info (sprintf ('El usuario %s actualizó la información del aspirante %s', $request->user->codigo, $aspirante->id));
-				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::ver', $aspirante->id);
+				$url = Gatuf_HTTP_URL_urlForView ('Admision_Views_Aspirante::editar', $aspirante->id);
 				return new Gatuf_HTTP_Response_Redirect ($url);
 			}
 		} else {

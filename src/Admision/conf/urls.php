@@ -14,7 +14,7 @@ $ctl_ad[] = array (
 $ctl_ad[] = array (
 	'regex' => '#^/$#',
 	'base' => $base,
-	'model' => 'Admision_Views',
+	'model' => 'Admision_Views_Index',
 	'method' => 'index',
 );
 
@@ -89,10 +89,24 @@ $ctl_ad[] = array (
 );
 
 $ctl_ad[] = array (
+	'regex' => '#^/aspirante/dashboard/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'dashboard',
+);
+
+$ctl_ad[] = array (
+	'regex' => '#^/aspirante/dashboard/foto/miniatura/$#',
+	'base' => $base,
+	'model' => 'Admision_Views_Aspirante',
+	'method' => 'dashboardFotoMiniatura',
+);
+
+$ctl_ad[] = array (
 	'regex' => '#^/aspirante/(\d+)/$#',
 	'base' => $base,
 	'model' => 'Admision_Views_Aspirante',
-	'method' => 'ver',
+	'method' => 'editar',
 );
 
 $ctl_ad[] = array (

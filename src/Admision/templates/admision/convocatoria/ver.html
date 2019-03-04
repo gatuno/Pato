@@ -4,7 +4,7 @@
 <p>Fecha de apertura: {$convocatoria.apertura|date:"%d/%m/%Y %H:%M"}</p>
 <p>Fecha de cierre: {$convocatoria.cierre|date:"%d/%m/%Y %H:%M"}</p>
 <p>Cupos disponibles para esta convocatoria:</p>
-<a href="{url 'Admision_Views_Convocatoria::agregarCupo', $convocatoria.id}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nueva carrera" />Agregar una nueva carrera</a>
+{if $carreras != count ($cupos)}<a href="{url 'Admision_Views_Convocatoria::agregarCupo', $convocatoria.id}"><img class="icon" src="{media '/img/list-add.png'}" alt="Nueva carrera" />Agregar una nueva carrera</a>{/if}
 <ul>{foreach $cupos as $cupo}
 	<li>{$cupo.get_carrera}, cupos: {$cupo.cupo}</li>
 {/foreach}</ul>
