@@ -24,32 +24,13 @@ class Pato_Middleware_Aviso {
 			return false;
 		}
 		
-		if ($request->user->type == 'a') {
-			$filter = 'alumno=1';
-		} else if ($request->user->type == 'm') {
-			$filter = 'maestro=1';
-		}
-		$avisos = Gatuf::factory ('Pato_Aviso')->getList (array ('filter' => $filter));
-		$leidos = $request->user->get_avisos_list (array ('filter' => $filter));
+		$avisos = $request->user->get_avisos_list ();
 		
-		if (count ($avisos) != count ($leidos)) {
+		if (count ($avisos) > 0) {
 			/* Hay un aviso pendiente por leer, obligarlo a leerlo */
-			foreach ($avisos as $aviso) {
-				$leido = false;
-				foreach ($leidos as $l) {
-					if ($l->id == $aviso->id) {
-						$leido = true;
-						break;
-					}
-				}
-				
-				if (!$leido) {
-					/* Redirigir */
-					$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Aviso::leer', array ($aviso->id), array ('_redirect_after' => $request->uri));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Aviso::leer', array ($avisos[0]->id), array ('_redirect_after' => $request->uri));
 			
-					return new Gatuf_HTTP_Response_Redirect ($url);
-				}
-			}
+			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
 		return false;

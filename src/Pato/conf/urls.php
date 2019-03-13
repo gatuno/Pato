@@ -34,7 +34,6 @@ $ctl[] = array (
 	'method' => 'logout',
 );
 
-/* Avisos FIXME */
 $ctl[] = array (
 	'regex' => '#^/aviso/(\d+)/$#',
 	'base' => $base,

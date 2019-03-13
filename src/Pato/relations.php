@@ -19,7 +19,6 @@ $m['Pato_Evaluacion_Respuesta'] = array ('relate_to' => array ('Pato_Alumno', 'P
 $m['Pato_Solicitud_Suficiencia'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_Materia', 'Pato_Maestro'));
 $m['Pato_PerfilAlumno'] = array ('relate_to' => array ('Pato_Alumno'));
 
-//$m['Pato_Log_Estatus'] = array ('relate_to' => array ('Pato_Alumno', 'Pato_User', 'Pato_Estatus', 'Pato_Calendario'));
 $m['Pato_InscripcionEstatus'] = array ('relate_to' => array ('Pato_Inscripcion', 'Pato_Estatus'));
 $m['Pato_Log_Kardex'] = array ('relate_to' => array ('Pato_Kardex', 'Pato_Maestro'));
 
@@ -27,7 +26,7 @@ $m['Pato_Planeacion_Unidad'] = array ('relate_to' => array ('Pato_Materia', 'Pat
 $m['Pato_Planeacion_Tema'] = array ('relate_to' => array ('Pato_Planeacion_Unidad'));
 $m['Pato_Planeacion_Seguimiento'] = array ('relate_to' => array ('Pato_Planeacion_Tema', 'Pato_Seccion'));
 
-//$m['Pato_Aviso'] = array ('relate_to_many' => array ('Pato_User'));
+$m['Pato_Aviso'] = array ('relate_to_many' => array ('Pato_Alumno', 'Pato_Maestro'));
 
 $m['Pato_MessageA'] = array ('relate_to' => array ('Pato_Alumno'));
 

@@ -1,10 +1,10 @@
 {extends 'pato/base.html'}
 {block body}
-<h2>{$aviso.titulo}</h2>
-<div>{$aviso.texto|safe}</div>
+<h2>{$titulo}</h2>
+<div>{$texto|safe}</div>
 <br />
 <form action="." method="post">
 <input type="hidden" name="_redirect_after" value="{$_redirect_after}" />
-<input type="submit" value="Enterado, continuar a Patricia" />
+<input type="submit" value="Continuar a Patricia" />
 </form>
 {/block}

@@ -15,33 +15,29 @@ class Pato_Aviso extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Sequence',
 			       'blank' => true,
 			),
-			'maestro' =>
-			array (
-			       'type' => 'Gatuf_DB_Field_Boolean',
-			       'blank' => false,
-			       'default' => false,
-			),
-			'alumno' =>
-			array (
-			       'type' => 'Gatuf_DB_Field_Boolean',
-			       'blank' => false,
-			       'default' => false,
-			),
-			'titulo' =>
+			'klass' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Varchar',
 			       'blank' => false,
 			       'size' => 300,
 			),
-			'texto' =>
+			'data' =>
 			array (
-			       'type' => 'Gatuf_DB_Field_Text',
+			       'type' => 'Gatuf_DB_Field_Serialized',
 			       'blank' => false,
 			),
-			'usuarios' =>
+			'alumnos' =>
 			array (
 			       'type' => 'Gatuf_DB_Field_Manytomany',
-			       'model' => 'Pato_User',
+			       'blank' => false,
+			       'model' => 'Pato_Alumno',
+			       'relate_name' => 'avisos',
+			),
+			'maestros' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Manytomany',
+			       'blank' => false,
+			       'model' => 'Pato_Maestro',
 			       'relate_name' => 'avisos',
 			),
 		);
