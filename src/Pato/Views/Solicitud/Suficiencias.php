@@ -15,19 +15,22 @@ class Pato_Views_Solicitud_Suficiencias {
 	
 	public $solicitudes_precond = array ('Pato_Precondition::alumnoRequired');
 	public function solicitudes ($request, $match) {
+		/* Cambiar al calendario siguiente */
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
-		/* Cambiar al calendario siguiente */
 		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
 		
-		$alumno = $request->user->extra;
+		$gconf = new Pato_Calendario_GSettings ();
+		$gconf->setApp ('Patricia');
+		
+		$alumno = $request->user;
 		
 		/* Recuperar su lista de solicitudes */
 		$solicitudes = $alumno->get_pato_solicitud_suficiencia_list ();
 		
-		$abierto = $gconf->getVal ('suficiencias_abierta_'.$sig_calendario->clave, false);
+		$abierto = $gconf->getVal ('solicitar_suficiencias', false);
 		
 		$ins = $alumno->get_current_inscripcion ();
 		if ($ins == null) $abierto = false;
@@ -42,18 +45,20 @@ class Pato_Views_Solicitud_Suficiencias {
 	
 	public $nueva_precond = array ('Pato_Precondition::alumnoRequired');
 	public function nueva ($request, $match) {
+		/* Cambiar al calendario siguiente */
+		$gconf = new Gatuf_GSetting ();
+		$gconf->setApp ('Patricia');
+		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
+		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
+		
 		$alumno = $request->user;
 		
 		$extra = array ('alumno' => $alumno);
 		
-		$gconf = new Gatuf_GSetting ();
+		$gconf = new Pato_Calendario_GSettings ();
 		$gconf->setApp ('Patricia');
 		
-		/* Cambiar al calendario siguiente */
-		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
-		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
-		
-		$abierto = $gconf->getVal ('suficiencias_abierta_'.$sig_calendario->clave, false);
+		$abierto = $gconf->getVal ('solicitar_suficiencias', false);
 		
 		if (!$abierto) {
 			$request->user->setMessage (3, 'El periodo para solicitar suficiencias está cerrado');
@@ -86,11 +91,6 @@ class Pato_Views_Solicitud_Suficiencias {
 			$form = new Pato_Form_Solicitud_Suficiencia_Agregar (null, $extra);
 		}
 		
-		//$context = new Gatuf_Template_Context(array());
-		//$tmpl = new Gatuf_Template('pato/solicitud/suficiencia/terminos.html');
-		//$terms = Gatuf_Template::markSafe($tmpl->render($context));
-		$gconf = new Gatuf_GSetting ();
-		$gconf->setApp ('Patricia');
 		$terms = Gatuf_Template::markSafe ($gconf->getVal ('terminos_suficiencias', '<p>Texto pendiente</p>'));
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/agregar.html',
@@ -104,16 +104,18 @@ class Pato_Views_Solicitud_Suficiencias {
 	
 	public $actualizar_precond = array ('Pato_Precondition::alumnoRequired');
 	public function actualizar ($request, $match) {
-		$alumno = $request->user;
-		
+		/* Cambiar al calendario siguiente */
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
-		
-		/* Cambiar al calendario siguiente */
 		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
 		
-		$abierto = $gconf->getVal ('suficiencias_abierta_'.$sig_calendario->clave, false);
+		$alumno = $request->user;
+		
+		$gconf = new Pato_Calendario_GSettings ();
+		$gconf->setApp ('Patricia');
+		
+		$abierto = $gconf->getVal ('solicitar_suficiencias', false);
 		
 		$suficiencia = new Pato_Solicitud_Suficiencia ();
 		
@@ -157,9 +159,7 @@ class Pato_Views_Solicitud_Suficiencias {
 			$form = new Pato_Form_Solicitud_Suficiencia_Actualizar (null, $extra);
 		}
 		
-		$context = new Gatuf_Template_Context(array());
-		$tmpl = new Gatuf_Template('pato/solicitud/suficiencia/terminos.html');
-		$terms = Gatuf_Template::markSafe($tmpl->render($context));
+		$terms = Gatuf_Template::markSafe ($gconf->getVal ('terminos_suficiencias', '<p>Texto pendiente</p>'));
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/solicitud/suficiencia/actualizar.html',
 		                                         array ('page_title' => 'Actualizar solicitud de suficiencia',
@@ -173,16 +173,18 @@ class Pato_Views_Solicitud_Suficiencias {
 	
 	public $eliminar_precond = array ('Pato_Precondition::alumnoRequired');
 	public function eliminar ($request, $match) {
-		$alumno = $request->user;
-		
+		/* Cambiar al calendario siguiente */
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
-		
-		/* Cambiar al calendario siguiente */
 		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
 		
-		$abierto = $gconf->getVal ('suficiencias_abierta_'.$sig_calendario->clave, false);
+		$alumno = $request->user;
+		
+		$gconf = new Pato_Calendario_GSettings ();
+		$gconf->setApp ('Patricia');
+		
+		$abierto = $gconf->getVal ('solicitar_suficiencias', false);
 		
 		$suficiencia = new Pato_Solicitud_Suficiencia ();
 		
@@ -219,18 +221,18 @@ class Pato_Views_Solicitud_Suficiencias {
 	
 	public $revisarCarrera_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.admin_suficiencias', 'Patricia.autorizar_suficiencias')));
 	public function revisarCarrera ($request, $match) {
-		$carrera = new Pato_Carrera ();
-		
-		if ($carrera->get ($match[1]) === false) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
 		/* Cambiar al calendario siguiente */
 		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
+		
+		$carrera = new Pato_Carrera ();
+		
+		if ($carrera->get ($match[1]) === false) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
 		
 		/* Empezar por listar todas las solicitudes */
 		$todas = Gatuf::factory ('Pato_Solicitud_Suficiencia')->getList ();
@@ -255,7 +257,6 @@ class Pato_Views_Solicitud_Suficiencias {
 		                                         $request);
 	}
 	
-	/* Pendiente, crear un nuevo permiso para aprobar suficiencias */
 	public $aprobarCarrera_precond = array (array ('Pato_Precondition::hasAnyPerm', array ('Patricia.admin_suficiencias', 'Patricia.autorizar_suficiencias')));
 	public function aprobarCarrera ($request, $match) {
 		$carrera = new Pato_Carrera ();
@@ -264,10 +265,9 @@ class Pato_Views_Solicitud_Suficiencias {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		/* Cambiar al calendario siguiente */
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
-		
-		/* Cambiar al calendario siguiente */
 		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
 		
@@ -312,10 +312,9 @@ class Pato_Views_Solicitud_Suficiencias {
 	
 	public $crearNRCs_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_suficiencias'));
 	public function crearNRCs ($request, $match) {
+		/* Cambiar al calendario siguiente */
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
-		
-		/* Cambiar al calendario siguiente */
 		$sig_calendario = new Pato_Calendario ($gconf->getVal ('calendario_siguiente'));
 		$GLOBALS['CAL_ACTIVO'] = $sig_calendario->clave;
 		

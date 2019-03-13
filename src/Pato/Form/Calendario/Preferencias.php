@@ -1,14 +1,11 @@
 <?php
 
 class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
-	private $cal;
 	public function initFields ($extra = array ()) {
-		$this->cal = $extra['cal'];
-		
-		$gconf = new Gatuf_GSetting ();
+		$gconf = new Pato_Calendario_GSettings ();
 		$gconf->setApp ('Patricia');
 		
-		$abierto = $gconf->getVal ('suficiencias_abierta_'.$this->cal->clave, false);
+		$abierto = $gconf->getVal ('solicitar_suficiencias', false);
 		
 		$this->fields['suficiencias'] = new Gatuf_Form_Field_Boolean (
 			array (
@@ -20,7 +17,7 @@ class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
 	}
 	
 	public function save ($commit = true) {
-		$gconf = new Gatuf_GSetting ();
+		$gconf = new Pato_Calendario_GSettings ();
 		$gconf->setApp ('Patricia');
 		
 		if ($this->cleaned_data['suficiencias']) {
@@ -28,6 +25,6 @@ class Pato_Form_Calendario_Preferencias extends Gatuf_Form {
 		} else {
 			$sufi = false;
 		}
-		$gconf->setVal ('suficiencias_abierta_'.$this->cal->clave, $sufi);
+		$gconf->setVal ('solicitar_suficiencias', $sufi);
 	}
 }

@@ -109,8 +109,12 @@ class Pato_Views_Calendario {
 		$hoy = date("Y-m-d");
 		
 		/* Mostrar algunas de sus configuraciones */
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		$gconf = new Pato_Calendario_GSettings ();
+		$gconf->setApp ('Patricia');
+		
 		$configs = array ();
-		$configs['suficiencias'] = $gconf->getVal ('suficiencias_abierta_'.$calendario->clave, false);
+		$configs['suficiencias'] = $gconf->getVal ('solicitar_suficiencias', false);
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/calendario/ver.html',
 		                                         array ('page_title' => 'Calendario '.$calendario->descripcion,
@@ -130,6 +134,8 @@ class Pato_Views_Calendario {
 		if (false === $calendario->get ($match[1])) {
 			throw new Gatuf_HTTP_Error404 ();
 		}
+		
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
 		
 		if ($request->method == 'POST') {
 			$form = new Pato_Form_Calendario_Preferencias ($request->POST, array ('cal' => $calendario));

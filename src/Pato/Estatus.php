@@ -26,6 +26,12 @@ class Pato_Estatus extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Boolean',
 			       'blank' => false,
 			       'default' => true,
+			),
+			'oculto' => /* Si este estatus se considera oculto */
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'blank' => false,
+			       'default' => false,
 			)
 		);
 	}
