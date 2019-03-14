@@ -277,18 +277,6 @@ $ctl[] = array(
 			'method' => 'registroEliminar',
 		),
 		array (
-			'regex' => '#^(\w\d{7})/evaluacion/profesores/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Evaluacion_Profesor',
-			'method' => 'listar_evals',
-		),
-		array (
-			'regex' => '#^evaluar/(\d+)/$#',
-			'base' => $base,
-			'model' => 'Pato_Views_Evaluacion_Profesor',
-			'method' => 'evaluar',
-		),
-		array (
 			'regex' => '#^(\w\d{7})/kardex/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',
@@ -1172,25 +1160,31 @@ $ctl[] = array (
 	'method' => 'recibirDocumentosReportePDF',
 );
 
-$ctl[] = array (
+/* Pendiente estos dos */
+$ctl[] = array(
 	'regex' => '#^/evaluacion/profesores/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Evaluacion_Profesor',
 	'method' => 'index',
 );
 
-$ctl[] = array (
-	'regex' => '#^/evaluacion/profesores/resultados/$#',
+$ctl[] = array(
+	'regex' => '#^/evaluacion/profesores/#',
 	'base' => $base,
-	'model' => 'Pato_Views_Evaluacion_Profesor',
-	'method' => 'resultados',
-);
-
-$ctl[] = array (
-	'regex' => '#^/evaluacion/profesores/resultados/(\d+)/([A-Za-z]{2,5})/$#',
-	'base' => $base,
-	'model' => 'Pato_Views_Evaluacion_Profesor',
-	'method' => 'resultadoMaestro',
+	'sub' => array (
+		array (
+			'regex' => '#^evaluar/(\d+)/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Evaluacion_Profesor',
+			'method' => 'evaluar',
+		),
+		array (
+			'regex' => '#^resultados/(\d+)/([A-Za-z]{2,5})/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Evaluacion_Profesor',
+			'method' => 'resultadoMaestro',
+		),
+	),
 );
 
 $ctl[] = array(
