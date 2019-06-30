@@ -8,8 +8,8 @@
 <thead><tr><th>Hora inicio</th><th>Hora fin</th><th>Días</th><th>Edificio</th><th>Aula</th></tr></thead>
 <tbody>
 <tr>
-<td>{$horario.inicio}</td>
-<td>{$horario.fin}</td>
+<td>{$horario.inicio|time:'H:i'}</td>
+<td>{$horario.fin|time:'H:i'}</td>
 <td>{$horario.displayDias()}</td>
 <td><a href="{url 'Pato_Views_Edificio::verEdificio', array ($salon.edificio)}">{$salon.edificio}</a></td>
 <td><a href="{url 'Pato_Views_Edificio::verEdificio', array ($salon.edificio)}{'#salon_'~$salon.id}">{$salon.aula}</a></td>

@@ -59,10 +59,11 @@ class Pato_Views_Maestro {
 		}
 		
 		$sec = new Pato_Seccion ();
-		$sql = new Gatuf_SQL ('secciones_view.maestro = %s', array ($maestro->codigo));
+		$dbpfx = $sec->_con->pfx;
+		$sql = new Gatuf_SQL ($dbpfx.'secciones_view.maestro = %s', array ($maestro->codigo));
 		$grupos = $sec->getList (array ('view' => 'paginador', 'filter' => $sql->gen ()));
 		
-		$sql = new Gatuf_SQL ('secciones_view.suplente = %s', array ($maestro->codigo));
+		$sql = new Gatuf_SQL ($dbpfx.'secciones_view.suplente = %s', array ($maestro->codigo));
 		$grupos_suplente = $sec->getList (array ('view' => 'paginador', 'filter' => $sql->gen ()));
 		if (count ($grupos_suplente) > 0){
 			foreach ($grupos_suplente as $suple) {
@@ -89,8 +90,19 @@ class Pato_Views_Maestro {
 					
 					foreach (array ('l', 'm', 'i', 'j', 'v', 's') as $dia) {
 						if ($hora->$dia) {
-							$horario_maestro->events[] = array ('start' => date('Y-m-d ', $dia_semana).$hora->inicio,
-											             'end' => date('Y-m-d ', $dia_semana).$hora->fin,
+							if ($hora->inicio instanceof DateTime) {
+								$h_i = $hora->inicio->format ('H:i');
+							} else {
+								$h_i = $hora->inicio;
+							}
+						
+							if ($hora->fin instanceof DateTime) {
+								$h_f = $hora->fin->format ('H:i');
+							} else {
+								$h_f = $hora->fin;
+							}
+							$horario_maestro->events[] = array ('start' => date('Y-m-d ', $dia_semana).$h_i,
+											             'end' => date('Y-m-d ', $dia_semana).$h_f,
 											             'content' => ((string) $hora->get_salon ()).'<br />'.$cadena_desc,
 											             'title' => '',
 											             'url' => '.');

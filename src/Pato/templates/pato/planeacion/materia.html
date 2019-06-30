@@ -8,7 +8,7 @@
 </style>
 {/literal}{/block}
 {block body}
-{if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
+{maestroself 'myself', $user, $maestro}
 {if $myself}
 	<p>Planeación para la materia <strong>{$materia.descripcion}</strong>. Recuerde, la planeación se realiza una vez por cada materia diferente, el seguimiento se realiza por grupo</p>
 {else}

@@ -13,8 +13,8 @@
 	<thead><tr><th>Hora inicio</th><th>Hora fin</th><th>Días</th><th>Edificio</th><th>Aula</th>{if $puede_editar}<th>Acciones</th>{/if}</tr></thead>
 	<tbody>
 	{foreach $horarios as $hora}
-		<tr><td>{$hora.inicio}</td>
-		<td>{$hora.fin}</td>
+		<tr><td>{$hora.inicio|time:'H:i'}</td>
+		<td>{$hora.fin|time:'H:i'}</td>
 		<td>{$hora.displayDias()}</td>
 		{assign $salon = $hora.get_salon ()}
 		<td><a href="{url 'Pato_Views_Edificio::verEdificio', array ($salon.edificio)}">{$salon.edificio}</a></td>

@@ -11,8 +11,10 @@
 {if $cerrar_kardex}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verOperaciones', array ($seccion.nrc)}">Comandos</a></li>
 {/if}
-{if $maestro_self || $ver_planeacion}
+{if $maestro_self}
 <li style="display: inline;"><a href="{url 'planeacion_materia_propia', array ($seccion.materia)}">Planeación</a></li>
+{elseif $ver_planeacion}
+<li style="display: inline;"><a href="{url 'planeacion_materia_otros', array ($seccion.maestro, $seccion.materia)}">Planeación</a></li>
 {/if}
 {if $editar_seccion_vacio || $admin_secciones}
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::actualizarNrc', array ($seccion.nrc)}">Actualizar</a></li>

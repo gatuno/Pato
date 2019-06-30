@@ -107,6 +107,17 @@ class Pato_Horario extends Gatuf_Model {
 	
 	function hash () {
 		$aula = $this->get_salon ();
-		return $this->displayDias ().'-'.$this->inicio.'-'.$this->fin.'-'.$aula->edificio.'-'.$aula->aula;
+		if ($this->inicio instanceof DateTime) {
+			$h_i = $this->inicio->format ('H:i');
+		} else {
+			$h_i = $this->inicio;
+		}
+		
+		if ($this->fin instanceof DateTime) {
+			$h_f = $this->fin->format ('H:i');
+		} else {
+			$h_f = $this->fin;
+		}
+		return $this->displayDias ().'-'.$h_i.'-'.$h_f.'-'.$aula->edificio.'-'.$aula->aula;
 	}
 }

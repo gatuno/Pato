@@ -170,11 +170,19 @@ class Pato_Views_Evaluacion_Profesor {
 		//return new Gatuf_HTTP_Response ('Vista en remodelación');
 		$alumno = $request->user;
 		
-		$gconf = new Pato_Calendario_GSettings ();
+		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		$correcto = true;
 		
-		$abierto = $gconf->getVal ('evaluacion_profesores', false);
+		$abierto = $gconf->getVal ('evaluacion_profesores_abierta', false);
+		$cal = $gconf->getVal ('evaluacion_profesores_cal', '');
+		
+		$calendario = new Pato_Calendario ();
+		
+		if (false === ($calendario->get ($cal))) {
+			$abierto = false;
+			$calendario = null;
+		}
 		
 		if ($abierto == false) {
 			$correcto = false;
@@ -182,20 +190,27 @@ class Pato_Views_Evaluacion_Profesor {
 		}
 		
 		/* Revisar cuáles respuestas están en tiempo */
-		$secciones = $alumno->get_grupos_list ();
 		
-		$respuestas = array ();
+		if ($calendario != null) {
+			$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+			$secciones = $alumno->get_grupos_list ();
 		
-		foreach ($secciones as $seccion) {
-			$sql = new Gatuf_SQL ('seccion=%s', $seccion->nrc);
-			$rs = $alumno->get_pato_evaluacion_respuesta_list (array ('filter' => $sql->gen ()));
+			$respuestas = array ();
+		
+			foreach ($secciones as $seccion) {
+				$sql = new Gatuf_SQL ('seccion=%s', $seccion->nrc);
+				$rs = $alumno->get_pato_evaluacion_respuesta_list (array ('filter' => $sql->gen ()));
 			
-			/* Revisar si contestó la encuesta o no */
-			if (count ($rs) == 0) {
-				$respuestas[$seccion->nrc] = false;
-			} else {
-				$respuestas[$seccion->nrc] = true;
+				/* Revisar si contestó la encuesta o no */
+				if (count ($rs) == 0) {
+					$respuestas[$seccion->nrc] = false;
+				} else {
+					$respuestas[$seccion->nrc] = true;
+				}
 			}
+		} else {
+			$secciones = array ();
+			$respuestas = array ();
 		}
 		
 		return Gatuf_Shortcuts_RenderToResponse ('pato/evaluaciones/listar.html',
@@ -203,16 +218,25 @@ class Pato_Views_Evaluacion_Profesor {
 		                                               'alumno' => $alumno,
 		                                               'respuestas' => $respuestas,
 		                                               'secciones' => $secciones,
-		                                               'correcto' => $correcto),
+		                                               'correcto' => $correcto,
+		                                               'calendario' => $calendario),
                                                  $request);
 	}
 	
 	public static function checar_si_evaluo ($alumno) {
-		$gconf = new Pato_Calendario_GSettings ();
+		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
 		/* Si no está abierta la evaluación de profesores, no sirve de nada forzar a que evaluen */
-		$abierto = $gconf->getVal ('evaluacion_profesores', false);
+		$abierto = $gconf->getVal ('evaluacion_profesores_abierta', false);
+		$cal = $gconf->getVal ('evaluacion_profesores_cal', '');
+		
+		$calendario = new Pato_Calendario ();
+		
+		if (false === ($calendario->get ($cal))) {
+			$abierto = false;
+			return true;
+		}
 		
 		if (!$abierto) {
 			return true;
@@ -239,24 +263,31 @@ class Pato_Views_Evaluacion_Profesor {
 	
 	public $evaluar_precond = array ('Pato_Precondition::alumnoRequired');
 	public function evaluar ($request, $match) {
-		$seccion = new Pato_Seccion ();
-		
-		if (false === ($seccion->get ($match[1]))) {
-			throw new Gatuf_HTTP_Error404 ();
-		}
-		
-		/* Si el calendario actual no es igual al calendario de las preferencias,
-		 * No permitir las evaluaciones */
-		$gconf = new Pato_Calendario_GSettings ();
+		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
-		$abierto = $gconf->getVal ('evaluacion_profesores', false);
+		$abierto = $gconf->getVal ('evaluacion_profesores_abierta', false);
+		$cal = $gconf->getVal ('evaluacion_profesores_cal', '');
+		
+		$calendario = new Pato_Calendario ();
+		
+		if (false === ($calendario->get ($cal))) {
+			$abierto = false;
+		}
 		
 		if ($abierto == false) {
 			$request->user->setMessage (2, 'Por el momento, la evaluación de profesores no se encuentra activa');
 			
 			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Evaluacion_Profesor::index');
 			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		
+		$seccion = new Pato_Seccion ();
+		
+		if (false === ($seccion->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
 		}
 		
 		$sql = new Gatuf_SQL ('nrc=%s', $seccion->nrc);
@@ -308,7 +339,8 @@ class Pato_Views_Evaluacion_Profesor {
 		                                         array('page_title' => 'Evaluar profesor',
 		                                               'alumno' => $alumno,
 		                                               'form' => $form,
-		                                               'seccion' => $seccion),
+		                                               'seccion' => $seccion,
+		                                               'calendario' => $calendario),
                                                  $request);
 	}
 }

@@ -1,17 +1,20 @@
 {extends 'pato/base.html'}
-{block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
-<p>Aquí puede evaluar a los profesores</p>
-<p><strong>Atención</strong>: Si los datos aquí listados no son las materias y profesores que estás cursando, <strong>notifica de inmediato</strong> al aplicador de la encuesta.</p>
+{if $calendario == null}
+<p>La evaluación de profesores se encuentra cerrada.</p>
+{else}
+<p>Aquí puede evaluar a los profesores. Se evaluarán las materias tomadas durante el calendario {$calendario.descripcion}</p>
+<p><strong>Atención</strong>: Si los datos aquí listados no corresponden con las materias y profesores que cursas/cursaste durante el calendario {$calendario.descripcion}, <strong>notifica de inmediato</strong> al aplicador de la encuesta o control escolar.</p>
 {if count($secciones) != 0}
 <table>
 	<thead><tr><th>NRC</th><th>Materia</th><th>Sección</th><th>Profesor</th><th>Evaluar</th></tr></thead>
 	<tbody>{foreach $secciones as $seccion}
 	<tr><td>{$seccion.nrc}</td><td>{$seccion.get_materia}</td><td>{$seccion.seccion}</td><td>{$seccion.get_maestro}</td>
-	<td>{if $respuestas[$seccion.nrc]}<strong>Evaluado</strong>{else}{if $user.login == $alumno.codigo && $correcto}<form action="{url 'Pato_Views_Evaluacion_Profesor::evaluar', $seccion.nrc}" method="get"><input type="submit" value="Evaluar" /></form>{else}No evaluado{/if}{/if}</td></tr>
+	<td>{if $respuestas[$seccion.nrc]}<strong>Evaluado</strong>{else}{if $user.codigo == $alumno.codigo && $correcto}<form action="{url 'Pato_Views_Evaluacion_Profesor::evaluar', $seccion.nrc}" method="get"><input type="submit" value="Evaluar" /></form>{else}No evaluado{/if}{/if}</td></tr>
 	{/foreach}</tbody>
 </table>
 {else}
-	<p>No hay evaluaciones para este periodo.</p>
+	<p>Nada que evaluar</p>
+{/if}
 {/if}
 {/block}

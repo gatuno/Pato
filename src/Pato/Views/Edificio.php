@@ -75,8 +75,19 @@ class Pato_Views_Edificio {
 				$calendar->opts['start-day'] = date('Y-m-d', $dia_semana);
 				foreach (array ('l', 'm', 'i', 'j', 'v', 's') as $dia) {
 					if ($horario->$dia) {
-						$calendar->events[] = array ('start' => date('Y-m-d ', $dia_semana).$horario->inicio,
-								                     'end' => date('Y-m-d ', $dia_semana).$horario->fin,
+						if ($horario->inicio instanceof DateTime) {
+							$h_i = $horario->inicio->format ('H:i');
+						} else {
+							$h_i = $horario->inicio;
+						}
+						
+						if ($horario->fin instanceof DateTime) {
+							$h_f = $horario->fin->format ('H:i');
+						} else {
+							$h_f = $horario->fin;
+						}
+						$calendar->events[] = array ('start' => date('Y-m-d ', $dia_semana).$h_i,
+								                     'end' => date('Y-m-d ', $dia_semana).$h_f,
 								                     'title' => $horario->nrc,
 								                     'content' => $cadena_desc,
 								                     'url' => $url, 'color' => '');

@@ -33,22 +33,32 @@ class Pato_Form_Horario_Actualizar extends Gatuf_Form {
 				'widget' => 'Gatuf_Form_Widget_DobleInput',
 		));
 		
+		if ($this->hora->inicio instanceof Datetime) {
+			$h_i = $this->hora->inicio->format ('H:i');
+		} else {
+			$h_i = date('H:i', strtotime($this->hora->inicio));
+		}
 		$this->fields['inicio'] = new Gatuf_Form_Field_Time (
 			array (
 				'required' => true,
 				'label' => 'Hora inicio',
-				'initial' => date('H:i', strtotime($this->hora->inicio)),
+				'initial' => $h_i,
 				'help_text' => 'La hora de inicio. Puede ser del tipo 17:00',
 				'widget_attrs' => array (
 					'size' => 5,
 				)
 		));
 		
+		if ($this->hora->fin instanceof Datetime) {
+			$h_f = $this->hora->fin->format ('H:i');
+		} else {
+			$h_f = date('H:i', strtotime($this->hora->fin));
+		}
 		$this->fields['fin'] = new Gatuf_Form_Field_Time (
 			array (
 				'required' => true,
 				'label' => 'Hora fin',
-				'initial' => date('H:i', strtotime($this->hora->fin)),
+				'initial' => $h_f,
 				'help_text' => 'La hora de final. Puede ser del tipo 17:00',
 				'widget_attrs' => array (
 					'size' => 5,

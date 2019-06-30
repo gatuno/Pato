@@ -161,8 +161,20 @@ class Pato_Views_Alumno {
 				
 				foreach (array ('l', 'm', 'i', 'j', 'v', 's') as $dia) {
 					if ($hora->$dia) {
-						$calendario->events[] = array ('start' => date('Y-m-d ', $dia_semana).$hora->inicio,
-										             'end' => date('Y-m-d ', $dia_semana).$hora->fin,
+						if ($hora->inicio instanceof DateTime) {
+							$h_i = $hora->inicio->format ('H:i');
+						} else {
+							$h_i = $hora->inicio;
+						}
+						
+						if ($hora->fin instanceof DateTime) {
+							$h_f = $hora->fin->format ('H:i');
+						} else {
+							$h_f = $hora->fin;
+						}
+						
+						$calendario->events[] = array ('start' => date('Y-m-d ', $dia_semana).$h_i,
+										             'end' => date('Y-m-d ', $dia_semana).$h_f,
 										             'title' => (string) $hora->get_salon (),
 										             'content' => $cadena_desc,
 										             'url' => $url);

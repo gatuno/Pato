@@ -1,7 +1,7 @@
 {extends 'pato/base.html'}
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
-{if $maestro->codigo == $user->extra->codigo}{assign $myself = true}{else}{assign $myself = false}{/if}
+{maestroself 'myself', $user, $maestro}
 {if $myself}
 <p>Usted puede armar la planeación de sus materias. La planeación se realiza una vez por materia, independiente de la cantidad de grupos que imparta. El seguimiento se realiza por grupo.</p>
 {else}

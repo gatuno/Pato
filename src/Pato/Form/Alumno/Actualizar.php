@@ -43,11 +43,11 @@ class Pato_Form_Alumno_Actualizar extends Gatuf_Form {
 				),
 		));
 		
-		$this->fields['correo'] = new Gatuf_Form_Field_Email (
+		$this->fields['email'] = new Gatuf_Form_Field_Email (
 			array (
 				'required' => true,
 				'label' => 'Correo',
-				'initial' => $this->alumno->user->email,
+				'initial' => $this->alumno->email,
 				'help_text' => 'Un correo',
 		));
 	}
@@ -58,12 +58,11 @@ class Pato_Form_Alumno_Actualizar extends Gatuf_Form {
 		}
 		
 		$this->alumno->setFromFormData ($this->cleaned_data);
-		$this->alumno->user->email = $this->cleaned_data['correo'];
 		
 		if ($commit) {
 			$this->alumno->update();
-			$this->alumno->user->update ();
 		}
+		
 		return $this->alumno;
 	}
 }
