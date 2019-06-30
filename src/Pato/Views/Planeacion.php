@@ -11,7 +11,7 @@ class Pato_Views_Planeacion {
 		} else {
 			$maestro = new Pato_Maestro ();
 			
-			if (!$request->user->hasPerm ('Patricia.ver-planeacion')) {
+			if (!$request->user->hasPerm ('Patricia.ver_planeacion')) {
 				return new Gatuf_HTTP_Response_Forbidden ($request);
 			}
 			
@@ -70,7 +70,7 @@ class Pato_Views_Planeacion {
 		} else {
 			$maestro = new Pato_Maestro ();
 			
-			if (!$request->user->hasPerm ('Patricia.ver-planeacion')) {
+			if (!$request->user->hasPerm ('Patricia.ver_planeacion')) {
 				return new Gatuf_HTTP_Response_Forbidden ($request);
 			}
 			

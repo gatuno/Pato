@@ -4,14 +4,14 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Pato_Views_Planeacion_Reportes {
-	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes-planeacion'));
+	public $index_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_planeacion'));
 	public function index ($request, $match) {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/planeacion/reportes/index.html',
 		                                          array ('page_title' => 'Planeación'),
 		                                          $request);
 	}
 	
-	public $reportePorMaestro_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes-planeacion'));
+	public $reportePorMaestro_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_planeacion'));
 	public function reportePorMaestro ($request, $match) {
 		$maestro = new Pato_Maestro ();
 		
@@ -86,7 +86,7 @@ class Pato_Views_Planeacion_Reportes {
 		                                          $request);
 	}
 	
-	public $reportePorMateria_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes-planeacion'));
+	public $reportePorMateria_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.reportes_planeacion'));
 	public function reportePorMateria ($request, $match) {
 		$materia = new Pato_Materia ();
 		

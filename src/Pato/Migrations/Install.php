@@ -70,22 +70,6 @@ function Pato_Migrations_Install_teardown ($params=null) {
 	}
 }
 
-function Pato_Migrations_Install_2GruposEval_setup ($params = null) {
-	$geval = new Pato_GrupoEvaluacion ();
-	
-	/* Crear las tres primeros y necesarios grupos de evaluacion */
-	$grupos = array (1 => 'Ordinario',
-	                 2 => 'Extraordinario',
-	                 3 => 'Verano');
-	
-	foreach ($grupos as $id => $descripcion) {
-		$geval->id = $id;
-		$geval->descripcion = $descripcion;
-		
-		$geval->create ();
-	}
-}
-
 function Pato_Migrations_Install_6Carreras_setup ($params = null) {
 	$carrera_model = new Pato_Carrera ();
 	

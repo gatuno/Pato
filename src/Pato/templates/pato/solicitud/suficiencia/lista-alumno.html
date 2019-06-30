@@ -12,8 +12,12 @@
 			<tr><td>{$s.get_materia}</td>
 			<td>{if $s.estatus == 0}Pendiente{elseif $s.estatus == 1}Aprobada{elseif $s.estatus == 2}No aprobada{/if}</td>
 			<td>{if $s.maestro === null}<strong>Ninguno</strong>{else}{$s.get_maestro}{/if}</td>
-			{if $abierto}<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::actualizar', $s.id}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Actualizar solicitud" /></a></td>
-			<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::eliminar', $s.id}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Retirar solicitud" /></a></td>{/if}</tr>
+			{if $abierto}
+			{if $s.estatus == 0}
+			<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::actualizar', $s.id}"><img class="icon" src="{media '/img/document-properties.png'}" alt="Actualizar solicitud" /></a></td>
+			<td><a href="{url 'Pato_Views_Solicitud_Suficiencias::eliminar', $s.id}"><img class="icon" src="{media '/img/edit-delete.png'}" alt="Retirar solicitud" /></a></td>{else}
+			<td>-</td><td>-</td>
+			{/if}{/if}</tr>
 		{/foreach}</tbody>
 	</table>
 {/if}

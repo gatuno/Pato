@@ -3,7 +3,7 @@
 {block body}
 <ul style="list-style-type: none;" class="do-not-print">
 <li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verNrc', array ($seccion.nrc)}">Detalles</a></li>
-{aperm 'matricular', $user, 'Patricia.matricular_alumnos'}{aperm 'horario_alumno', $user, 'Patricia.horario_alumno'}{aperm 'editar_seccion_vacio', $user, 'Patricia.editar_secciones_vacio'}{aperm 'admin_secciones', $user, 'Patricia.admin_secciones'}{aperm 'cerrar_kardex', $user, 'Patricia.cerrar_kardex'}{aperm 'ver_planeacion', $user, 'Patricia.ver-planeacion'}
+{aperm 'matricular', $user, 'Patricia.matricular_alumnos'}{aperm 'horario_alumno', $user, 'Patricia.horario_alumno'}{aperm 'editar_seccion_vacio', $user, 'Patricia.editar_secciones_vacio'}{aperm 'admin_secciones', $user, 'Patricia.admin_secciones'}{aperm 'cerrar_kardex', $user, 'Patricia.cerrar_kardex'}{aperm 'ver_planeacion', $user, 'Patricia.ver_planeacion'}
 {maestroself 'maestro_self', $user, $seccion.get_maestro ()}
 {if $seccion.suplente != null}{maestroself 'suplente_self', $user, $seccion.get_suplente ()}{else}{assign $suplente_self = false}{/if}
 {if $matricular || $horario_alumno || $maestro_self || $suplente_self}<li style="display: inline;"><a href="{url 'Pato_Views_Seccion::verAlumnos', array ($seccion.nrc)}">Alumnos y calificaciones</a></li>{/if}
