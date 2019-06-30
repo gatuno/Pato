@@ -1,6 +1,9 @@
 {extends 'pato/base.html'}
 {block body}
-{aperm 'usar_folios', $user, 'Patricia.foliador'}{aperm 'cambiar_fecha', $user, 'Patricia.falsificador_fecha'}
+{aperm 'usar_folios', $user, 'Patricia.foliador'}
+{aperm 'cambiar_fecha', $user, 'Patricia.falsificador_fecha'}
+{aperm 'admin_sufi', $user, 'Patricia.admin_suficiencias'}
+{aperm 'config_eval', $user, 'Patricia.admin_evaluacion_profs'}
 <p>Aquí puede cambiar algunas preferencias.</p>
 {if $usar_folios}
 <p>Cambiar <a href="{url 'Pato_Views_Preferencias::cambiarFolio'}">folio inicial</a></p>
@@ -8,6 +11,10 @@
 {if $cambiar_fecha}
 <p>Falsificar una <a href="{url 'Pato_Views_Preferencias::cambiarFecha'}">fecha</a></p>
 {/if}
+{if $admin_sufi}
 <p>Cambiar el texto en los <a href="{url 'Pato_Views_Preferencias::terminosSuficiencias'}">términos de las suficiencias</a></p>
+{/if}
+{if $config_eval}
 <p>Configurar <a href="{url 'Pato_Views_Preferencias::evalProf'}">si evalúan a los profesores y sobre qué calendario</a></p>
+{/if}
 {/block}

@@ -122,12 +122,13 @@ $cfg['gatuf_custom_user'] = 'Pato_Maestro';
 /*$cfg['template_tags'] = array ('coordperm' => 'Calif_Template_CoordPerm',
 	'jefeperm' => 'Calif_Template_JefePerm');*/
 
-$cfg['installed_apps'] = array('Gatuf', 'Pato', 'Admin', 'CP', 'Admision');
+$cfg['installed_apps'] = array('Gatuf', 'Pato', 'CP', 'Admision');
 
 $cfg['template_tags'] = array (
 	'patomsgs' => 'Pato_Template_Tag_Messages',
 	'alumnoself' => 'Pato_Template_Tag_AlumnoSelf',
 	'maestroself' => 'Pato_Template_Tag_MaestroSelf',
+	'anyperm' => 'Pato_Template_Tag_AnyPerm',
 );
 
 $cfg['gatuf_log_file'] = '/home/www/patricia.upzmg.edu.mx/pato.log';

@@ -24,15 +24,21 @@
 							<li><a href="{url 'Pato_Views_Edificio::index'}">Edificios y salones</a></li>
 						</ul>
 					</li>
-					{if $user.administrator}
+					{aperm 'admin_cal', $user, 'Patricia.admin_calendario'}
+					{anyperm 'cals', $user, array ('Patricia.cerrar_kardex', 'Patricia.corregir_kardex', 'Patricia.levantar_kardex')}
+					{anyperm 'utils', $user, array ('Patricia.imprimir_boleta_alumno', 'Patricia.matricular_alumnos', 'Patricia.admin_agenda', 'Patricia.admin_materia_evals', 'Admision.agregar_codigos_postales'}
+					{aperm 'reportes', $user, 'Patricia.reportes_todos'}
+					{aperm 'estatus', $user, 'Patricia.admin_estatus'}
+					{anyperm 'prefs', $user, array ('Patricia.foliador', 'Patricia.falsificador_fecha', 'Patricia.admin_suficiencias', 'Patricia.admin_evaluacion_profs'}
+					{if $admin_cal || $cals || $utils || $reportes || $estatus || $prefs}
 					<li class="calificaciones"><a href="#">Sistema</a>
 						<ul>
-							<li><a href="{url 'Pato_Views_Calendario::index'}">Calendarios</a></li>
-							<li><a href="{url 'Pato_Views_Calificaciones::index'}">Calificaciones</a></li>
-							<li><a href="{url 'Pato_Views_Utils::index'}">Utilerías</a></li>
-							<li><a href="{url 'Pato_Views_Reportes::index'}">Reportes</a></li>
-							<li><a href="{url 'Pato_Views_Estatus::index'}">Estatus</a></li>
-							<li><a href="{url 'Pato_Views_Preferencias::index'}">Preferencias</a></li>
+							{if $admin_cal}<li><a href="{url 'Pato_Views_Calendario::index'}">Calendarios</a></li>{/if}
+							{if $cals}<li><a href="{url 'Pato_Views_Calificaciones::index'}">Calificaciones</a></li>{/if}
+							{if $utils}<li><a href="{url 'Pato_Views_Utils::index'}">Utilerías</a></li>{/if}
+							{if $reportes}<li><a href="{url 'Pato_Views_Reportes::index'}">Reportes</a></li>{/if}
+							{if $estatus}<li><a href="{url 'Pato_Views_Estatus::index'}">Estatus</a></li>{/if}
+							{if $prefs}<li><a href="{url 'Pato_Views_Preferencias::index'}">Preferencias</a></li>{/if}
 						</ul>
 					</li>
 					{/if}
