@@ -31,7 +31,7 @@ class Pato_Form_Salon_Buscarsalon extends Gatuf_Form {
 			));
 		}
 		
-		$edificios = Gatuf::factory ('Pato_Edificio')->getList ();
+		$edificios = Gatuf::factory ('Pato_Edificio')->getList (array ('filter' => 'oculto=0'));
 		
 		$choices = array ();
 		foreach ($edificios as $edificio) {
@@ -45,9 +45,7 @@ class Pato_Form_Salon_Buscarsalon extends Gatuf_Form {
 				'initial' => $extra['edificios'],
 				'help_text' => 'Puede limitar la busqueda a estos edificios',
 				'widget' => 'Gatuf_Form_Widget_SelectMultipleInput_Checkbox',
-				'widget_attrs' => array (
-					'choices' => $choices,
-				),
+				'choices' => $choices,
 				'multiple' => true,
 		));
 	}

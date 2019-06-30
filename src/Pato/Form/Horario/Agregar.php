@@ -8,7 +8,7 @@ class Pato_Form_Horario_Agregar extends Gatuf_Form {
 		$this->nrc = $extra['seccion'];
 		
 		/* Preparar la lista de salones a elegir */
-		$edificios = Gatuf::factory('Pato_Edificio')->getList ();
+		$edificios = Gatuf::factory('Pato_Edificio')->getList (array ('filter' => 'oculto=0'));
 		
 		$choices = array ();
 		foreach ($edificios as $edificio) {

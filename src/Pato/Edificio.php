@@ -22,6 +22,12 @@ class Pato_Edificio extends Gatuf_Model {
 			       'blank' => false,
 			       'size' => 100,
 			),
+			'oculto' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'blank' => false,
+			       'default' => false,
+			),
 		);
 		
 	}

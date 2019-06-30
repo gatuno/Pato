@@ -1,0 +1,7 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Este proceso ocultará el edificio {$edificio.descripcion} ({$edificio.clave}) completo. Este proceso permite que en el futuro todo el edificio no sea utilizado en planeación académica. Si el edificio (o alguno de sus salones) sigue en uso, seguirá apareciendo en los horarios correspondientes. ¿Está seguro de que desea ocultar el edificio?</p>
+<form method="post" action=".">
+	<p><input type="submit" value="Ocultar edificio" /> | <a href="{url 'Pato_Views_Edificio::verEdificio', array ($edificio.clave)}">Cancelar</a></p>
+</form>
+{/block}

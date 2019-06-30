@@ -791,10 +791,17 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/edificio/(\w+)/ocultos/$#',
+	'regex' => '#^/edificio/(\w+)/salones/ocultos/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Edificio',
 	'method' => 'salonesOcultos',
+);
+
+$ctl[] = array (
+	'regex' => '#^/edificio/(\w+)/ocultar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Edificio',
+	'method' => 'ocultarEdificio',
 );
 
 $ctl[] = array (

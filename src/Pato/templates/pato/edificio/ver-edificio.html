@@ -2,13 +2,17 @@
 {block extratopbody}{include 'pato/calendario/cambiar-calendario.html'}{/block}
 {block body}
 {aperm 'admin_salones', $user, 'Patricia.admin_edificios_salones'}
-<p>Se muestran los horarios de todos los salones</p>
+{if $edificio.oculto == 0}<p>Se muestran los horarios de todos los salones</p>{/if}
 {if $admin_salones}
-<p><a href="{url 'Pato_Views_Salon::agregarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar salon" />Agregar nuevo salon</a></p>
+{if $edificio.oculto == 0}<p><a href="{url 'Pato_Views_Salon::agregarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar salon" />Agregar nuevo salon</a></p>
+<p>El edificio puede ser descartado de toda la programación académica, <a href="{url 'Pato_Views_Edificio::ocultarEdificio', array ($edificio.clave)}">ocultando el edificio</a></p>
 {if $hay_ocultos}<p>Este edificio ocultó ciertos salones para facilitar la administración, puede revisar la <a href="{url 'Pato_Views_Edificio::salonesOcultos', array ($edificio.clave)}">lista de salones ocultos</a></p>{/if}
+{else}
+<p>Este edificio (y sus salones) está oculto para la programación academica. Solo se conserva por integridad del sistema</p>
 {/if}
-<p><a href="{url 'Pato_Views_Salon::buscarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/edit-find.png'}" alt="Buscar salon" />Buscar un salon en este edificio</a></p>
-{if count ($salones) != 0}
+{/if}
+{if $edificio.oculto == 0}<p><a href="{url 'Pato_Views_Salon::buscarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/edit-find.png'}" alt="Buscar salon" />Buscar un salon en este edificio</a></p>{/if}
+{if count ($salones) != 0 && $edificio.oculto == 0}
 	<div id="salones_tabs"><ul>
 	{foreach $salones as $salon}
 		<li><a href="#salon_{$salon.id}">{$salon.aula}</a></li>
@@ -24,6 +28,8 @@
 		</div>
 	{/foreach}
 	</div>
+{elseif $edificio.oculto == 1}
+	<p>Este edificio tiene todos sus salones ocultos. No puede ver sus salones</p>
 {else}
 	<p>Este edificio no tiene salones registrados</p>
 {/if}

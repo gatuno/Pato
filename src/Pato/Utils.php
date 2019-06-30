@@ -2,10 +2,10 @@
 function Pato_Utils_buscarSalonVacio ($semana, $bus_inicio, $bus_fin, $edificios = array ()) {
 	/* FIXME: Optimizar este código */
 	if (count ($edificios) != 0) {
-		$sql = new Gatuf_SQL ('edificio IN ('.implode (',', array_fill (0, count ($edificios), '%s')).')', $edificios);
+		$sql = new Gatuf_SQL ('oculto=0 AND edificio IN ('.implode (',', array_fill (0, count ($edificios), '%s')).')', $edificios);
 		$where = $sql->gen ();
 	} else {
-		$where = null;
+		$where = 'oculto=0';
 	}
 	$salones = Gatuf::factory('Pato_Salon')->getList (array ('order' => array ('edificio ASC', 'aula ASC'), 'filter' => $where));
 	

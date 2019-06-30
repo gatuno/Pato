@@ -169,4 +169,47 @@ class Pato_Views_Edificio {
 		                                               'ocultos' => $salones),
 		                                         $request);
 	}
+	
+	public $ocultarEdificio_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
+	public function ocultarEdificio ($request, $match) {
+		$edificio = new Pato_Edificio ();
+		
+		if (false === $edificio->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		/* Verificar que el edificio esté en mayúsculas */
+		$nueva_clave = mb_strtoupper ($match[1]);
+		if ($match[1] != $nueva_clave) {
+			$url = Gatuf_HTTP_URL_urlForView('Pato_Views_Edificio::verEdificio', array ($nueva_clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($edificio->oculto == 1) {
+			/* ¿Ya está oculto? */
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $edificio->clave);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		if ($request->method == 'POST') {
+			$edificio->oculto = 1;
+			
+			$edificio->update ();
+			
+			foreach ($edificio->get_pato_salon_list () as $s) {
+				$s->oculto = 1;
+				
+				$s->update ();
+			}
+			
+			Gatuf_Log::info (sprintf ('El edificio %s ha sido ocultado por el usuario %s', $edificio->clave, $request->user->codigo));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $edificio->clave);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+
+		return Gatuf_Shortcuts_RenderToResponse ('pato/edificio/ocultar-edificio.html',
+		                                         array('page_title' => 'Edificio '.$edificio->clave,
+		                                               'edificio' => $edificio),
+                                                 $request);
+	}
 }
