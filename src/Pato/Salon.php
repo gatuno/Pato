@@ -33,6 +33,12 @@ class Pato_Salon extends Gatuf_Model {
 			       'blank' => false,
 			       'default' => 0,
 			),
+			'oculto' =>
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'blank' => false,
+			       'default' => false,
+			),
 		);
 		
 		$this->default_order = 'edificio ASC, aula ASC';

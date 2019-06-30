@@ -8,6 +8,8 @@ class Pato_Views_Edificio {
 		$edificio = new Pato_Edificio ();
 		
 		$pag = new Gatuf_Paginator ($edificio);
+		$sql = new Gatuf_SQL ('oculto=0');
+		$pag->forced_where = $sql;
 		$pag->action = array ('Pato_Views_Edificio::index');
 		$pag->summary = 'Lista de los edificios';
 		
@@ -50,7 +52,14 @@ class Pato_Views_Edificio {
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		
-		$salones = $edificio->get_pato_salon_list ();
+		$salones = $edificio->get_pato_salon_list (array ('filter' => 'oculto=0'));
+		
+		$salones_ocultos = $edificio->get_pato_salon_list (array ('filter' => 'oculto=1', 'count' => true));
+		
+		$hay_ocultos = false;
+		if ($salones_ocultos > 0) {
+			$hay_ocultos = true;
+		}
 		
 		$super_calendarios = array ();
 		foreach ($salones as $salon) {
@@ -104,7 +113,8 @@ class Pato_Views_Edificio {
 		                                         array('page_title' => 'Edificio '.$edificio->clave,
 		                                               'edificio' => $edificio,
 		                                               'salones' => $salones,
-                                                       'calendarios' => $super_calendarios),
+                                                       'calendarios' => $super_calendarios,
+                                                       'hay_ocultos' => $hay_ocultos),
                                                  $request);
 	}
 
@@ -128,6 +138,35 @@ class Pato_Views_Edificio {
 		return Gatuf_Shortcuts_RenderToResponse ('pato/edificio/agregar-edificio.html',
 		                                         array ('page_title' => 'Nuevo Edificio',
 		                                                'form' => $form),
+		                                         $request);
+	}
+	
+	public $salonesOcultos_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
+	public function salonesOcultos ($request, $match) {
+		$edificio = new Pato_Edificio ();
+		
+		if (false === $edificio->get ($match[1])) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		/* Verificar que el edificio esté en mayúsculas */
+		$nueva_clave = mb_strtoupper ($match[1]);
+		if ($match[1] != $nueva_clave) {
+			$url = Gatuf_HTTP_URL_urlForView('Pato_Views_Edificio::verEdificio', array ($nueva_clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$salones = $edificio->get_pato_salon_list (array ('filter' => 'oculto=1'));
+		
+		if (count ($salones) == 0) {
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', array ($edificio->clave));
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/edificio/salones-ocultos.html',
+		                                         array ('page_title' => 'Edificio '.$edificio->clave,
+		                                               'edificio' => $edificio,
+		                                               'ocultos' => $salones),
 		                                         $request);
 	}
 }

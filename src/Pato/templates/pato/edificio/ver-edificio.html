@@ -5,6 +5,7 @@
 <p>Se muestran los horarios de todos los salones</p>
 {if $admin_salones}
 <p><a href="{url 'Pato_Views_Salon::agregarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/list-add.png'}" alt="Agregar salon" />Agregar nuevo salon</a></p>
+{if $hay_ocultos}<p>Este edificio ocultó ciertos salones para facilitar la administración, puede revisar la <a href="{url 'Pato_Views_Edificio::salonesOcultos', array ($edificio.clave)}">lista de salones ocultos</a></p>{/if}
 {/if}
 <p><a href="{url 'Pato_Views_Salon::buscarSalon', array (), array('edificio' => $edificio.clave)}"><img class="icon" src="{media '/img/edit-find.png'}" alt="Buscar salon" />Buscar un salon en este edificio</a></p>
 {if count ($salones) != 0}
@@ -14,7 +15,7 @@
 	{/foreach}</ul>
 	{foreach $salones as $salon}
 		<div id="salon_{$salon.id}">
-			<p>Este es el salón {$salon.aula}, del edificio {$edificio.descripcion}. Tiene una capacidad de {$salon.cupo}. {if $admin_salones}<a href="{url 'Pato_Views_Salon::actualizarSalon', array ($salon.id)}">Cambiar cupo</a>{/if}</p>
+			<p>Este es el salón {$salon.aula}, del edificio {$edificio.descripcion}. Tiene una capacidad de {$salon.cupo}. {if $admin_salones}<a href="{url 'Pato_Views_Salon::actualizarSalon', array ($salon.id)}">Cambiar cupo</a> <a href="{url 'Pato_Views_Salon::ocultarSalon', array ($salon.id)}">Ocultar salón</a>{/if}</p>
 			{if $calendarios[$salon.id]}
 				{$calendarios[$salon.id].render}
 			{else}

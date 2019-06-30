@@ -67,6 +67,70 @@ class Pato_Views_Salon {
                                                  $request);
 	}
 	
+	public $ocultarSalon_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
+	public function ocultarSalon ($request, $match) {
+		$salon = new Pato_Salon ();
+		
+		if (false === ($salon->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if ($salon->oculto == 1) {
+			/* ¿Ya está oculto? */
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $salon->edificio);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$edificio = $salon->get_edificio ();
+		
+		if ($request->method == 'POST') {
+			$salon->oculto = 1;
+			
+			$salon->update ();
+			Gatuf_Log::info (sprintf ('El salon %s ha sido ocultado por el usuario %s', $salon->id, $request->user->codigo));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $salon->edificio);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+
+		return Gatuf_Shortcuts_RenderToResponse ('pato/salon/ocultar-salon.html',
+		                                         array('page_title' => 'Ocultar un salon',
+		                                               'edificio' => $edificio,
+		                                               'salon' => $salon),
+                                                 $request);
+	}
+	
+	public $desocultarSalon_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_edificios_salones'));
+	public function desocultarSalon ($request, $match) {
+		$salon = new Pato_Salon ();
+		
+		if (false === ($salon->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404();
+		}
+		
+		if ($salon->oculto == 0) {
+			/* No está oculto, realmente */
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $salon->edificio);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+		
+		$edificio = $salon->get_edificio ();
+		
+		if ($request->method == 'POST') {
+			$salon->oculto = 0;
+			
+			$salon->update ();
+			Gatuf_Log::info (sprintf ('El salon %s ha sido des-ocultado por el usuario %s', $salon->id, $request->user->codigo));
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Edificio::verEdificio', $salon->edificio);
+			return new Gatuf_HTTP_Response_Redirect ($url);
+		}
+
+		return Gatuf_Shortcuts_RenderToResponse ('pato/salon/desocultar-salon.html',
+		                                         array('page_title' => 'Descultar un salon',
+		                                               'edificio' => $edificio,
+		                                               'salon' => $salon),
+                                                 $request);
+	}
+	
 	public $buscarSalon_precond = array ('Gatuf_Precondition::loginRequired');
 	public function buscarSalon ($request, $match) {
 		/* Tratar de "pre-seleccionar" los edificios */

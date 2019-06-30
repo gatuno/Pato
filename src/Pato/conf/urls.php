@@ -652,6 +652,20 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/salon/(\d+)/ocultar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Salon',
+	'method' => 'ocultarSalon',
+);
+
+$ctl[] = array (
+	'regex' => '#^/salon/(\d+)/desocultar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Salon',
+	'method' => 'desocultarSalon',
+);
+
+$ctl[] = array (
 	'regex' => '#^/salones/add/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Salon',
@@ -770,10 +784,17 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
-	'regex' => '#^/edificio/(.+)/$#',
+	'regex' => '#^/edificio/(\w+)/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Edificio',
 	'method' => 'verEdificio',
+);
+
+$ctl[] = array (
+	'regex' => '#^/edificio/(\w+)/ocultos/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Edificio',
+	'method' => 'salonesOcultos',
 );
 
 $ctl[] = array (

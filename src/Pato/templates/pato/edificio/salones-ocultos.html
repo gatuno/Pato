@@ -1,0 +1,10 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Los siguientes salones del edificio {$edificio.descripcion} ({$edificio.clave}) fueron ocultados:</p>
+<table>
+	<thead><tr><th>Salón</th><th>Acción</th></tr></thead>
+	<tbody>{foreach $ocultos as $s}
+		<tr><td>{$s.aula}</td><td><a href="{url 'Pato_Views_Salon::desocultarSalon', array ($s.id)}">Desocultar</a></td></tr>
+	{/foreach}</tbody>
+</table>
+{/block}

@@ -12,8 +12,7 @@ class Pato_Form_Horario_Agregar extends Gatuf_Form {
 		
 		$choices = array ();
 		foreach ($edificios as $edificio) {
-			$sql = new Gatuf_SQL ('edificio=%s', $edificio->clave);
-			$salones = Gatuf::factory('Pato_Salon')->getList (array ('filter' => $sql->gen ()));
+			$salones = $edificio->get_pato_salon_list (array ('filter' => 'oculto=0'));
 			$choices[$edificio->descripcion] = array ();
 			foreach ($salones as $salon) {
 				$choices[$edificio->descripcion][$salon->aula] = $salon->id;
@@ -25,9 +24,7 @@ class Pato_Form_Horario_Agregar extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Salon',
 				'initial' => '',
-				'widget_attrs' => array (
-					'choices' => $choices,
-				),
+				'choices' => $choices,
 				'help_text' => 'El salon',
 				'widget' => 'Gatuf_Form_Widget_DobleInput',
 		));

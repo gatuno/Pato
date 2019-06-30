@@ -1,0 +1,7 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Este proceso volverá visible el salón {$salon.aula} del edificio {$edificio.descripcion} ({$edificio.clave}). Con esto volverá a estar disponible para la planeación académica. ¿Desea regresar el salón a la planeación?</p>
+<form method="post" action=".">
+	<p><input type="submit" value="Mostrar salon" /> | <a href="{url 'Pato_Views_Edificio::salonesOcultos', array ($edificio.clave)}">Cancelar</a></p>
+</form>
+{/block}
