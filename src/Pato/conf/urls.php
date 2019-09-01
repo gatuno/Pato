@@ -1289,6 +1289,12 @@ $ctl[] = array (
 	'sub' => include 'CP/conf/urls.php',
 );
 
+$ctl[] = array (
+	'regex' => '#^/encuesta#',
+	'base' => $base,
+	'sub' => include 'Encuesta/conf/urls.php',
+);
+
 $ctl[] = array(
 	'regex' => '#^/test/$#',
 	'base' => $base,

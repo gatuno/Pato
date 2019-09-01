@@ -73,7 +73,7 @@ class Admin_Form_Biblioteca_Equipo_Prestar extends Gatuf_Form {
 		
 		foreach (Gatuf::factory ('Admin_Biblioteca_Equipo')->getList () as $equipo) {
 			if ($equipo->prestado ()) continue;
-			$ops[$equipo->tipo][$equipo->nombre." (".$equipo->id.")"] = $equipo->id;
+			$ops[$equipo->tipo][$equipo->nombre] = $equipo->id;
 		}
 		
 		foreach ($this->tipos as $desc => $tipo) {

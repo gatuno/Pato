@@ -6,9 +6,6 @@
 	<tr>
 	<th style="text-align: right">
 		{alumnoself 'alumno_self', $user, $alumno}
-		{if $alumno_self}<a href="http://gravatar.com/emails/" title="Cambie su imagen en gravatar.com">
-		{else}<a href="http://www.gravatar.com/avatar/{$alumno.email|md5}.jpg?s=400">{/if}
-		<img src="http://www.gravatar.com/avatar/{$alumno.email|md5}.jpg?s=128" alt=" " /></a>
 	</th>
 		<td>{$alumno.apellido} {$alumno.nombre}</td>
 	</tr>

@@ -2,24 +2,42 @@
 P R E S E N T E
 
 Estimado {$nombre}, a través de la presente la Universidad Politécnica de la Zona Metropolitana de Guadalajara le informa que ha sido admitido en su solicitud de ingreso.
-Reciba la más cordial de nuestras felicitaciones por la aceptación para formar parte del alumnado de nuestra Universidad y por lo cual, le solicitamos se presente en nuestras oficinas de Tlajomulco a partir del día 15 de Junio al 24  de Julio del año en curso para comenzar los trámites de inscripción.
-Requisitos de inscripción:
+Reciba la más cordial de nuestras felicitaciones por la aceptación para formar parte de nuestra comunidad universitaria, por lo que le solicitamos se presente en nuestras instalaciones de Tlajomulco a inscribirte.
 
-* Original y copia de acta de nacimiento.
-* Original y copia de certificado de preparatoria, promedio mínimo de 7 (debidamente legalizado por el estado), en el caso que estés por concluir documento que explique el promedio obtenido y cuando lo recibirás el certificado.
-* 6 Fotografías t/infantil blanco y negro de estudio.
-* 2 copias de comprobante de domicilio.
-* 2 copias de identificación oficial (credencial de elector, cartilla militar, pasaporte y en caso de ser menor de edad credencial de la escuela de preparatoria).
-* Original y copia de certificado médico de una Institución oficial, con tipo de sangre (IMSS, Cruz Verde o Cruz Roja).
-* 2 copias de la CURP.
-* Presentar la ficha  del pago cuatrimestral por la cantidad de $1,500.00 pesos, mismo que debe realizarse en el banco HSBC con referencia personal, que es la siguiente: 
+	A partir del día 20 al 23 de Agosto del presente año.
+	Horario de atención e Inscripción. De las 9:00am a 3:00pm.
 
+Nota importante:
+* EN EL DÍA QUE TE CORRESPONDA SE TE TOMARÁ LA FOTOGRAFÍA PARA TU CREDENCIAL DE ESTUDIANTE.
+* OBLIGATORIO PRESENTAR TODOS LOS DOCUMENTOS SOLICITADOS A EXCEPCIÓN DEL CERTIFICADO DE PREPARATORIA (en el caso que no cuentes con él, presentar documento que avale el promedio obtenido y cuando recibirás el certificado, debidamente sellado y firmado por la institución) COMO LO INDICA EL SEGUNDO REQUISITO***
+
+REQUISITOS PARA INSCRIPCION:
+1.- Original y copia de acta de nacimiento.
+2.- Original y copia de certificado de preparatoria, promedio mínimo de 7 (debidamente legalizado por el estado), (en el caso que no cuentes con él, presentar documento que avale el promedio obtenido y cuando recibirás el certificado, debidamente sellado y firmado por la institución).***
+3.- 6 Fotografías t/infantil blanco y negro de estudio.
+4.- 2 copias de comprobante de domicilio.
+5.- 2 copias de identificación oficial (credencial de elector, cartilla militar, pasaporte y en caso de ser menor de edad credencial de la escuela de preparatoria).
+6.- Original y copia de certificado médico con tipo de sangre, de una Institución oficial, (IMSS, Cruz Verde o Cruz Roja, Centro de Salud, DIF.).
+7.- 2 copias de la CURP.
+8.-Presentar tú Número de Afiliación. (IMSS)
+Consúltalo aquí:
+https://serviciosdigitales.imss.gob.mx/gestionAsegurados-web-externo/asignacionNSS
+9.- Deberás presentar Un pago Original y Copia. Por la cantidad 2,000 (dos mil) pesos respectivamente.( Estas cuotas están autorizadas por la junta directiva de la universidad a partir de junio del 2016).
+
+Los pagos deberás realizarlos en el banco HSBC con referencia personal el cual aplica para todos los pagos, que es la siguiente:
 Clave RAP: 1210
 No. De Referencia: {$referencia}
 
-Para cualquier duda o aclaración, quedo a sus órdenes. 
-Por su atención, gracias. 
+OBLIGATORIO:
+* Asistir al curso propedéutico del 26 al 30 de Agosto de las 8:00am a 2:00pm.
+* Conocer y aplicar lo que determina el “Reglamento de Estudios de Programas Educativos Incluyentes de la Universidad Politécnica de la Zona Metropolitana de Guadalajara”. 
+Descárgalo aquí: https://info.jalisco.gob.mx/sites/default/files/leyes/reglamento_de_estudios.pdf
+
+Para cualquier duda o aclaración, quedo a sus órdenes.
+Por su atención, gracias.
+
 ATENTAMENTE
-MTRO. JAVIER ENRIQUE SOLÓRZANO CARRILLO
+MTRO. VICTOR RAVELERO VAZQUEZ
 RECTOR DE LA UNIVERSIDAD
+
 

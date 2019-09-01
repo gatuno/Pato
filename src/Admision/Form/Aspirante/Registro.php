@@ -21,7 +21,7 @@ class Admision_Form_Aspirante_Registro extends Gatuf_Form {
 				'widget' => 'Gatuf_Form_Widget_SelectInput',
 		));
 		
-		$choices_turnos = array ('Matutino' => 'M', 'Vespertino' => 'V');
+		$choices_turnos = array ('Matutino' => 'M');
 		
 		$this->fields['turno'] = new Gatuf_Form_Field_Varchar (
 			array (

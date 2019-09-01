@@ -11,7 +11,7 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 				'required' => true,
 				'label' => 'Seccion',
 				'initial' => $this->seccion->seccion,
-				'help_text' => 'La sección, como A01 o B03. Se utiliza "A" para Lomas de Tejeda, "B" para Cajititlán, "X" para extracurriculares, "S" para secciones de suficiencias y "E" para especiales',
+				'help_text' => 'La sección, como A01 o B03. Se utiliza "A" para Lomas de Tejeda, "B" para Cajititlán, "X" para extracurriculares, "R" para secciones de revalidación, "S" para secciones de suficiencias, "E" para especiales y "C" Por competencia',
 				'max_length' => 15,
 				'widget_attrs' => array(
 					'maxlength' => 15,
@@ -66,8 +66,8 @@ class Pato_Form_Seccion_Actualizar extends Gatuf_Form {
 		
 		if ($this->seccion->seccion == $seccion) return $this->seccion->seccion;
 		
-		if (!preg_match("/^[ABESX]\d+$/", $seccion)) {
-			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con las letras A, B, E, S, X seguidas de un número.');
+		if (!preg_match("/^[ABESRXC]\d+$/", $seccion)) {
+			throw new Gatuf_Form_Invalid('La sección de la materia tiene que comenzar con las letras A, B, E, S, R, X, C seguidas de un número.');
 		}
 		
 		$sql = new Gatuf_SQL ('materia=%s AND seccion=%s', array ($this->seccion->materia, $seccion));

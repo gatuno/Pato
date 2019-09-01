@@ -4,7 +4,7 @@ Gatuf::loadFunction('Gatuf_HTTP_URL_urlForView');
 Gatuf::loadFunction('Gatuf_Shortcuts_RenderToResponse');
 
 class Admin_Views_SI_Laboratorio {
-	public $index_precond = array ('Gatuf_Precondition::loginRequired');
+	public $index_precond = array ('Pato_Precondition::maestroRequired');
 	public function index ($request, $match) {
 		$laboratorios = Gatuf::factory ('Admin_SI_Laboratorio')->getList ();
 		return Gatuf_Shortcuts_RenderToResponse ('admin/si/laboratorio/index.html',

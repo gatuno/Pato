@@ -6,8 +6,8 @@
 <table class="resultados">
 	<thead><tr><th>Pregunta</th>{foreach $secciones as $s}<th><abbr title="{$s.get_materia().descripcion}">{$s.materia}</abbr><br />{$s.seccion}</th>{/foreach}</tr></thead>
 	<tbody>
-		{assign $g = 1}{while ($g <= 27)}
-		<tr><td>{$textos[$g - 1]}</td>{foreach $secciones as $s}<td>{$total[$s.nrc][$g]|float:2}</td>{/foreach}</tr>
+		{assign $g = 1}{while ($g <= 26)}
+		<tr><td><div style="page-break-inside: avoid">{$textos[$g - 1]}</div></td>{foreach $secciones as $s}<td>{$total[$s.nrc][$g]|float:2}</td>{/foreach}</tr>
 		{assign $g = $g + 1}
 		{/while}
 	</tbody>
@@ -30,6 +30,7 @@ table.resultados tr th:first-child {
 }
 table.resultados {
 	border-collapse: collapse;
+	page-break-inside: auto;
 }
 table.resultados th, table.resultados td {
 	border: 1px solid black;

@@ -50,8 +50,8 @@ class Admin_Form_Biblioteca_Equipo_Agregar extends Gatuf_Form {
 				'help_text' => 'Una breve descripción del equipo',
 				'widget' => 'Gatuf_Form_Widget_TextareaInput',
 				'widget_attrs' => array (
-					'cols' => 80,
-					'rows' => 10,
+					'cols' => 40,
+					'rows' => 4,
 				),
 		));
 	}

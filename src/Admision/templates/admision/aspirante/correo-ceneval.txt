@@ -1,20 +1,28 @@
 Hola {$nombre} {$apellido}:
 
-A contituación deberas llenar en línea el cuestionario de CENEVAL en la siguiente dirección:
+A continuación deberás registrarte y llenar en línea el cuestionario de CENEVAL en la siguiente dirección:
 
 http://registroenlinea.ceneval.edu.mx/RegistroLinea/indexCerrado.php
 
 Si ya completaste este paso, por favor haz caso omiso de este correo.
+ 
+				PASOS PARA REGISTRARTE: 
 
-En el apartado de "Institución" selecciona "Universidad Politécnica de la Zona Metropolitana de Guadalajara". En la opción "Programa/Carrera" deberás seleccionar la misma carrera que solicitaste. En el campo "matrícula" deberás ingresar tu número de aspirante.
+1.-  En el apartado de "Institución" selecciona "Universidad Politécnica de la Zona Metropolitana de Guadalajara".
+2.- En el campo "matrícula" deberás ingresar tu número de aspirante. (Tu número de aspirante para hacer seguimiento del trámite es: {$numero}).
+3.- En la opción "Programa/Carrera" deberás seleccionar la misma carrera que solicitaste.
+Al terminar el registro y el llenado del cuestionario CENEVAL, deberás imprimir el pase de ingreso que presentarás el Sábado 25 de Mayo del 2019 al momento de ingresar al aula para aplicar el examen. La guía del examen EXANI II, podrás descargarla en:
 
-Tu número de aspirante para hacer seguimiento del trámite es: {$numero}
+https://upzmg.edu.jalisco.gob.mx/sites/upzmg.edu.jalisco.gob.mx/files/guia_exani_ii_24a_edicion_2019.pdf
 
-Al terminar deberás imprimir el pase de ingreso que presentarás el 23 de mayo del 2015 al momento de ingresar al aula para aplicar el examen.
+REQUISITOS PARA PRESENTAR EXAMEN DE ADMISION:
 
-La guía del examen EXANI II, podrás descargarla en:
-
-http://archivos.ceneval.edu.mx/archivos_portal/18201/GuiadelEXANI-II2015.pdf
+PASE DE INGRESO AL EXAMEN CENEVAL.
+IDENTIFICACION CON FOTOGRAFIA (ORIGINAL.)
+LAPIZ.
+BORRADOR.
+CALCULADORA SENCILLA.
+SABADO 25 DE MAYO DE 2019 A LAS 8:30 HRS. EN LAS INSTALACIONES DE LA UNIVERSIDAD.
 
 Por favor, no dejes el registro hasta el último momento, ¡sin el pase de ingreso no podrás presentar tu examen de admisión!
 

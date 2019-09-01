@@ -13,7 +13,7 @@
 	<table><thead><tr><th>NRC</th><th>Materia</th><th>Sección</th></tr></thead>
 	<tbody>
 	{foreach $grupos as $g}
-		<tr><td>{$g.displaylinkednrc()|safe}</td><td>{$g.displaylinkedmateria()|safe}</td><td>{$g.displaylinkedseccion()|safe}</td></tr>
+		<tr><td>{$g.displaylinkednrc()|safe}</td><td>{$g.get_materia}</td><td>{$g.displaylinkedseccion()|safe}</td></tr>
 	{/foreach}
 	</tbody></table>
 {else}

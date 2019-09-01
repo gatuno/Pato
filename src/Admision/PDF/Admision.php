@@ -179,7 +179,7 @@ class Admision_PDF_Admision extends External_FPDF {
 		$this->SetFont('Times', '', 9);
 		$this->SetY (190);
 		$this->SetX (18);
-		$this->MultiCell (180, 4, 'Manifiesto bajo protesta, que los datos asentados en la presente solicitud de admisión son verídicos. Y que en  caso de haberme conducido con falsedad en los datos asentados en mi solicitud, acepto hacerme acreedor a cualquiera de las sanciones administrativas correspondientes, incluyendo la negativa de ingreso a la Universidad.');
+		$this->MultiCell (180, 4, 'Declaro bajo protesta, que los datos asentados en la presente solicitud de admisión son verídicos. Y que en caso de haberme conducido con falsedad en los datos asentados en mi solicitud, acepto hacerme acreedor a cualquiera de las sanciones administrativas correspondientes, incluyendo la negativa de ingreso a la Universidad.');
 		
 		$this->SetFont('Times', 'B', 12);
 		$this->SetY (205);
@@ -194,7 +194,7 @@ class Admision_PDF_Admision extends External_FPDF {
 		$this->SetFont('Times', '', 9);
 		$this->SetY (224);
 		$this->SetX (18);
-		$this->MultiCell (180, 4, 'Autorizo que la documentación entregada a la Universidad Politécnica de la Zona Metropolitana de Guadalajara para el proceso de Admisión. Sea destruida en el caso de no ser admitido en el periodo en trámite.');
+		$this->MultiCell (180, 4, 'Autorizo que las copias simples entregada a la Universidad Politécnica de la Zona Metropolitana de Guadalajara para el proceso de Admisión. Sea destruida en el caso de no ser admitido en el periodo en trámite.');
 		
 		$this->SetFont('Times', '', 12);
 		$this->SetY (246);
@@ -220,6 +220,6 @@ class Admision_PDF_Admision extends External_FPDF {
 		$this->Cell (60, 6, 'Revisión: 4');
 		
 		$this->SetX (146);
-		$this->Cell (50, 6, 'Fecha: 1 de mayo de 2015', 0, 0, 'R');
+		$this->Cell (50, 6, 'Fecha: 1 de mayo de 2016', 0, 0, 'R');
 	}
 }
