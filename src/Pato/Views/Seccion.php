@@ -400,9 +400,10 @@ class Pato_Views_Seccion {
 		$pdf->Close ();
 		
 		$nombre = 'acta_preacta_'.$seccion->nrc.'.pdf';
-		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		$fln = $nombre.Gatuf_Utils::getPassword (6);
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$fln, 'F');
 		
-		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$fln, $nombre, 'application/pdf', true);
 	}
 	
 	public $listaAsistencia_precond = array ('Gatuf_Precondition::loginRequired');
@@ -426,9 +427,10 @@ class Pato_Views_Seccion {
 		$pdf->Close ();
 		
 		$nombre = 'Lista_asistencias_'.$seccion->nrc.'_'.$seccion->materia.'_'.$seccion->seccion.'.pdf';
-		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		$fln = $nombre.Gatuf_Utils::getPassword (6);
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$fln, 'F');
 		
-		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$fln, $nombre, 'application/pdf', true);
 	}
 	
 	public $evaluar_precond = array ('Pato_Precondition::maestroRequired');

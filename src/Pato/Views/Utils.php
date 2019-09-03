@@ -46,9 +46,10 @@ class Pato_Views_Utils {
 		}
 		
 		$nombre = 'boletas_'.$carrera->clave.'.pdf';
-		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		$fln = $nombre.Gatuf_Utils::getPassword (6);
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$fln, 'F');
 		
-		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$fln, $nombre, 'application/pdf', true);
 	}
 	
 	public $altasBajasMasivas_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.matricular_alumnos'));

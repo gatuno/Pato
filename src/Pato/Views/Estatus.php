@@ -741,8 +741,9 @@ class Pato_Views_Estatus {
 		$pdf->Close ();
 		
 		$nombre = 'recibo_'.$alumno->codigo.'.pdf';
-		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$nombre, 'F');
+		$fln = $nombre.Gatuf_Utils::getPassword (6);
+		$pdf->Output (Gatuf::config ('tmp_folder').'/'.$fln, 'F');
 		
-		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$nombre, $nombre, 'application/pdf', true);
+		return new Gatuf_HTTP_Response_File (Gatuf::config ('tmp_folder').'/'.$fln, $nombre, 'application/pdf', true);
 	}
 }
