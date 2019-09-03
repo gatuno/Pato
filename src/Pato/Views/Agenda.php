@@ -223,16 +223,17 @@ class Pato_Views_Agenda {
 		$gconf = new Gatuf_GSetting ();
 		$gconf->setApp ('Patricia');
 		
+		
+		$var = Pato_Views_Evaluacion_Profesor::checar_si_evaluo ($alumno);
 		/* FIXME: revisar esto */
-		if (!Pato_Views_Evaluacion_Profesor::checar_si_evaluo($alumno)) {
-			/* Obligarlo a aplicar la evaluación a profesores primero */
-			
+		if (!$var) {
+			// Obligarlo a aplicar la evaluación a profesores primero
 			$request->user->setMessage (3, 'Debes realizar la evaluación docente antes de registrar tus materias');
 			$cal = $gconf->getVal ('calendario_activo', null);
 			$calendario = new Pato_Calendario ($cal);
 			$request->session->setData ('CAL_ACTIVO', $calendario->clave);
 			
-			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Evaluacion_Profesor::listar_evals', $alumno->codigo);
+			$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Evaluacion_Profesor::index');
 			return new Gatuf_HTTP_Response_Redirect ($url);
 		}
 		

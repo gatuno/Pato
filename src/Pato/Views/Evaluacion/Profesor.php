@@ -192,14 +192,14 @@ class Pato_Views_Evaluacion_Profesor {
 		
 		if ($calendario != null) {
 			$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+			$alumno = new Pato_Alumno ($request->user->codigo);
 			$secciones = $alumno->get_grupos_list ();
 		
 			$respuestas = array ();
-		
 			foreach ($secciones as $seccion) {
 				$sql = new Gatuf_SQL ('seccion=%s', $seccion->nrc);
 				$rs = $alumno->get_pato_evaluacion_respuesta_list (array ('filter' => $sql->gen ()));
-			
+				
 				/* Revisar si contestó la encuesta o no */
 				if (count ($rs) == 0) {
 					$respuestas[$seccion->nrc] = false;
@@ -241,9 +241,10 @@ class Pato_Views_Evaluacion_Profesor {
 			return true;
 		}
 		
+		$GLOBALS['CAL_ACTIVO'] = $calendario->clave;
+		$alumno = new Pato_Alumno ($alumno->codigo);
 		/* Revisar cuáles respuestas están en tiempo */
 		$secciones = $alumno->get_grupos_list ();
-		
 		$respuestas = 0;
 		
 		foreach ($secciones as $seccion) {

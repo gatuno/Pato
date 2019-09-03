@@ -31,7 +31,6 @@ $cfg['pear_path'] = '/usr/share/php';
 # Ruta de los templates
 $cfg['template_folders'] = array(
    dirname(__FILE__).'/../templates',
-   dirname(__FILE__).'/../../Admin/templates',
    dirname(__FILE__).'/../../Admision/templates',
 );
 

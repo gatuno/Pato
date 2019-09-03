@@ -89,9 +89,8 @@ class Admision_Views_Admitir {
                                                  $request);
 	}
 	
-	public $procesar_precond = array ('Gatuf_Precondition::adminRequired');
+	public $procesar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Admision.admitir_aspirantes'));
 	public function procesar ($request, $match) {
-		return new Gatuf_HTTP_Response ('Vista en revisión');
 		$cupo_carrera = new Admision_CupoCarrera ();
 		
 		if (false === ($cupo_carrera->get ($match[1]))) {
@@ -152,6 +151,9 @@ class Admision_Views_Admitir {
 			/* Intentar determinar el máximo número de matricula ya asignado */
 			$n = $aspi->id - 20000;
 			
+			if ($n < 0) {
+				$n = 0;
+			}
 			do {
 				$nuevo_codigo = $base.str_pad($n, 5, '0', STR_PAD_LEFT);
 				$sql = new Gatuf_SQL ('codigo LIKE %s', $nuevo_codigo);
