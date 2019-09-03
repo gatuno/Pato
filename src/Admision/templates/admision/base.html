@@ -13,6 +13,7 @@
 		<table class="topmenu-table"><tr>
 			<td>
 				<ul class="nav">
+					{if !$user.isAnonymous()}<li class="general"><a href="{url 'Pato_Views_Index::index'}">Patricia</a></li>{/if}
 					<li class="admision"><a href="{url 'Admision_Views_Index::index'}">Admisión</a>
 						<ul>
 							<li><a href="{url 'Admision_Views_Aspirante::convocatoria'}">Nuevo trámite</a></li>

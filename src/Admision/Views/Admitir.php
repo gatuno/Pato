@@ -206,10 +206,12 @@ class Admision_Views_Admitir {
 			               array ('nombre' => $alumno->nombre,
 			                      'apellido' => $alumno->apellido,
 			                      'referencia' => $referencia));
-			$email = new Gatuf_Mail (Gatuf::config ('from_email'), $aspi->email, 'Has sido aceptado en la UPZMG');
-			$email->setReturnPath (Gatuf::config ('bounce_email', Gatuf::config ('from_email')));
-			$email->addTextMessage ($tmpl->render ($context));
-			$email->sendMail ();
+			$correo_pendiente = new Pato_CorreoPendiente ();
+			$correo_pendiente->asunto = 'Has sido aceptado en la UPZMG';
+			$correo_pendiente->destinatario = $aspi->email;
+			$correo_pendiente->cuerpo_txt = $tmpl->render ($context);
+			
+			$correo_pendiente->create ();
 		}
 		
 		$cupo_carrera->procesada = true;
