@@ -45,6 +45,10 @@ class Pato_InscripcionEstatus extends Gatuf_Model {
 		return $this->get_estatus ()->activo;
 	}
 	
+	function isBaja () {
+		return $this->get_estatus ()->baja;
+	}
+	
 	function __toString () {
 		//return $this->descripcion.' ('.$this->clave.')';
 		return ((string) $this->get_estatus ());

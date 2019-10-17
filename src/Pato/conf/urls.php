@@ -1139,6 +1139,13 @@ $ctl[] = array (
 );
 
 $ctl[] = array (
+	'regex' => '#^/estatus/baja-academica/aplicar/$#',
+	'base' => $base,
+	'model' => 'Pato_Views_Estatus',
+	'method' => 'bajaAcademicaEjecutar',
+);
+
+$ctl[] = array (
 	'regex' => '#^/estatus/baja-administrativa/$#',
 	'base' => $base,
 	'model' => 'Pato_Views_Estatus',

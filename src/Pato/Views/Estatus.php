@@ -367,14 +367,18 @@ class Pato_Views_Estatus {
 	
 	public $bajaAcademica_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
 	public function bajaAcademica ($request, $match) {
-		/* Buscar todos los alumnos que tengan dos veces la misma materia reprobada */
+		/* Nuevo reporte, buscar los alumnos que cumplen con una de 3 condiciones:
+		 * La misma materia reprobada 3 veces o más en toda su carrera
+		 * Más de 3 materias reprobadas en un semestre y también en otro semestre
+		 * Más de 5 materias reprobadas en un semestre
+		 */
 		$kardex = new Pato_Kardex ();
-		/* SELECT *, COUNT(*) FROM `kardex`  WHERE aprobada = 0 GROUP BY alumno,materia HAVING COUNT(*) > 1*/
-		$kardex->_a['views']['doble'] = array ('group' => 'alumno,materia', 'having' => 'COUNT(*) > 1');
+		/* SELECT *, COUNT(*) FROM `kardex`  WHERE aprobada = 0 GROUP BY alumno,materia HAVING COUNT(*) > 1 */
+		$kardex->_a['views']['doble'] = array ('group' => 'alumno,materia', 'having' => 'COUNT(*) > 2');
 		
 		$reprobados = $kardex->getList (array ('select' => 'alumno, materia, COUNT(*)', 'filter' => 'aprobada=0', 'view' => 'doble'));
 		
-		$reporte = array ();
+		$reporte_a = array ();
 		foreach ($reprobados as $r) {
 			$alumno = $r->get_alumno ();
 			
@@ -384,67 +388,250 @@ class Pato_Views_Estatus {
 			
 			$estatus = $ins->get_current_estatus ();
 			/* Aunque tenga Baja Administrativa, puede aplicar una baja academica */
-			if (!$estatus->isActivo() && $estatus->get_estatus()->clave != 'B6') continue; /* Ya está de baja */
+			if ($estatus->isBaja() && $estatus->get_estatus()->clave != 'B6') continue; /* Ya está de baja */
 			
 			$sql = new Gatuf_SQL ('alumno = %s AND materia = %s AND aprobada = 0', array ($r->alumno, $r->materia));
 			$muestra = $kardex->getList (array ('filter' => $sql->gen ()));
 			
-			$o = new stdClass();
-			$o->alumno = $alumno;
-			$o->inscripcion = $ins;
-			$o->estatus = $estatus;
-			$o->materia = $r->get_materia ();
-			$o->muestra = $muestra;
-			$reporte[] = $o;
+			$cals = array ();
+			foreach ($muestra as $mu) {
+				$cals[] = $mu->get_calendario ()->descripcion;
+			}
+			$cals = implode (', ', $cals);
+			
+			if (!isset ($reporte_a[$alumno->codigo])) {
+				$o = new stdClass();
+				$o->alumno = $alumno;
+				$o->inscripcion = $ins;
+				$o->estatus = $estatus;
+				
+				$o->reprobadas = array ();
+				
+				$p = new stdClass ();
+				$p->materia = $r->get_materia ();
+				$p->cals = $cals;
+				
+				$o->reprobadas[] = $p;
+				$reporte_a[$alumno->codigo] = $o;
+			} else {
+				$p = new stdClass ();
+				$p->materia = $r->get_materia ();
+				$p->cals = $cals;
+				
+				$reporte_a[$alumno->codigo]->reprobadas[] = $p;
+			}
+		}
+		
+		$reporte_b = array ();
+		$reporte_c = array ();
+		
+		/* SELECT *, COUNT(*) FROM `kardex`  WHERE aprobada = 0 GROUP BY alumno, calendario HAVING COUNT(*) > 1 */
+		$kardex->_a['views']['multiples'] = array ('select' => 'alumno, calendario, COUNT(*) AS cant', 'group' => 'alumno, calendario', 'having' => 'COUNT(*) > 2', 'props' => array ('cant'));
+		
+		$reprobados = $kardex->getList (array ('filter' => 'aprobada=0', 'view' => 'multiples'));
+		$strikes = array ();
+		
+		foreach ($reprobados as $r) {
+			$alumno = $r->get_alumno ();
+			
+			$ins = $alumno->get_current_inscripcion ();
+			
+			if ($ins == null) {
+				continue; /* Ya está dado de baja */
+			}
+			$estatus = $ins->get_current_estatus ();
+			/* Aunque tenga Baja Administrativa, puede aplicar una baja academica */
+			if ($estatus->isBaja() && $estatus->get_estatus()->clave != 'B6') {
+				continue; /* Ya está de baja */
+			}
+			
+			if ($r->cant >= 5) {
+				/* Es del reporte C, más de 5 materias reprobadas en un mismo semestre */
+				if (!isset ($reporte_c[$alumno->codigo])) {
+					$o = new stdClass ();
+					$o->alumno = $alumno;
+					
+					$o->inscripcion = $ins;
+					$o->estatus = $estatus;
+					
+					$o->cals = array ();
+					
+					$p = new stdClass ();
+					$p->cal = $r->get_calendario ();
+					$p->cant = $r->cant;
+				
+					$o->cals[] = $p;
+					$reporte_c[$alumno->codigo] = $o;
+				} else {
+					$p = new stdClass ();
+					$p->cal = $r->get_calendario ();
+					$p->cant = $r->cant;
+					
+					$reporte_c[$alumno->codigo]->cals[] = $p;
+				}
+			} else {
+				if (!isset ($strikes[$alumno->codigo])) {
+					/* Primer strike, marcar */
+					$strikes[$alumno->codigo] = $r;
+				} else if ($strikes[$alumno->codigo] !== 1) {
+					/* Segundo strike */
+					$o = new stdClass ();
+					$o->alumno = $alumno;
+					$o->inscripcion = $ins;
+					$o->estatus = $estatus;
+					
+					$o->cals = array ();
+					
+					$first = $strikes[$alumno->codigo];
+					
+					$p = new stdClass ();
+					$p->cal = $first->get_calendario ();
+					$p->cant = $first->cant;
+					
+					$o->cals[] = $p;
+					
+					$p = new stdClass ();
+					$p->cal = $r->get_calendario ();
+					$p->cant = $r->cant;
+					
+					$o->cals[] = $p;
+					
+					$strikes[$alumno->codigo] = 1;
+					
+					$reporte_b[$alumno->codigo] = $o;
+				} else {
+					/* Anexar este strike */
+					$p = new stdClass ();
+					$p->cal = $r->get_calendario ();
+					$p->cant = $r->cant;
+					
+					$reporte_b[$alumno->codigo]->cals[] = $p;
+				}
+			}
+		}
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-academica.html',
+		                                         array('page_title' => 'Bajas Académicas',
+		                                               'reporte_a' => $reporte_a,
+		                                               'reporte_b' => $reporte_b,
+		                                               'reporte_c' => $reporte_c),
+		                                         $request);
+	}
+	
+	public $bajaAcademicaEjecutar_precond = array (array ('Gatuf_Precondition::hasPerm', 'Patricia.admin_estatus'));
+	public function bajaAcademicaEjecutar ($request, $match) {
+		$kardex = new Pato_Kardex ();
+		/* SELECT *, COUNT(*) FROM `kardex`  WHERE aprobada = 0 GROUP BY alumno,materia HAVING COUNT(*) > 1 */
+		$kardex->_a['views']['doble'] = array ('group' => 'alumno,materia', 'having' => 'COUNT(*) > 2');
+		$reprobados = $kardex->getList (array ('select' => 'alumno, materia, COUNT(*)', 'filter' => 'aprobada=0', 'view' => 'doble'));
+		
+		$todos = array ();
+		foreach ($reprobados as $r) {
+			$alumno = $r->get_alumno ();
+			$ins = $alumno->get_current_inscripcion ();
+			
+			if ($ins == null) continue; /* Ya está dado de baja */
+			
+			$estatus = $ins->get_current_estatus ();
+			/* Aunque tenga Baja Administrativa, puede aplicar una baja academica */
+			if ($estatus->isBaja() && $estatus->get_estatus()->clave != 'B6') continue; /* Ya está de baja */
+			if (!isset ($todos[$alumno->codigo])) {
+				$todos[$alumno->codigo] = $alumno;
+			}
+		}
+		
+		/* SELECT *, COUNT(*) FROM `kardex`  WHERE aprobada = 0 GROUP BY alumno, calendario HAVING COUNT(*) > 1 */
+		$kardex->_a['views']['multiples'] = array ('select' => 'alumno, calendario, COUNT(*) AS cant', 'group' => 'alumno, calendario', 'having' => 'COUNT(*) > 2', 'props' => array ('cant'));
+		
+		$reprobados = $kardex->getList (array ('filter' => 'aprobada=0', 'view' => 'multiples'));
+		$strikes = array ();
+		
+		foreach ($reprobados as $r) {
+			$alumno = $r->get_alumno ();
+			
+			$ins = $alumno->get_current_inscripcion ();
+			
+			if ($ins == null) continue; /* Ya está dado de baja */
+			$estatus = $ins->get_current_estatus ();
+			/* Aunque tenga Baja Administrativa, puede aplicar una baja academica */
+			if ($estatus->isBaja() && $estatus->get_estatus()->clave != 'B6') continue; /* Ya está de baja */
+			
+			if ($r->cant >= 5) {
+				/* Es del reporte C, más de 5 materias reprobadas en un mismo semestre */
+				if (!isset ($todos[$alumno->codigo])) {
+					$todos[$alumno->codigo] = $alumno;
+				}
+			} else {
+				if (!isset ($strikes[$alumno->codigo])) {
+					/* Primer strike, marcar */
+					$strikes[$alumno->codigo] = 1;
+				} else {
+					/* Segundo o siguientes strikes */
+					if (!isset ($todos[$alumno->codigo])) {
+						$todos[$alumno->codigo] = $alumno;
+					}
+				}
+			}
 		}
 		
 		if ($request->method == 'POST') {
-			$estatus = new Pato_Estatus ('B5'); /* Baja academica */
+			$form = new Pato_Form_Calendario_Seleccionar ($request->POST);
 			
-			$calendario_actual = new Pato_Calendario ($gconf->getVal ('calendario_activo', null));
-			foreach ($reporte as &$r) {
-				$r->estatus->fin = date ('Y-m-d H:i:s');
-				$r->estatus->update ();
+			if ($form->isValid ()) {
+				$calendario = $form->save ();
+				
+				$b5 = new Pato_Estatus ('B5'); /* Baja academica */
 			
-				$estatus = new Pato_InscripcionEstatus ();
-				$estatus->inicio = date ('Y-m-d H:i:s');
-				$estatus->inscripcion = $r->inscripcion;
-				$estatus->estatus = new Pato_Estatus ('B5');
-				$estatus->create ();
-			
-				$r->inscripcion->egreso = $calendario_actual;
-				$r->inscripcion->update ();
-			
-				/* Registrar los cambios de estatus */
-				/* Desmatricular las posibles materias que tenga */
-				foreach ($r->alumno->get_grupos_list as $seccion) {
-					/* Borrar las calificaciones y asistencias
-					 * TODO: Convertir esto en un TRIGGER */
-					$sql = new Gatuf_SQL ('alumno=%s AND nrc=%s', array ($r->alumno->codigo, $seccion->nrc));
+				foreach ($todos as $alumno) {
+					/* TODO: Generar un log interno aquí */
+					$ins = $alumno->get_current_inscripcion ();
 					
-					$asistencias = Gatuf::factory ('Pato_Asistencia')->getList (array ('filter' => $sql->gen ()));
-					foreach ($asistencias as $asis) {
-						$asis->delete ();
+					$old_estatus = $ins->get_current_estatus ();
+					$old_estatus->fin = date ('Y-m-d H:i:s');
+					$old_estatus->update ();
+					
+					$estatus = new Pato_InscripcionEstatus ();
+					$estatus->inicio = date ('Y-m-d H:i:s');
+					$estatus->inscripcion = $ins;
+					$estatus->estatus = $b5;
+					$estatus->create ();
+			
+					$ins->egreso = $calendario;
+					$ins->update ();
+			
+					/* Registrar los cambios de estatus */
+					/* Desmatricular las posibles materias que tenga */
+					foreach ($alumno->get_grupos_list as $seccion) {
+						/* Borrar las calificaciones y asistencias
+						 * TODO: Convertir esto en un TRIGGER */
+						$sql = new Gatuf_SQL ('alumno=%s AND nrc=%s', array ($alumno->codigo, $seccion->nrc));
+					
+						$asistencias = Gatuf::factory ('Pato_Asistencia')->getList (array ('filter' => $sql->gen ()));
+						foreach ($asistencias as $asis) {
+							$asis->delete ();
+						}
+					
+						$boletas = Gatuf::factory ('Pato_Boleta')->getList (array ('filter' => $sql->gen ()));
+						foreach ($boletas as $b) {
+							$b->delete ();
+						}
+					
+						$seccion->delAssoc ($alumno);
 					}
-					
-					$boletas = Gatuf::factory ('Pato_Boleta')->getList (array ('filter' => $sql->gen ()));
-					foreach ($boletas as $b) {
-						$b->delete ();
-					}
-					
-					$seccion->delAssoc ($r->alumno);
 				}
-			}
+				
+				$request->user->setMessage (1, 'Todas las bajas académicas fueron aplicadas');
 			
-			return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/reporte-baja-academica.html',
-				                                     array('page_title' => 'Reporte de Bajas Académicas',
-		                                                   'reporte' => $reporte),
-		                                             $request);
+				$url = Gatuf_HTTP_URL_urlForView ('Pato_Views_Estatus::bajaAcademica');
+				return new Gatuf_HTTP_Response_Redirect ($url);
+			}
+		} else {
+			$form = new Pato_Form_Calendario_Seleccionar (null);
 		}
 		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-academica.html',
-		                                         array('page_title' => 'Bajas Académicas',
-		                                               'reporte' => $reporte),
+		return Gatuf_Shortcuts_RenderToResponse ('pato/estatus/baja-academica-ejecutar.html',
+		                                         array('page_title' => 'Baja Académica',
+		                                               'total' => count ($todos),
+		                                               'form' => $form),
 		                                         $request);
 	}
 	

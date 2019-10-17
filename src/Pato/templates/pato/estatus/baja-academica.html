@@ -1,16 +1,35 @@
 {extends 'pato/base.html'}
 {block body}
-<p>Los siguientes alumnos han sido detectados con dos materias reprobadas:</p>
+<p>Estoy de acuerdo, <a href="{url 'Pato_Views_Estatus::bajaAcademicaEjecutar'}">proceder a dar de baja a estos alumnos</a>. Prodrá seleccionar el calendario sobre cuál será el egreso antes de aplicar las bajas.</p>
+<h2>Reporte A</h2>
+<p>Reporte A de alumnos para baja académica. Los alumnos aquí listados cumplen los siguientes criterios: Reprobaron la misma materia 3 veces o más en diferentes semestres.</p>
 <table border="1">
-	<thead><tr><th rowspan="2">Alumno</th><th rowspan="2">Carrera</th><th rowspan="2">Estatus</th><th rowspan="2">Materia</th><th colspan="2">Reprobada</th></tr>
-	<tr><th>Calendario</th><th>Calificación</th></tr></thead>
-	<tbody>{foreach $reporte as $r}
-		<tr>{assign $row = count($r.muestra)}
-			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.estatus}</td><td rowspan="{$row}">{$r.materia}</td>
-			{assign $g = 0}{foreach $r.muestra as $kardex}{if $g != 0}<tr>{else}{assign $g = $g + 1}{/if}<td>{$kardex.get_calendario()}</td><td><strong>{$kardex.calificacion|float:2}</strong></td></tr>{/foreach}
+	<thead><tr><th>Alumno</th><th>Carrera</th><th>Estatus</th><th>Materia (s)</th></tr></thead>
+	<tbody>{foreach $reporte_a as $r}
+		<tr>{assign $row = count($r.reprobadas)}
+			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.estatus}</td>
+			{assign $g = 0}{foreach $r.reprobadas as $repro}{if $g != 0}<tr>{else}{assign $g = $g + 1}{/if}<td><strong>{$repro.materia}</strong> (Reprobada: {$repro.cals})</td></tr>{/foreach}
 	{/foreach}</tbody>
 </table>
-<form action="." method="post">
-<p>Estoy de acuerdo, <input type="submit" value="Dar de baja a estos alumnos" /></p>
-</form>
+<h2>Reporte B</h2>
+<p>Reporte B de alumnos para baja académica. Los alumnos aquí listados cumplen los siguientes criterios: Reprobaron 3 o 4 materias diferentes en el mismo calendario dos veces en diferentes calendarios.</p>
+<table border="1">
+<thead><tr><th>Alumno</th><th>Carrera</th><th>Estatus</th><th>Calendarios</th></tr></thead>
+	<tbody>{foreach $reporte_b as $r}
+		<tr>{assign $row = count($r.cals)}
+			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.estatus}</td>
+			{assign $g = 0}{foreach $r.cals as $calr}{if $g != 0}<tr>{else}{assign $g = $g + 1}{/if}<td><strong>{$calr.cal}</strong> (Reprobó: {$calr.cant} materias en este calendario)</td></tr>{/foreach}
+	{/foreach}</tbody>
+</table>
+<h2>Reporte C</h2>
+<p>Reporte C de alumnos para baja académica. Los alumnos aquí listados cumplen los siguientes criterios: Reprobaron 5 o más materias diferentes en el mismo calendario.</p>
+<table border="1">
+<thead><tr><th>Alumno</th><th>Carrera</th><th>Estatus</th><th>Calendarios</th></tr></thead>
+	<tbody>{foreach $reporte_c as $r}
+		<tr>{assign $row = count($r.cals)}
+			<td rowspan="{$row}">{$r.alumno}</td><td rowspan="{$row}">{$r.inscripcion.get_carrera()}</td><td rowspan="{$row}">{$r.estatus}</td>
+			{assign $g = 0}{foreach $r.cals as $calr}{if $g != 0}<tr>{else}{assign $g = $g + 1}{/if}<td><strong>{$calr.cal}</strong> (Reprobó: {$calr.cant} materias en este calendario)</td></tr>{/foreach}
+	{/foreach}</tbody>
+</table>
+<p>Estoy de acuerdo, <a href="{url 'Pato_Views_Estatus::bajaAcademicaEjecutar'}">proceder a dar de baja a estos alumnos</a>. Prodrá seleccionar el calendario sobre cuál será el egreso antes de aplicar las bajas.</p>
 {/block}

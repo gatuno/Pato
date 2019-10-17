@@ -32,7 +32,13 @@ class Pato_Estatus extends Gatuf_Model {
 			       'type' => 'Gatuf_DB_Field_Boolean',
 			       'blank' => false,
 			       'default' => false,
-			)
+			),
+			'baja' => /* Si este estatus se considera baja */
+			array (
+			       'type' => 'Gatuf_DB_Field_Boolean',
+			       'blank' => false,
+			       'default' => true,
+			),
 		);
 	}
 	

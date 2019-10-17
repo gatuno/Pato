@@ -1,0 +1,11 @@
+{extends 'pato/base.html'}
+{block body}
+<p>Se darán de baja un total de {$total} alumnos por razones académicas. Puede <a href="{url 'Pato_Views_Estatus::bajaAcademica'}">revisar listado completo</a> antes de aplicar las bajas. A continuación, seleccione sobre que calendario marcar las bajas.</p>
+<form method="post" action=".">
+	<table>
+		{$form.render_table}
+		<tr><td>&nbsp;</td>
+		<td><input type="submit" value="Aplicar todas las bajas académicas" /></td></tr>
+	</table>
+</form>
+{/block}
