@@ -2,8 +2,11 @@
 {block body_alumno}
 <p>Alumno: {$alumno.nombre} {$alumno.apellido}</p>
 <p>Carrera: {$inscripcion.get_carrera}</p>
+<p>Estatus: {$estatus}</p>
 <p>Calendario de ingreso: {$inscripcion.get_ingreso}</p>
 {if $inscripcion.egreso}<p>Calendario de egreso: {$inscripcion.get_egreso}</p>{/if}
+{aperm 'ver_kardex', $user, 'Patricia.kardex_alumno'}
+{if $ver_kardex}Regresar a <a href="{url 'Pato_Views_Alumno::kardexCarrera', array ($alumno.codigo, $inscripcion.id)}">Historial académico</a>{/if}
 <h2>Materias faltantes por tomar en la carrera</h2>
 <p>Nota: si el dato es incorrecto, revise la asociación que existe entre materias y carreras</p>
 <table>

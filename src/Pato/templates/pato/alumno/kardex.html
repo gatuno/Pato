@@ -4,6 +4,8 @@
 <p>Carrera: {$inscripcion.get_carrera}</p>
 <p>Estatus: {$estatus}</p>
 <p>Calendario de ingreso: {$inscripcion.get_ingreso}</p>
+{aperm 'ver_kardex', $user, 'Patricia.kardex_alumno'}
+{if $ver_kardex}También puede revisar <a href="{url 'Pato_Views_Alumno::kardexCarreraFaltantes', array ($alumno.codigo, $inscripcion.id)}">las materias faltantes por tomar</a> con respecto a esta carrera{/if}
 {if $inscripcion.egreso}<p>Calendario de egreso: {$inscripcion.get_egreso}</p>{/if}
 {regroup $kardexs, 'calendario', 'por_calendario'}
 {foreach $por_calendario as $cal}
@@ -11,8 +13,16 @@
 <table>
 	<thead><tr><th>Clave</th><th>Materia</th><th>Calificación</th><th>Tipo</th></tr></thead>
 	<tbody>{foreach $cal.list as $kardex}
-		<tr><td>{$kardex.materia}</td><td>{$kardex.get_materia}</td><td>{$kardex.calificacion}</td><td>{$kardex.get_gpe}</td></tr>
+		<tr><td>{$kardex.materia}</td><td>{$kardex.get_materia}</td><td {if $kardex.aprobada == 0}class="reprobada"{/if}>{$kardex.calificacion}</td><td>{$kardex.get_gpe}</td></tr>
 	{/foreach}</tbody>
 </table>
 {/foreach}
+{/block}
+{block extrahead}
+<style type="text/css">{literal}
+.reprobada {
+	color: red;
+	font-weight: bold;
+}
+{/literal}</style>
 {/block}

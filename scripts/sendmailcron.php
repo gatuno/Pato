@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 
 require dirname(__FILE__).'/../src/Pato/conf/path.php';

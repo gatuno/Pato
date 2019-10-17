@@ -399,6 +399,8 @@ class Pato_Views_Alumno {
 			throw new Gatuf_HTTP_Error404 ();
 		}
 		
+		$estatus = $inscripcion->get_current_estatus ();
+		
 		$carrera = $inscripcion->get_carrera ();
 		$todas = array ();
 		foreach ($carrera->get_materias_list () as $m) {
@@ -412,11 +414,12 @@ class Pato_Views_Alumno {
 			}
 		}
 		
-		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/kardex_faltantes.html',
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/kardex-faltantes.html',
 		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
 		                                                'alumno' => $alumno,
 		                                                'inscripcion' => $inscripcion,
-		                                                'faltantes' => $todas),
+		                                                'faltantes' => $todas,
+		                                                'estatus' => $estatus),
 		                                         $request);
 	}
 	

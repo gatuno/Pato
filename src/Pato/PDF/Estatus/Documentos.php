@@ -63,7 +63,7 @@ class Pato_PDF_Estatus_Documentos extends External_FPDF {
 		
 		$this->SetY (95);
 		$this->SetX (13);
-		$this->Cell (84, 4, $user->extra->nombre.' '.$user->extra->apellido, 0, 0, 'C');
+		$this->Cell (84, 4, $user->nombre.' '.$user->apellido, 0, 0, 'C');
 		
 		$this->SetX (99);
 		$this->Cell (84, 4, $alumno->nombre.' '.$alumno->apellido, 0, 0, 'C');
@@ -204,8 +204,8 @@ class Pato_PDF_Estatus_Documentos extends External_FPDF {
 		$this->Cell (81, 4, 'Servicios Escolares', 0, 0, 'C');
 		
 		$this->SetY (251);
-		$this->SetX (13);
-		$this->Cell (81, 4, $alumno->nombre.' '.$alumno->apellido, 0, 0, 'C');
+		$this->SetX (18);
+		$this->Cell (81, 4, $user->nombre.' '.$user->apellido, 0, 0, 'C');
 		$this->SetY (251);
 		$this->SetX (112);
 		$this->Cell (81, 4, $alumno->nombre.' '.$alumno->apellido, 0, 0, 'C');
