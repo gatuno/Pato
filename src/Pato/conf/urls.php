@@ -289,6 +289,12 @@ $ctl[] = array(
 			'method' => 'kardexCarrera',
 		),
 		array (
+			'regex' => '#^(\w\d{7})/kardex/(\d+)/faltantes/$#',
+			'base' => $base,
+			'model' => 'Pato_Views_Alumno',
+			'method' => 'kardexCarreraFaltantes',
+		),
+		array (
 			'regex' => '#^(\w\d{7})/perfil/update/$#',
 			'base' => $base,
 			'model' => 'Pato_Views_Alumno',

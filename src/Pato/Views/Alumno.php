@@ -376,6 +376,50 @@ class Pato_Views_Alumno {
 		                                         $request);
 	}
 	
+	public $kardexCarreraFaltantes_precond = array ('Gatuf_Precondition::loginRequired');
+	public function kardexCarreraFaltantes ($request, $match) {
+		$alumno = new Pato_Alumno ();
+		
+		if (false === ($alumno->get ($match[1]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$res = Pato_Precondition::selfAlumnoOrHasPerm ($request, $alumno, 'Patricia.kardex_alumno');
+		if (true !== $res) {
+			return $res;
+		}
+		
+		$inscripcion = new Pato_Inscripcion ();
+		
+		if (false === ($inscripcion->get ($match[2]))) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		if ($inscripcion->alumno != $alumno->codigo) {
+			throw new Gatuf_HTTP_Error404 ();
+		}
+		
+		$carrera = $inscripcion->get_carrera ();
+		$todas = array ();
+		foreach ($carrera->get_materias_list () as $m) {
+			$todas[$m->clave] = $m;
+		}
+		
+		$aprobs = $alumno->get_kardex_list (array ('filter' => 'aprobada = 1'));
+		foreach ($aprobs as $a) {
+			if (isset ($todas[$a->materia])) {
+				unset ($todas[$a->materia]);
+			}
+		}
+		
+		return Gatuf_Shortcuts_RenderToResponse ('pato/alumno/kardex_faltantes.html',
+		                                         array ('page_title' => 'Alumno '.$alumno->nombre.' '.$alumno->apellido,
+		                                                'alumno' => $alumno,
+		                                                'inscripcion' => $inscripcion,
+		                                                'faltantes' => $todas),
+		                                         $request);
+	}
+	
 	public $verPerfil_precond = array ('Gatuf_Precondition::loginRequired');
 	public function verPerfil ($request, $match) {
 		$alumno = new Pato_Alumno ();

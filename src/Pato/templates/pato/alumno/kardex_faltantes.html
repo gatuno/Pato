@@ -1,0 +1,15 @@
+{extends 'pato/alumno/base.html'}
+{block body_alumno}
+<p>Alumno: {$alumno.nombre} {$alumno.apellido}</p>
+<p>Carrera: {$inscripcion.get_carrera}</p>
+<p>Calendario de ingreso: {$inscripcion.get_ingreso}</p>
+{if $inscripcion.egreso}<p>Calendario de egreso: {$inscripcion.get_egreso}</p>{/if}
+<h2>Materias faltantes por tomar en la carrera</h2>
+<p>Nota: si el dato es incorrecto, revise la asociación que existe entre materias y carreras</p>
+<table>
+	<thead><tr><th>Clave</th><th>Materia</th></tr></thead>
+	<tbody>{foreach $faltantes as $mat}
+		<tr><td>{$mat.clave}</td><td>{$mat.descripcion}</td></tr>
+	{/foreach}</tbody>
+</table>
+{/block}
